@@ -435,27 +435,24 @@
       }
     }
 
-    async function verifyRootAccess() {
-      // bypass
-
+    function verifyRootAccess() {
       const u = document.getElementById("rootUser").value.trim();
       const p = document.getElementById("rootPass").value.trim();
+      const err = document.getElementById("lockError");
 
-      const uHash = await computeSHA256(u);
-      const pHash = await computeSHA256(p);
-
-      if (uHash === TARGET_USER_HASH && pHash === TARGET_PASS_HASH) {
+      // Exact Match Verification
+      if (u.toUpperCase() === "AKHIL" && p.toLowerCase() === "akhilrawat027@gmail.com") {
         sessionStorage.setItem("AKHIL_ROOT_AUTH", "GRANTED");
-        localStorage.setItem("AKHIL_FAIL_ATTEMPTS", "0");
         document.getElementById("securityGate").style.display = "none";
 
-        // AUTO PLAY MUSIC ON SUCCESSFUL AUTH
+        // AUTO PLAY MUSIC
         startBGM();
 
         initInactivityWatchdog();
         logToTerminal("[AUTH_SUCCESS] Operator AKHIL Authenticated. Console unlocked.");
       } else {
-        registerFailedAttempt();
+        err.style.display = "block";
+        err.innerText = "ACCESS DENIED: INVALID USERNAME OR KEY";
         document.getElementById("rootPass").value = "";
         document.getElementById("rootPass").focus();
       }
