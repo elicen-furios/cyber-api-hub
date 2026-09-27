@@ -624,6 +624,16 @@
         sessionStorage.setItem("AKHIL_ROOT_AUTH", "GRANTED");
         localStorage.setItem("AKHIL_FAIL_ATTEMPTS", "0");
         document.getElementById("securityGate").style.display = "none";
+        
+        // AUTO PLAY MUSIC ON SUCCESSFUL LOGIN
+        try {
+          const bgm = document.getElementById("bgmAudio");
+          if (bgm) {
+            bgm.volume = 0.8;
+            bgm.play().catch(e => console.log("Audio play error:", e));
+          }
+        } catch(e) {}
+
         initInactivityWatchdog();
       } else {
         registerFailedAttempt();
