@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AKHIL API HUB</title>
+  <title>AKHIL API - Cyber Developer Hub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    
-    body {
+    body { background: #070b14; color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
+
+    /* --- LOGIN GATE VIEW --- */
+    #authGateWrapper {
       min-height: 100vh;
       background: #000 url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
       background-size: cover;
-      color: #fff;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      position: relative;
-      overflow-x: hidden;
+      justify-content: space-between;
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
     }
-
-    body::before {
+    #authGateWrapper::before {
       content: "";
       position: absolute;
       inset: 0;
@@ -28,294 +29,239 @@
       z-index: 1;
     }
 
-    /* LOGIN GATE CARD */
-    .gate-wrapper {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-      width: 100%;
+    .top-ambient-bar {
+      position: relative; z-index: 2; display: flex; justify-content: space-between;
+      padding: 16px 24px; font-size: 0.65rem; letter-spacing: 2px; color: #64748b; font-weight: 700; text-transform: uppercase;
     }
+    .accent-quote { color: #10b981; font-style: italic; }
 
+    .gate-inner { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; padding: 16px; flex: 1; }
     .neon-card {
-      width: 100%;
-      max-width: 390px;
-      background: rgba(10, 18, 26, 0.8);
-      border: 1.5px solid #00f2fe;
-      box-shadow: 0 0 35px rgba(0, 242, 254, 0.35);
-      border-radius: 28px;
-      padding: 32px 22px;
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      text-align: center;
+      width: 100%; max-width: 390px; background: rgba(10, 18, 26, 0.82);
+      border: 1.5px solid #00f2fe; box-shadow: 0 0 35px rgba(0, 242, 254, 0.35);
+      border-radius: 28px; padding: 30px 22px; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); text-align: center;
     }
-
-    .logo-glow {
-      font-size: 2.5rem;
-      color: #00f2fe;
-      margin-bottom: 4px;
-      filter: drop-shadow(0 0 14px rgba(0, 242, 254, 0.8));
-    }
-    .brand-name {
-      font-size: 1.8rem;
-      font-weight: 900;
-      letter-spacing: 5px;
-      color: #fff;
-      margin-bottom: 2px;
-    }
-    .brand-sub {
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 3px;
-      color: #00f2fe;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-    }
-    .h-welcome {
-      font-size: 1.35rem;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-    .p-lead {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      margin-bottom: 22px;
-    }
+    .logo-glow { font-size: 2.4rem; color: #00f2fe; margin-bottom: 2px; filter: drop-shadow(0 0 14px rgba(0, 242, 254, 0.8)); }
+    .brand-name { font-size: 1.7rem; font-weight: 900; letter-spacing: 5px; color: #fff; margin-bottom: 2px; }
+    .brand-sub { font-size: 0.7rem; font-weight: 800; letter-spacing: 3px; color: #00f2fe; margin-bottom: 20px; text-transform: uppercase; }
+    .h-welcome { font-size: 1.35rem; font-weight: 800; margin-bottom: 4px; }
+    .p-lead { font-size: 0.78rem; color: #94a3b8; margin-bottom: 20px; }
 
     .btn-action {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 13px 18px;
-      border-radius: 12px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 12px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #fff;
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 18px; border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; margin-bottom: 12px; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; transition: 0.2s;
     }
-    .btn-action.highlight {
-      border: 1.5px solid #00f2fe;
-      background: rgba(0, 242, 254, 0.08);
-      box-shadow: 0 0 16px rgba(0, 242, 254, 0.2);
-    }
+    .btn-action.highlight { border: 1.5px solid #00f2fe; background: rgba(0, 242, 254, 0.08); box-shadow: 0 0 16px rgba(0, 242, 254, 0.2); }
+    .btn-action:active { transform: scale(0.98); }
     .btn-left { display: flex; align-items: center; gap: 12px; }
 
-    .divider-or {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 18px 0;
-      font-size: 0.65rem;
-      color: #64748b;
-      font-weight: 700;
-      letter-spacing: 2px;
-    }
-    .divider-or::before, .divider-or::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.1);
-    }
+    .divider-or { display: flex; align-items: center; gap: 12px; margin: 16px 0; font-size: 0.65rem; color: #64748b; font-weight: 700; letter-spacing: 2px; }
+    .divider-or::before, .divider-or::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
 
-    #phoneInputSection {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 14px;
-      text-align: left;
-    }
-    .styled-input {
-      width: 100%;
-      background: rgba(3, 7, 18, 0.85);
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      border-radius: 10px;
-      padding: 12px 14px;
-      color: #fff;
-      font-size: 0.88rem;
-      outline: none;
-    }
-    .btn-send {
-      width: 100%;
-      background: linear-gradient(135deg, #00f2fe, #4facfe);
-      color: #000;
-      font-weight: 800;
-      border: none;
-      border-radius: 10px;
-      padding: 12px;
-      cursor: pointer;
-      font-size: 0.88rem;
-    }
+    #phoneInputSection { display: none; flex-direction: column; gap: 10px; margin-bottom: 14px; text-align: left; }
+    .styled-input { width: 100%; background: rgba(3, 7, 18, 0.85); border: 1px solid rgba(0, 242, 254, 0.3); border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 0.88rem; outline: none; }
+    .btn-send { width: 100%; background: linear-gradient(135deg, #00f2fe, #4facfe); color: #000; font-weight: 800; border: none; border-radius: 10px; padding: 12px; cursor: pointer; font-size: 0.88rem; }
 
-    .feature-strip {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .feature-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
+    .feature-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 22px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+    .feature-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
     .feature-item i { font-size: 1.05rem; color: #00f2fe; }
-    .feature-item span {
-      font-size: 0.6rem;
-      color: #94a3b8;
-      line-height: 1.2;
-      text-align: center;
-    }
+    .feature-item span { font-size: 0.6rem; color: #94a3b8; line-height: 1.2; text-align: center; }
 
-    /* DASHBOARD */
-    #dashboardView {
-      display: none;
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 24px 16px;
+    /* --- REAL COMPLETE API DASHBOARD --- */
+    #dashboardView { display: none; }
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(7, 11, 20, 0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50;
     }
-    .dash-navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 20px;
-      border-radius: 16px;
-      background: rgba(10, 18, 26, 0.85);
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      backdrop-filter: blur(15px);
-      margin-bottom: 24px;
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; color: #00f2fe; }
+    .brand-icon { background: #0284c7; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; }
+    .user-bar { display: flex; align-items: center; gap: 12px; }
+    .user-badge {
+      display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+      background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 20px; font-size: 0.82rem; font-weight: 700; color: #00f2fe;
     }
     .btn-logout {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid #ef4444;
-      color: #ef4444;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
+      background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #ef4444;
+      padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
     }
-    .api-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 16px;
+
+    .dash-container { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
+    .hero-banner {
+      background: rgba(13, 21, 39, 0.6); border: 1px solid rgba(0, 242, 254, 0.2);
+      border-radius: 20px; padding: 26px 18px; text-align: center; margin-bottom: 24px;
     }
-    .api-card {
-      background: rgba(10, 18, 26, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
-      padding: 18px;
+    .hero-title { font-size: 1.5rem; font-weight: 900; margin-bottom: 6px; }
+    .hero-desc { font-size: 0.82rem; color: #94a3b8; margin-bottom: 20px; }
+    .search-box {
+      display: flex; gap: 8px; max-width: 550px; margin: 0 auto;
+      background: #030712; padding: 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
     }
-    .api-card h3 { color: #00f2fe; margin-bottom: 6px; font-size: 1rem; }
-    .api-card p { font-size: 0.8rem; color: #94a3b8; }
+    .search-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; padding-left: 12px; font-size: 0.88rem; }
+    .search-btn { background: #0284c7; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 26px; }
+    .stat-card { background: rgba(13, 21, 39, 0.7); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 14px; }
+    .stat-num { font-size: 1.3rem; font-weight: 800; color: #00f2fe; }
+    .stat-label { font-size: 0.75rem; color: #94a3b8; }
+
+    .sec-head { font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .api-list { display: flex; flex-direction: column; gap: 12px; }
+    .api-item {
+      background: rgba(13, 21, 39, 0.8); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 16px; display: flex; justify-content: space-between; align-items: center;
+      transition: 0.2s;
+    }
+    .api-item:hover { border-color: rgba(0, 242, 254, 0.4); transform: translateY(-2px); }
+    .api-meta h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .api-meta p { font-size: 0.78rem; color: #94a3b8; }
+    .tag-category { font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN SCREEN -->
-  <div class="gate-wrapper" id="authGateWrapper">
-    <div class="neon-card">
-      <div class="logo-glow"><i class="fa-solid fa-bolt"></i></div>
-      <div class="brand-name">AKHIL</div>
-      <div class="brand-sub">API DEVELOPER HUB</div>
+  <!-- VIEW 1: LOGIN GATE -->
+  <div id="authGateWrapper">
+    <div class="top-ambient-bar">
+      <div>DREAM <i class="fa-solid fa-play" style="font-size:0.5rem; margin:0 4px;"></i> BUILD <i class="fa-solid fa-play" style="font-size:0.5rem; margin:0 4px;"></i> ACHIEVE</div>
+      <div class="accent-quote">"Small steps build big dreams."</div>
+    </div>
 
-      <div class="h-welcome">Welcome Back</div>
-      <div class="p-lead">Sign in to continue to your API world</div>
+    <div class="gate-inner">
+      <div class="neon-card">
+        <div class="logo-glow"><i class="fa-solid fa-bolt"></i></div>
+        <div class="brand-name">AKHIL</div>
+        <div class="brand-sub">API DEVELOPER HUB</div>
 
-      <div class="btn-action highlight" onclick="togglePhoneForm()">
-        <div class="btn-left">
-          <i class="fa-solid fa-mobile-screen"></i>
-          <span>Login with Phone Number</span>
+        <div class="h-welcome">Welcome Back</div>
+        <div class="p-lead">Sign in to continue to your API world</div>
+
+        <!-- Phone Button -->
+        <div class="btn-action highlight" onclick="togglePhoneForm()">
+          <div class="btn-left">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <span>Login with Phone Number</span>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
         </div>
-        <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
-      </div>
 
-      <div id="phoneInputSection">
-        <input type="tel" id="userPhone" class="styled-input" placeholder="+91 9876543210">
-        <div id="recaptcha-container"></div>
-        <button class="btn-send" id="btnSendOtp" onclick="sendOtp()">Send OTP</button>
+        <!-- Expandable Phone Form -->
+        <div id="phoneInputSection">
+          <input type="tel" id="userPhone" class="styled-input" placeholder="+91 9876543210">
+          <div id="recaptcha-anchor"></div>
+          <button class="btn-send" id="btnSendOtp" onclick="sendOtp()">Send Verification OTP</button>
 
-        <div id="otpInputWrap" style="display:none; flex-direction:column; gap:8px;">
-          <input type="text" id="userOtp" class="styled-input" placeholder="Enter 6-digit OTP">
-          <button class="btn-send" onclick="verifyOtp()">Verify Code</button>
+          <div id="otpInputWrap" style="display:none; flex-direction:column; gap:8px;">
+            <input type="text" id="userOtp" class="styled-input" placeholder="Enter 6-digit OTP">
+            <button class="btn-send" onclick="verifyOtp()">Verify Code</button>
+          </div>
+          <div id="authErrMsg" style="font-size:0.72rem; color:#f43f5e; text-align:center;"></div>
+          <div id="quotaStatus" style="font-size:0.68rem; color:#00f2fe; text-align:center;">Daily Limit: 5 OTPs / day</div>
         </div>
-        <div id="authErrMsg" style="font-size:0.72rem; color:#f43f5e; text-align:center;"></div>
-        <div id="quotaStatus" style="font-size:0.68rem; color:#00f2fe; text-align:center;">Rate limit: 5 OTPs / day</div>
-      </div>
 
-      <div class="divider-or">OR</div>
+        <div class="divider-or">OR</div>
 
-      <div class="btn-action" onclick="loginGoogle()">
-        <div class="btn-left">
-          <i class="fa-brands fa-google" style="color:#ea4335;"></i>
-          <span>Continue with Google</span>
+        <!-- Google -->
+        <div class="btn-action" onclick="loginGoogle()">
+          <div class="btn-left">
+            <i class="fa-brands fa-google" style="color:#ea4335;"></i>
+            <span>Continue with Google</span>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
         </div>
-        <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
-      </div>
 
-      <div class="btn-action" onclick="loginGithub()">
-        <div class="btn-left">
-          <i class="fa-brands fa-github"></i>
-          <span>Continue with GitHub</span>
+        <!-- GitHub -->
+        <div class="btn-action" onclick="loginGithub()">
+          <div class="btn-left">
+            <i class="fa-brands fa-github"></i>
+            <span>Continue with GitHub</span>
+          </div>
+          <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
         </div>
-        <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
-      </div>
 
-      <div class="feature-strip">
-        <div class="feature-item">
-          <i class="fa-solid fa-shield-halved"></i>
-          <span>Secure<br>Login</span>
-        </div>
-        <div class="feature-item">
-          <i class="fa-solid fa-bolt"></i>
-          <span>Fast<br>Access</span>
-        </div>
-        <div class="feature-item">
-          <i class="fa-solid fa-code"></i>
-          <span>API<br>Powered</span>
-        </div>
-        <div class="feature-item">
-          <i class="fa-solid fa-infinity"></i>
-          <span>Always<br>With You</span>
+        <!-- 4 Icons -->
+        <div class="feature-strip">
+          <div class="feature-item"><i class="fa-solid fa-shield-halved"></i><span>Secure<br>Login</span></div>
+          <div class="feature-item"><i class="fa-solid fa-bolt"></i><span>Fast<br>Access</span></div>
+          <div class="feature-item"><i class="fa-solid fa-code"></i><span>API<br>Powered</span></div>
+          <div class="feature-item"><i class="fa-solid fa-infinity"></i><span>Always<br>With You</span></div>
         </div>
       </div>
     </div>
+
+    <div style="height:20px;"></div>
   </div>
 
-  <!-- DASHBOARD -->
+  <!-- VIEW 2: LIVE COMPLETE DASHBOARD -->
   <div id="dashboardView">
-    <div class="dash-navbar">
-      <div>
-        <div style="font-weight:900; font-size:1.1rem; color:#00f2fe;">AKHIL API HUB</div>
-        <div style="font-size:0.75rem; color:#94a3b8;" id="userProfileTag">Authenticated</div>
+    <header class="navbar">
+      <div class="brand">
+        <div class="brand-icon"><i class="fa-solid fa-code"></i></div>
+        FREE API WEB
       </div>
-      <button class="btn-logout" onclick="logout()">Logout</button>
-    </div>
+      <div class="user-bar">
+        <div class="user-badge" id="dashUserBadge"><i class="fa-solid fa-circle-check"></i> Verified</div>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+      </div>
+    </header>
 
-    <div class="api-grid">
-      <div class="api-card">
-        <h3>Spotify Web API</h3>
-        <p>Direct metadata streaming access for artists, tracks, and playlists.</p>
+    <main class="dash-container">
+      <div class="hero-banner">
+        <h1 class="hero-title">WELCOME TO THIS FREE API WEB ✨</h1>
+        <p class="hero-desc">Discover thousands of public APIs. Explore, test and build something amazing. 🚀</p>
+        <div class="search-box">
+          <input type="text" class="search-input" placeholder="Search APIs by name, category, description...">
+          <button class="search-btn">Search →</button>
+        </div>
       </div>
-      <div class="api-card">
-        <h3>OpenWeather Engine</h3>
-        <p>Global meteorological tracking with high-precision forecasting endpoints.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num">1,953</div>
+          <div class="stat-label">APIs Available</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">50+</div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">10K+</div>
+          <div class="stat-label">Developers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">99.9%</div>
+          <div class="stat-label">Uptime Status</div>
+        </div>
       </div>
-      <div class="api-card">
-        <h3>Jikan Anime Service</h3>
-        <p>High-throughput public catalog for anime, manga, and demographic metrics.</p>
+
+      <div class="sec-head"><i class="fa-solid fa-fire" style="color:#f97316;"></i> Popular APIs</div>
+      <div class="api-list">
+        <div class="api-item">
+          <div class="api-meta">
+            <h4>Spotify API</h4>
+            <p>Access millions of songs, albums, and artists metadata directly.</p>
+          </div>
+          <span class="tag-category" style="background:rgba(34,197,94,0.12); color:#22c55e;">MUSIC</span>
+        </div>
+        <div class="api-item">
+          <div class="api-meta">
+            <h4>OpenWeather</h4>
+            <p>Get accurate global weather forecasts and historical climate records.</p>
+          </div>
+          <span class="tag-category" style="background:rgba(59,130,246,0.12); color:#3b82f6;">WEATHER</span>
+        </div>
+        <div class="api-item">
+          <div class="api-meta">
+            <h4>Jikan API</h4>
+            <p>Unofficial MyAnimeList API for anime, manga and characters.</p>
+          </div>
+          <span class="tag-category" style="background:rgba(168,85,247,0.12); color:#a855f7;">ANIME</span>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -334,12 +280,13 @@
 
     firebase.initializeApp(firebaseConfig);
 
+    // Auth State Observer
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         document.getElementById("authGateWrapper").style.display = "none";
         document.getElementById("dashboardView").style.display = "block";
-        const name = user.displayName || user.phoneNumber || user.email || "Developer";
-        document.getElementById("userProfileTag").innerText = "Session Active: " + name;
+        const shortName = (user.displayName || user.phoneNumber || user.email || "Member").split(" ")[0];
+        document.getElementById("dashUserBadge").innerHTML = `<i class="fa-solid fa-circle-check"></i> ${shortName}`;
       } else {
         document.getElementById("authGateWrapper").style.display = "flex";
         document.getElementById("dashboardView").style.display = "none";
@@ -351,9 +298,10 @@
       box.style.display = box.style.display === "flex" ? "none" : "flex";
     }
 
+    // 5 OTP Limit
     function getQuota() {
       const today = new Date().toISOString().slice(0, 10);
-      let q = JSON.parse(localStorage.getItem("akhil_otp_quota") || "{}");
+      let q = JSON.parse(localStorage.getItem("akhil_otp_limit_fixed") || "{}");
       if (q.date !== today) q = { date: today, count: 0 };
       return q;
     }
@@ -364,25 +312,25 @@
       err.innerText = "";
 
       if (q.count >= 5) {
-        err.innerText = "Daily Limit: 5 OTP requests allowed per day.";
+        err.innerText = "Daily Limit: 5 OTP requests per user exceeded.";
         return;
       }
 
       const phone = document.getElementById("userPhone").value.trim();
       if (!phone || phone.length < 10) {
-        err.innerText = "Enter phone with country code (e.g. +91XXXXXXXXXX)";
+        err.innerText = "Enter phone with country code (+91XXXXXXXXXX)";
         return;
       }
 
       if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", { size: "invisible" });
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-anchor", { size: "invisible" });
       }
 
       firebase.auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
         .then(conf => {
           window.confResult = conf;
           q.count += 1;
-          localStorage.setItem("akhil_otp_quota", JSON.stringify(q));
+          localStorage.setItem("akhil_otp_limit_fixed", JSON.stringify(q));
           document.getElementById("btnSendOtp").style.display = "none";
           document.getElementById("otpInputWrap").style.display = "flex";
           document.getElementById("quotaStatus").innerText = "Attempts left today: " + (5 - q.count);
