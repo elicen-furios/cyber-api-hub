@@ -383,8 +383,8 @@
     const TARGET_USER_HASH = "b588dbda096ee9a4f4cb3df0f2fe359a39ca25e2e85ab89dcfd092e0797f74c7";
     const TARGET_PASS_HASH = "02f1a60cfb92d6e355609438067332d001614742a0ddfca7412f1ef550fdb0a6";
 
-    const MAX_ATTEMPTS = 3;
-    const LOCKOUT_DURATION_MS = 5 * 60 * 1000;
+    const MAX_ATTEMPTS = 15;
+    const LOCKOUT_DURATION_MS = 30 * 1000;
     const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
     let inactivityTimer = null;
 
@@ -544,7 +544,11 @@
       }
     });
 
+    
     window.addEventListener("DOMContentLoaded", () => {
+      localStorage.removeItem("AKHIL_LOCKOUT_UNTIL");
+      localStorage.removeItem("AKHIL_FAIL_ATTEMPTS");
+
       checkLockoutStatus();
       if (sessionStorage.getItem("AKHIL_ROOT_AUTH") === "GRANTED") {
         const gate = document.getElementById("securityGate");
