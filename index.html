@@ -3,115 +3,374 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CYBER ACCESS - FREE API WEB</title>
+  <title>AKHIL API - Login</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    
     body {
-      background: radial-gradient(circle at 50% 20%, #0d1527 0%, #030712 100%);
-      min-height: 100vh; color: #fff; display: flex; align-items: center; justify-content: center; padding: 16px;
+      min-height: 100vh;
+      background: #000 url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow-x: hidden;
     }
-    .auth-card {
-      width: 100%; max-width: 400px; background: rgba(13, 21, 39, 0.95);
-      border: 1px solid #38bdf8; border-radius: 20px; padding: 26px 20px;
-      box-shadow: 0 0 35px rgba(56, 189, 248, 0.35); text-align: center;
-    }
-    .badge {
-      display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
-      background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3);
-      border-radius: 20px; color: #38bdf8; font-size: 0.72rem; font-weight: 700;
-      letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px;
-    }
-    h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
-    p { font-size: 0.78rem; color: #94a3b8; margin-bottom: 20px; }
-    .btn-oauth {
-      width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
-      padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.05); color: #fff; font-size: 0.88rem; font-weight: 600;
-      cursor: pointer; margin-bottom: 10px;
-    }
-    .btn-oauth:active { transform: scale(0.98); }
-    .sep { display: flex; align-items: center; gap: 10px; margin: 16px 0; color: #64748b; font-size: 0.72rem; }
-    .sep::before, .sep::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
-    .auth-input {
-      width: 100%; background: #030712; border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px; padding: 11px 12px; color: #fff; font-size: 0.85rem; outline: none; margin-bottom: 10px;
-    }
-    .btn-submit {
-      width: 100%; background: linear-gradient(135deg, #2563eb, #7c3aed);
-      color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 0.88rem;
-      font-weight: 700; cursor: pointer;
-    }
-    .tag-limit { font-size: 0.72rem; color: #38bdf8; margin-top: 8px; }
-    .tag-err { font-size: 0.72rem; color: #f43f5e; margin-top: 8px; }
 
-    /* Dashboard UI */
-    #dashboardView { display: none; width: 100%; max-width: 900px; padding: 20px 0; }
-    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .dash-title { font-size: 1.4rem; font-weight: 800; color: #38bdf8; }
-    .dash-btn-logout { background: #ef4444; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
-    .api-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
-    .api-card { background: rgba(13, 21, 39, 0.9); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; }
-    .api-name { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
-    .api-desc { font-size: 0.8rem; color: #94a3b8; }
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(3, 10, 20, 0.78) 0%, rgba(1, 4, 9, 0.94) 100%);
+      z-index: 1;
+    }
+
+    /* Top & Bottom Ambient Labels */
+    .top-bar, .bottom-bar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      padding: 16px 24px;
+      font-size: 0.65rem;
+      letter-spacing: 2px;
+      color: #64748b;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .accent-quote { color: #10b981; font-style: italic; }
+
+    /* Centered Glassmorphic Frame */
+    .gate-wrapper {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      flex: 1;
+    }
+
+    .neon-card {
+      width: 100%;
+      max-width: 390px;
+      background: rgba(10, 18, 26, 0.75);
+      border: 1.5px solid #00f2fe;
+      box-shadow: 0 0 35px rgba(0, 242, 254, 0.35), inset 0 0 20px rgba(0, 242, 254, 0.08);
+      border-radius: 28px;
+      padding: 30px 22px;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      text-align: center;
+    }
+
+    /* Logo & Headings */
+    .logo-glow {
+      font-size: 2.4rem;
+      color: #00f2fe;
+      margin-bottom: 2px;
+      filter: drop-shadow(0 0 14px rgba(0, 242, 254, 0.8));
+    }
+    .brand-name {
+      font-size: 1.7rem;
+      font-weight: 900;
+      letter-spacing: 5px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .brand-sub {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 3.5px;
+      color: #00f2fe;
+      margin-bottom: 22px;
+      text-transform: uppercase;
+    }
+    .h-welcome {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    .p-lead {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+
+    /* Pill Buttons */
+    .btn-action {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 12px;
+      transition: all 0.25s ease;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+    .btn-action.highlight {
+      border: 1.5px solid #00f2fe;
+      background: rgba(0, 242, 254, 0.08);
+      box-shadow: 0 0 18px rgba(0, 242, 254, 0.2);
+    }
+    .btn-action:active { transform: scale(0.98); }
+    .btn-left { display: flex; align-items: center; gap: 12px; }
+
+    .divider-or {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0;
+      font-size: 0.65rem;
+      color: #64748b;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    .divider-or::before, .divider-or::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Phone Form */
+    #phoneInputSection {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .styled-input {
+      width: 100%;
+      background: rgba(3, 7, 18, 0.85);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .styled-input:focus { border-color: #00f2fe; box-shadow: 0 0 10px rgba(0,242,254,0.3); }
+    .btn-send {
+      width: 100%;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      color: #000;
+      font-weight: 800;
+      border: none;
+      border-radius: 10px;
+      padding: 11px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    /* 4-Icon Bottom Feature Bar */
+    .feature-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 22px 0 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .feature-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .feature-item i { font-size: 1.05rem; color: #00f2fe; }
+    .feature-item span {
+      font-size: 0.58rem;
+      color: #94a3b8;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .terms-text {
+      font-size: 0.65rem;
+      color: #64748b;
+      line-height: 1.4;
+    }
+    .terms-text a { color: #00f2fe; text-decoration: none; }
+
+    /* Clean Dashboard view when authorized */
+    #dashboardView {
+      display: none;
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+    .dash-navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 20px;
+      border-radius: 16px;
+      background: rgba(10, 18, 26, 0.85);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      backdrop-filter: blur(15px);
+      margin-bottom: 24px;
+    }
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #ef4444;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .api-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .api-card {
+      background: rgba(10, 18, 26, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 18px;
+    }
+    .api-card h3 { color: #00f2fe; margin-bottom: 6px; font-size: 1rem; }
+    .api-card p { font-size: 0.78rem; color: #94a3b8; }
   </style>
 </head>
 <body>
 
-  <!-- Gatekeeper Card -->
-  <div class="auth-card" id="gateBox">
-    <div class="badge"><i class="fa-solid fa-shield-halved"></i> Z+ Security Protocol</div>
-    <h2>CYBER ACCESS</h2>
-    <p>Identity Verification Required</p>
-
-    <button class="btn-oauth" onclick="loginGoogle()">
-      <i class="fa-brands fa-google" style="color:#ea4335;"></i> Sign in with Google
-    </button>
-    <button class="btn-oauth" onclick="loginGithub()">
-      <i class="fa-brands fa-github"></i> Sign in with GitHub
-    </button>
-
-    <div class="sep">OR SMS OTP</div>
-
-    <input type="tel" id="userPhone" class="auth-input" placeholder="+91 9876543210">
-    <div id="recaptcha-anchor"></div>
-    <button class="btn-submit" id="btnSendOtp" onclick="sendOtp()">Send OTP</button>
-
-    <div id="otpInputBox" style="display:none; margin-top:10px;">
-      <input type="text" id="userOtp" class="auth-input" placeholder="Enter 6-digit OTP">
-      <button class="btn-submit" onclick="verifyOtp()">Verify Code</button>
-    </div>
-
-    <div class="tag-limit" id="quotaStatus">Rate Limit: 5 OTPs / day</div>
-    <div class="tag-err" id="errBox"></div>
+  <!-- Top Ambient Banner -->
+  <div class="top-bar">
+    <div>DREAM <i class="fa-solid fa-play" style="font-size:0.5rem; margin:0 4px;"></i> BUILD <i class="fa-solid fa-play" style="font-size:0.5rem; margin:0 4px;"></i> ACHIEVE</div>
+    <div class="accent-quote">"Small steps build big dreams."</div>
   </div>
 
-  <!-- Protected Dashboard -->
-  <div id="dashboardView">
-    <div class="dash-header">
-      <div>
-        <div class="dash-title">FREE API WEB</div>
-        <div style="font-size:0.8rem; color:#94a3b8;" id="userProfileTag">Authenticated Session Active</div>
+  <!-- AUTH GATE SCREEN -->
+  <div class="gate-wrapper" id="authGateWrapper">
+    <div class="neon-card">
+      <div class="logo-glow"><i class="fa-solid fa-bolt"></i></div>
+      <div class="brand-name">AKHIL</div>
+      <div class="brand-sub">API DEVELOPER HUB</div>
+
+      <div class="h-welcome">Welcome Back</div>
+      <div class="p-lead">Sign in to continue to your API world</div>
+
+      <!-- Phone Button -->
+      <div class="btn-action highlight" onclick="togglePhoneForm()">
+        <div class="btn-left">
+          <i class="fa-solid fa-mobile-screen"></i>
+          <span>Login with Phone Number</span>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
       </div>
-      <button class="dash-btn-logout" onclick="logout()">Logout</button>
+
+      <!-- Expandable Phone OTP Box -->
+      <div id="phoneInputSection">
+        <input type="tel" id="userPhone" class="styled-input" placeholder="+91 9876543210">
+        <div id="recaptcha-container"></div>
+        <button class="btn-send" id="btnSendOtp" onclick="sendOtp()">Send OTP</button>
+
+        <div id="otpInputWrap" style="display:none; flex-direction:column; gap:8px;">
+          <input type="text" id="userOtp" class="styled-input" placeholder="Enter 6-digit OTP">
+          <button class="btn-send" onclick="verifyOtp()">Verify Code</button>
+        </div>
+        <div id="authErrMsg" style="font-size:0.72rem; color:#f43f5e; text-align:center;"></div>
+        <div id="quotaStatus" style="font-size:0.68rem; color:#00f2fe; text-align:center;">Rate limit: 5 OTPs / day</div>
+      </div>
+
+      <div class="divider-or">OR</div>
+
+      <!-- Google Button -->
+      <div class="btn-action" onclick="loginGoogle()">
+        <div class="btn-left">
+          <i class="fa-brands fa-google" style="color:#ea4335;"></i>
+          <span>Continue with Google</span>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
+      </div>
+
+      <!-- GitHub Button -->
+      <div class="btn-action" onclick="loginGithub()">
+        <div class="btn-left">
+          <i class="fa-brands fa-github"></i>
+          <span>Continue with GitHub</span>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
+      </div>
+
+      <!-- 4 Icon Feature Strip -->
+      <div class="feature-strip">
+        <div class="feature-item">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Secure<br>Login</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Fast<br>Access</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-brain"></i>
+          <span>API<br>Powered</span>
+        </div>
+        <div class="feature-item">
+          <i class="fa-solid fa-infinity"></i>
+          <span>Always<br>With You</span>
+        </div>
+      </div>
+
+      <div class="terms-text">
+        By continuing, you agree to our<br>
+        <a href="#">Terms of Service</a> &bull; <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTHENTICATED DASHBOARD -->
+  <div id="dashboardView">
+    <div class="dash-navbar">
+      <div>
+        <div style="font-weight:900; font-size:1.1rem; color:#00f2fe;">AKHIL API HUB</div>
+        <div style="font-size:0.75rem; color:#94a3b8;" id="userProfileTag">Authenticated</div>
+      </div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
     </div>
 
     <div class="api-grid">
       <div class="api-card">
-        <div class="api-name">Spotify API</div>
-        <div class="api-desc">Access millions of songs, albums, and artists directly.</div>
+        <h3>Spotify Web API</h3>
+        <p>Direct metadata streaming access for artists, tracks, and playlists.</p>
       </div>
       <div class="api-card">
-        <div class="api-name">OpenWeather</div>
-        <div class="api-desc">Live global weather forecasts and historical climate records.</div>
+        <h3>OpenWeather Engine</h3>
+        <p>Global meteorological tracking with high-precision forecasting endpoints.</p>
       </div>
       <div class="api-card">
-        <div class="api-name">Jikan Anime API</div>
-        <div class="api-desc">Direct access to anime, manga, character data without rate cap.</div>
+        <h3>Jikan Anime Service</h3>
+        <p>High-throughput public catalog for anime, manga, and demographic metrics.</p>
       </div>
     </div>
   </div>
 
+  <!-- Bottom Brand Footnote -->
+  <div class="bottom-bar">
+    <div>BETTER THAN YESTERDAY</div>
+    <div style="letter-spacing:1px;">POWERED BY MYRAA</div>
+  </div>
+
+  <!-- Firebase Core SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
@@ -128,60 +387,59 @@
 
     firebase.initializeApp(firebaseConfig);
 
-    // Handle Redirect Result (Mobile safe)
-    firebase.auth().getRedirectResult().catch(err => {
-      if (err.code !== "auth/popup-closed-by-user") {
-        document.getElementById("errBox").innerText = err.message;
-      }
-    });
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        document.getElementById("gateBox").style.display = "none";
+        document.getElementById("authGateWrapper").style.display = "none";
         document.getElementById("dashboardView").style.display = "block";
         const name = user.displayName || user.phoneNumber || user.email || "Developer";
-        document.getElementById("userProfileTag").innerText = "Logged in as: " + name;
+        document.getElementById("userProfileTag").innerText = "Session Active: " + name;
       } else {
-        document.getElementById("gateBox").style.display = "block";
+        document.getElementById("authGateWrapper").style.display = "flex";
         document.getElementById("dashboardView").style.display = "none";
       }
     });
 
+    function togglePhoneForm() {
+      const box = document.getElementById("phoneInputSection");
+      box.style.display = box.style.display === "flex" ? "none" : "flex";
+    }
+
     // 5 OTPs per day quota
     function getQuota() {
       const today = new Date().toISOString().slice(0, 10);
-      let q = JSON.parse(localStorage.getItem("otp_quota_track") || "{}");
+      let q = JSON.parse(localStorage.getItem("akhil_otp_quota") || "{}");
       if (q.date !== today) q = { date: today, count: 0 };
       return q;
     }
 
     function sendOtp() {
       const q = getQuota();
-      const err = document.getElementById("errBox");
+      const err = document.getElementById("authErrMsg");
       err.innerText = "";
 
       if (q.count >= 5) {
-        err.innerText = "Quota Exceeded: 5 OTP requests allowed per day.";
+        err.innerText = "Daily Limit: 5 OTP requests per user exceeded.";
         return;
       }
 
       const phone = document.getElementById("userPhone").value.trim();
       if (!phone || phone.length < 10) {
-        err.innerText = "Enter phone number with country code (+91XXXXXXXXXX)";
+        err.innerText = "Enter phone with country code (e.g. +91XXXXXXXXXX)";
         return;
       }
 
       if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-anchor", { size: "invisible" });
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", { size: "invisible" });
       }
 
       firebase.auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
         .then(conf => {
           window.confResult = conf;
           q.count += 1;
-          localStorage.setItem("otp_quota_track", JSON.stringify(q));
+          localStorage.setItem("akhil_otp_quota", JSON.stringify(q));
           document.getElementById("btnSendOtp").style.display = "none";
-          document.getElementById("otpInputBox").style.display = "block";
+          const wrap = document.getElementById("otpInputWrap");
+          wrap.style.display = "flex";
           document.getElementById("quotaStatus").innerText = "Attempts left today: " + (5 - q.count);
           alert("OTP sent successfully!");
         }).catch(e => { err.innerText = e.message; });
@@ -191,22 +449,19 @@
       const code = document.getElementById("userOtp").value.trim();
       if (!code || !window.confResult) return;
       window.confResult.confirm(code)
-        .catch(e => { document.getElementById("errBox").innerText = "Invalid OTP: " + e.message; });
+        .catch(e => { document.getElementById("authErrMsg").innerText = "Invalid OTP: " + e.message; });
     }
 
-    // Use signInWithRedirect for mobile Chrome
     function loginGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithRedirect(provider);
+      firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider());
     }
 
     function loginGithub() {
-      const provider = new firebase.auth.GithubAuthProvider();
-      firebase.auth().signInWithRedirect(provider);
+      firebase.auth().signInWithRedirect(new firebase.auth.GithubAuthProvider());
     }
 
     function logout() {
-      firebase.auth().signOut();
+      firebase.auth().signOut().then(() => window.location.reload());
     }
   </script>
 </body>
