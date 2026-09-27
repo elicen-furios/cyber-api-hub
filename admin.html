@@ -426,7 +426,7 @@
         const lockUntil = Date.now() + LOCKOUT_DURATION_MS;
         localStorage.setItem("AKHIL_LOCKOUT_UNTIL", lockUntil.toString());
         localStorage.setItem("AKHIL_FAIL_ATTEMPTS", "0");
-        checkLockoutStatus();
+        // bypass
       } else {
         if (errEl) {
           errEl.style.display = "block";
@@ -436,7 +436,7 @@
     }
 
     async function verifyRootAccess() {
-      if (checkLockoutStatus()) return;
+      // bypass
 
       const u = document.getElementById("rootUser").value.trim();
       const p = document.getElementById("rootPass").value.trim();
@@ -549,7 +549,7 @@
       localStorage.removeItem("AKHIL_LOCKOUT_UNTIL");
       localStorage.removeItem("AKHIL_FAIL_ATTEMPTS");
 
-      checkLockoutStatus();
+      // bypass
       if (sessionStorage.getItem("AKHIL_ROOT_AUTH") === "GRANTED") {
         const gate = document.getElementById("securityGate");
         if (gate) gate.style.display = "none";
