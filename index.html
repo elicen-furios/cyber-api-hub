@@ -12,6 +12,7 @@
     /* --- LOGIN GATE VIEW --- */
     #authGateWrapper {
       min-height: 100vh;
+      width: 100vw;
       background: #000 url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
       background-size: cover;
       display: flex;
@@ -37,7 +38,7 @@
 
     .gate-inner { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; padding: 16px; flex: 1; }
     .neon-card {
-      width: 100%; max-width: 390px; background: rgba(10, 18, 26, 0.82);
+      width: 100%; max-width: 390px; background: rgba(10, 18, 26, 0.85);
       border: 1.5px solid #00f2fe; box-shadow: 0 0 35px rgba(0, 242, 254, 0.35);
       border-radius: 28px; padding: 30px 22px; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); text-align: center;
     }
@@ -69,12 +70,12 @@
     .feature-item i { font-size: 1.05rem; color: #00f2fe; }
     .feature-item span { font-size: 0.6rem; color: #94a3b8; line-height: 1.2; text-align: center; }
 
-    /* --- REAL COMPLETE API DASHBOARD --- */
-    #dashboardView { display: none; }
+    /* --- DASHBOARD VIEW --- */
+    #dashboardView { display: block; }
     .navbar {
       display: flex; justify-content: space-between; align-items: center;
       padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
-      background: rgba(7, 11, 20, 0.85); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50;
+      background: rgba(7, 11, 20, 0.95); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 50;
     }
     .brand { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; color: #00f2fe; }
     .brand-icon { background: #0284c7; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; }
@@ -115,15 +116,14 @@
       border-radius: 14px; padding: 16px; display: flex; justify-content: space-between; align-items: center;
       transition: 0.2s;
     }
-    .api-item:hover { border-color: rgba(0, 242, 254, 0.4); transform: translateY(-2px); }
     .api-meta h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
     .api-meta p { font-size: 0.78rem; color: #94a3b8; }
-    .tag-category { font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
+    .tag-category { font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
   </style>
 </head>
 <body>
 
-  <!-- VIEW 1: LOGIN GATE -->
+  <!-- AUTH GATE SCREEN -->
   <div id="authGateWrapper">
     <div class="top-ambient-bar">
       <div>DREAM <i class="fa-solid fa-play" style="font-size:0.5rem; margin:0 4px;"></i> BUILD <i class="fa-solid fa-play" style="font-size:0.5rem; margin:0 4px;"></i> ACHIEVE</div>
@@ -148,7 +148,6 @@
           <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
         </div>
 
-        <!-- Expandable Phone Form -->
         <div id="phoneInputSection">
           <input type="tel" id="userPhone" class="styled-input" placeholder="+91 9876543210">
           <div id="recaptcha-anchor"></div>
@@ -182,7 +181,6 @@
           <i class="fa-solid fa-chevron-right" style="font-size:0.75rem;"></i>
         </div>
 
-        <!-- 4 Icons -->
         <div class="feature-strip">
           <div class="feature-item"><i class="fa-solid fa-shield-halved"></i><span>Secure<br>Login</span></div>
           <div class="feature-item"><i class="fa-solid fa-bolt"></i><span>Fast<br>Access</span></div>
@@ -195,7 +193,7 @@
     <div style="height:20px;"></div>
   </div>
 
-  <!-- VIEW 2: LIVE COMPLETE DASHBOARD -->
+  <!-- COMPLETE API DASHBOARD -->
   <div id="dashboardView">
     <header class="navbar">
       <div class="brand">
@@ -203,7 +201,7 @@
         FREE API WEB
       </div>
       <div class="user-bar">
-        <div class="user-badge" id="dashUserBadge"><i class="fa-solid fa-circle-check"></i> Verified</div>
+        <div class="user-badge" id="dashUserBadge"><i class="fa-solid fa-circle-check"></i> Jitendra</div>
         <button class="btn-logout" onclick="logout()">Logout</button>
       </div>
     </header>
@@ -280,16 +278,25 @@
 
     firebase.initializeApp(firebaseConfig);
 
-    // Auth State Observer
+    function showDashboard(user) {
+      const gate = document.getElementById("authGateWrapper");
+      if (gate) {
+        gate.style.display = "none";
+      }
+      document.body.style.overflow = "auto";
+      const shortName = (user.displayName || user.phoneNumber || user.email || "Member").split(" ")[0];
+      const badge = document.getElementById("dashUserBadge");
+      if (badge) {
+        badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${shortName}`;
+      }
+    }
+
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        document.getElementById("authGateWrapper").style.display = "none";
-        document.getElementById("dashboardView").style.display = "block";
-        const shortName = (user.displayName || user.phoneNumber || user.email || "Member").split(" ")[0];
-        document.getElementById("dashUserBadge").innerHTML = `<i class="fa-solid fa-circle-check"></i> ${shortName}`;
+        showDashboard(user);
       } else {
-        document.getElementById("authGateWrapper").style.display = "flex";
-        document.getElementById("dashboardView").style.display = "none";
+        const gate = document.getElementById("authGateWrapper");
+        if (gate) gate.style.display = "flex";
       }
     });
 
@@ -298,10 +305,9 @@
       box.style.display = box.style.display === "flex" ? "none" : "flex";
     }
 
-    // 5 OTP Limit
     function getQuota() {
       const today = new Date().toISOString().slice(0, 10);
-      let q = JSON.parse(localStorage.getItem("akhil_otp_limit_fixed") || "{}");
+      let q = JSON.parse(localStorage.getItem("otp_quota_track_v2") || "{}");
       if (q.date !== today) q = { date: today, count: 0 };
       return q;
     }
@@ -312,7 +318,7 @@
       err.innerText = "";
 
       if (q.count >= 5) {
-        err.innerText = "Daily Limit: 5 OTP requests per user exceeded.";
+        err.innerText = "Daily Limit: Maximum 5 OTP requests allowed per day.";
         return;
       }
 
@@ -330,7 +336,7 @@
         .then(conf => {
           window.confResult = conf;
           q.count += 1;
-          localStorage.setItem("akhil_otp_limit_fixed", JSON.stringify(q));
+          localStorage.setItem("otp_quota_track_v2", JSON.stringify(q));
           document.getElementById("btnSendOtp").style.display = "none";
           document.getElementById("otpInputWrap").style.display = "flex";
           document.getElementById("quotaStatus").innerText = "Attempts left today: " + (5 - q.count);
@@ -342,19 +348,32 @@
       const code = document.getElementById("userOtp").value.trim();
       if (!code || !window.confResult) return;
       window.confResult.confirm(code)
+        .then(res => showDashboard(res.user))
         .catch(e => { document.getElementById("authErrMsg").innerText = "Invalid OTP: " + e.message; });
     }
 
     function loginGoogle() {
-      firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+      const p = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(p)
+        .then(res => showDashboard(res.user))
+        .catch(() => {
+          firebase.auth().signInWithRedirect(p);
+        });
     }
 
     function loginGithub() {
-      firebase.auth().signInWithRedirect(new firebase.auth.GithubAuthProvider());
+      const p = new firebase.auth.GithubAuthProvider();
+      firebase.auth().signInWithPopup(p)
+        .then(res => showDashboard(res.user))
+        .catch(() => {
+          firebase.auth().signInWithRedirect(p);
+        });
     }
 
     function logout() {
-      firebase.auth().signOut().then(() => window.location.reload());
+      firebase.auth().signOut().then(() => {
+        location.reload();
+      });
     }
   </script>
 </body>
