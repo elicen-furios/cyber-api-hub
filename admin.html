@@ -381,8 +381,16 @@
   <main class="main-content">
     <div class="top-header">
       <span class="motto-banner">CONTROL / MANAGE / DOMINATE</span>
-      <div class="user-pill">
-        <img class="user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" alt="Akhil">
+      
+      <!-- BGM CYBER AUDIO CONTROLLER -->
+      <audio id="bgmAudio" src="music.mp3" loop preload="auto"></audio>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button id="bgmToggleBtn" onclick="toggleBGM()" style="background:rgba(255,26,64,0.12); border:1px solid #ff1a40; color:#ff1a40; font-family:var(--font-code); font-size:0.75rem; font-weight:bold; padding:6px 14px; border-radius:20px; cursor:pointer; display:flex; align-items:center; gap:8px; box-shadow:0 0 12px rgba(255,26,64,0.3); transition:all 0.2s;">
+          <i class="fa-solid fa-play" id="bgmIcon"></i> <span id="bgmText">BGM: OFF</span>
+        </button>
+
+        <div class="user-pill">
+        <img class="user-avatar" src=\"akhil.jpg\" alt="Akhil">
         <div class="user-meta">
           <h4>AKHIL</h4>
           <span>Root Admin ● Online</span>
