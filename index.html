@@ -216,13 +216,13 @@
     // 2. Fetch Real APIs from public-apis GitHub data source
     async function loadApis() {
       try {
-        const res = await fetch("./apis.json");
+        const res = await fetch('./apis.json');
         // Fallback backup endpoint if first fails
         let data = [];
         if (res.ok) {
           const catList = await res.json();
           // load first batch
-          const apiRes = await fetch("./apis.json");
+          const apiRes = await fetch('./apis.json');
           data = await apiRes.json();
         } else {
           throw new Error();
@@ -256,7 +256,7 @@
         grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:var(--muted); padding:30px;">No APIs found matching query.</div>';
         return;
       }
-      grid.innerHTML = list.slice(0, 60).map(item => `
+      grid.innerHTML = list.map(item => `
         <div class="card">
           <div>
             <h3>${item.API} <span class="tag">${item.Category}</span></h3>
