@@ -216,13 +216,13 @@
     // 2. Fetch Real APIs from public-apis GitHub data source
     async function loadApis() {
       try {
-        const res = await fetch('https://raw.githubusercontent.com/marcelscruz/public-apis/master/db/categories.json');
+        const res = await fetch("./apis.json");
         // Fallback backup endpoint if first fails
         let data = [];
         if (res.ok) {
           const catList = await res.json();
           // load first batch
-          const apiRes = await fetch('https://raw.githubusercontent.com/marcelscruz/public-apis/master/db/apis.json');
+          const apiRes = await fetch("./apis.json");
           data = await apiRes.json();
         } else {
           throw new Error();
