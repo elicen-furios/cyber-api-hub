@@ -3,251 +3,311 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyberHub Console | Enterprise API Gateway</title>
+  <title>AKHIL // NEO GATEWAY PROTOCOL</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg-base: #060913;
-      --bg-surface: #0c1222;
-      --bg-subtle: #141c33;
-      --border-color: rgba(255, 255, 255, 0.08);
-      --border-hover: rgba(0, 242, 254, 0.35);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent: #00f2fe;
-      --accent-grad: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-      --danger: #f43f5e;
-      --success: #10b981;
-      --font-mono: 'JetBrains Mono', monospace;
+      --bg: #030508;
+      --panel: #070c14;
+      --panel-hover: #0c1524;
+      --border: #14243b;
+      --neo-cyan: #00f2fe;
+      --neo-cyan-glow: rgba(0, 242, 254, 0.45);
+      --neo-green: #00ff88;
+      --neo-green-glow: rgba(0, 255, 136, 0.4);
+      --neo-red: #ff2a5f;
+      --neo-red-glow: rgba(255, 42, 95, 0.4);
+      --text: #f0f6fc;
+      --muted: #64748b;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: var(--bg-base); color: var(--text-main); min-height: 100vh; display: flex; overflow-x: hidden; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-code);
+      min-height: 100vh;
+      display: flex;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(0,242,254,0.06), transparent 45%),
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 30px 30px, 30px 30px;
+    }
 
-    /* --- SIDEBAR --- */
-    .sidebar {
-      width: 260px;
-      background: var(--bg-surface);
-      border-right: 1px solid var(--border-color);
+    /* SIDEBAR */
+    .neo-sidebar {
+      width: 280px;
+      background: rgba(7, 12, 20, 0.95);
+      backdrop-filter: blur(14px);
+      border-right: 1.5px solid var(--border);
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 24px 16px;
-      min-height: 100vh;
       position: fixed;
-      left: 0; top: 0; bottom: 0;
+      inset: 0 auto 0 0;
       z-index: 100;
     }
-    .brand { display: flex; align-items: center; gap: 12px; padding: 0 8px 24px; border-bottom: 1px solid var(--border-color); }
-    .brand-logo {
-      width: 38px; height: 38px; background: var(--accent-grad);
-      border-radius: 10px; display: flex; align-items: center; justify-content: center;
-      color: #030712; font-size: 1.1rem; box-shadow: 0 0 20px rgba(0,242,254,0.3);
+    .brand-box {
+      border: 1.5px solid var(--neo-cyan);
+      box-shadow: 4px 4px 0px var(--neo-cyan);
+      padding: 14px;
+      background: #000;
     }
-    .brand h2 { font-size: 1rem; font-weight: 800; letter-spacing: -0.5px; }
-    .brand span { color: var(--accent); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; display: block; }
-
-    .nav-links { display: flex; flex-direction: column; gap: 6px; margin-top: 20px; list-style: none; }
-    .nav-link {
-      display: flex; align-items: center; gap: 12px; padding: 11px 14px;
-      color: var(--text-muted); text-decoration: none; border-radius: 10px;
-      font-size: 0.88rem; font-weight: 600; transition: all 0.2s ease;
+    .brand-box h1 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fff;
+      text-shadow: 0 0 12px var(--neo-cyan-glow);
     }
-    .nav-link:hover, .nav-link.active {
-      background: var(--bg-subtle); color: #fff; border: 1px solid var(--border-color);
+    .brand-box .tagline {
+      font-size: 0.7rem;
+      color: var(--neo-cyan);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 2px;
     }
-    .nav-link.active { color: var(--accent); border-color: rgba(0,242,254,0.25); }
 
-    .sidebar-footer { padding: 14px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid var(--border-color); }
-    .system-health { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--text-muted); }
-    .status-dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success); }
+    .nav-list { list-style: none; margin-top: 36px; display: flex; flex-direction: column; gap: 10px; }
+    .nav-item a {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+      color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 700;
+      border: 1px solid transparent; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nav-item a:hover, .nav-item a.active {
+      color: var(--neo-cyan);
+      border-color: var(--neo-cyan);
+      background: rgba(0, 242, 254, 0.05);
+      box-shadow: 3px 3px 0px rgba(0, 242, 254, 0.3);
+      transform: translate(-1px, -1px);
+    }
 
-    /* --- MAIN CONTENT --- */
-    .main-wrapper { margin-left: 260px; flex: 1; padding: 32px 40px; min-width: 0; }
+    .operator-card {
+      background: #020408;
+      border: 1px solid var(--border);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .operator-badge {
+      width: 36px; height: 36px; background: var(--neo-cyan); color: #000;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.9rem; box-shadow: 0 0 14px var(--neo-cyan-glow);
+    }
+
+    /* MAIN VIEW */
+    .neo-main { margin-left: 280px; flex: 1; padding: 36px 48px; min-width: 0; }
     @media(max-width: 900px) {
-      .sidebar { display: none; }
-      .main-wrapper { margin-left: 0; padding: 20px 16px; }
+      .neo-sidebar { display: none; }
+      .neo-main { margin-left: 0; padding: 20px 16px; }
     }
 
-    .top-bar {
+    .hud-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 32px; gap: 20px; flex-wrap: wrap;
+      flex-wrap: wrap; gap: 16px; margin-bottom: 36px;
+      border-bottom: 1px dashed var(--border); padding-bottom: 24px;
     }
-    .page-title h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
-    .page-title p { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+    .hud-title h2 {
+      font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;
+      letter-spacing: -0.5px; text-transform: uppercase; color: #fff;
+    }
+    .hud-title p { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
 
-    .action-group { display: flex; align-items: center; gap: 12px; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px;
-      border-radius: 9px; font-size: 0.85rem; font-weight: 700; cursor: pointer;
-      text-decoration: none; transition: all 0.2s; border: none;
+    .btn-neo {
+      font-family: var(--font-code); font-weight: 800; font-size: 0.8rem;
+      padding: 11px 20px; text-transform: uppercase; letter-spacing: 0.5px;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
+      transition: all 0.15s ease; border: none; text-decoration: none;
     }
-    .btn-secondary { background: var(--bg-subtle); color: var(--text-main); border: 1px solid var(--border-color); }
-    .btn-secondary:hover { background: rgba(255,255,255,0.06); }
-    .btn-primary { background: var(--accent-grad); color: #030712; box-shadow: 0 0 20px rgba(0,242,254,0.25); }
-    .btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-neo-primary {
+      background: var(--neo-cyan); color: #000;
+      box-shadow: 4px 4px 0px #fff;
+    }
+    .btn-neo-primary:hover {
+      box-shadow: 6px 6px 0px #fff; transform: translate(-2px, -2px);
+    }
+    .btn-neo-ghost {
+      background: #000; color: #fff; border: 1.5px solid var(--border);
+      box-shadow: 3px 3px 0px var(--border);
+    }
+    .btn-neo-ghost:hover {
+      border-color: var(--neo-cyan); color: var(--neo-cyan); box-shadow: 3px 3px 0px var(--neo-cyan);
+    }
 
-    /* --- METRICS GRID --- */
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
-    .kpi-card {
-      background: var(--bg-surface); border: 1px solid var(--border-color);
-      border-radius: 14px; padding: 20px; transition: border-color 0.2s;
+    /* KPI METRICS */
+    .metrics-hud { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 36px; }
+    .metric-panel {
+      background: var(--panel); border: 1.5px solid var(--border);
+      padding: 20px; position: relative; box-shadow: 4px 4px 0px #000;
     }
-    .kpi-card:hover { border-color: var(--border-hover); }
-    .kpi-header { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 0.8rem; font-weight: 600; }
-    .kpi-value { font-size: 1.75rem; font-weight: 800; margin-top: 10px; color: #fff; letter-spacing: -0.5px; }
-    .kpi-footer { font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; }
+    .metric-panel::after {
+      content: ""; position: absolute; top: -1px; left: -1px; width: 6px; height: 6px; background: var(--neo-cyan);
+    }
+    .metric-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .metric-val {
+      font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
+      color: #fff; margin-top: 10px;
+    }
+    .metric-val.glow { color: var(--neo-cyan); text-shadow: 0 0 15px var(--neo-cyan-glow); }
 
-    /* --- DATA TABLE PANEL --- */
-    .panel {
-      background: var(--bg-surface); border: 1px solid var(--border-color);
-      border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    /* TABLE HUD */
+    .table-hud {
+      background: var(--panel); border: 1.5px solid var(--border);
+      box-shadow: 6px 6px 0px #000; overflow: hidden;
     }
-    .panel-header {
-      padding: 18px 24px; border-bottom: 1px solid var(--border-color);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+    .table-top {
+      padding: 18px 24px; border-bottom: 1.5px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
+      background: #05080e;
     }
-    .search-input {
-      background: var(--bg-base); border: 1px solid var(--border-color);
-      border-radius: 8px; padding: 8px 14px 8px 34px; color: #fff; font-size: 0.82rem;
-      width: 280px; outline: none; transition: border-color 0.2s;
+    .neo-search {
+      background: #000; border: 1px solid var(--border); color: var(--neo-cyan);
+      font-family: var(--font-code); padding: 8px 14px 8px 36px; font-size: 0.8rem;
+      outline: none; width: 280px; transition: border-color 0.2s;
     }
-    .search-input:focus { border-color: var(--accent); }
-    .search-wrapper { position: relative; }
-    .search-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.78rem; }
+    .neo-search:focus { border-color: var(--neo-cyan); box-shadow: 0 0 12px var(--neo-cyan-glow); }
 
-    .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.84rem; }
-    .data-table th {
-      background: rgba(255,255,255,0.02); color: var(--text-muted);
-      font-weight: 600; padding: 14px 20px; font-size: 0.75rem; text-transform: uppercase;
-      letter-spacing: 0.5px; border-bottom: 1px solid var(--border-color);
+    .hud-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.82rem; }
+    .hud-table th {
+      padding: 14px 20px; background: #020408; color: var(--muted);
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px;
+      border-bottom: 1.5px solid var(--border);
     }
-    .data-table td { padding: 14px 20px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-    .data-table tr:hover { background: rgba(255,255,255,0.015); }
+    .hud-table td { padding: 15px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .hud-table tr:hover { background: rgba(0, 242, 254, 0.02); }
 
-    .pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; }
-    .pill-cyan { background: rgba(0,242,254,0.1); color: #00f2fe; border: 1px solid rgba(0,242,254,0.25); }
-    .pill-green { background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.25); }
-    .pill-gray { background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
-
-    .action-btn-del {
-      background: transparent; border: 1px solid rgba(244,63,94,0.3); color: var(--danger);
-      padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600;
-      transition: all 0.2s;
+    .neo-pill {
+      font-size: 0.7rem; font-weight: 700; padding: 3px 8px; text-transform: uppercase;
+      letter-spacing: 0.5px; border: 1px solid;
     }
-    .action-btn-del:hover { background: var(--danger); color: #fff; }
+    .pill-cyan { border-color: var(--neo-cyan); color: var(--neo-cyan); background: rgba(0,242,254,0.06); }
+    .pill-green { border-color: var(--neo-green); color: var(--neo-green); background: rgba(0,255,136,0.06); }
 
-    /* --- SLIDE DRAWER MODAL --- */
+    .btn-kill {
+      background: transparent; border: 1px solid var(--neo-red); color: var(--neo-red);
+      font-family: var(--font-code); font-size: 0.72rem; font-weight: 800;
+      padding: 5px 10px; cursor: pointer; text-transform: uppercase;
+    }
+    .btn-kill:hover { background: var(--neo-red); color: #000; box-shadow: 0 0 10px var(--neo-red-glow); }
+
+    /* DRAWER */
     .drawer-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(3,7,18,0.75);
-      backdrop-filter: blur(8px); z-index: 200; justify-content: flex-end;
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px); z-index: 200; justify-content: flex-end;
     }
     .drawer {
-      width: 100%; max-width: 520px; background: var(--bg-surface);
-      height: 100%; border-left: 1px solid var(--border-color);
-      display: flex; flex-direction: column; justify-content: space-between;
-      box-shadow: -10px 0 50px rgba(0,0,0,0.5); padding: 28px; overflow-y: auto;
+      width: 100%; max-width: 500px; background: #070c14;
+      border-left: 2px solid var(--neo-cyan); height: 100%;
+      padding: 36px; display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: -10px 0 40px rgba(0, 242, 254, 0.2); overflow-y: auto;
     }
-    .form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
-    .form-field label { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .form-field input, .form-field select, .form-field textarea {
-      background: var(--bg-base); border: 1px solid var(--border-color); border-radius: 9px;
-      padding: 11px 14px; color: #fff; font-size: 0.85rem; outline: none; transition: border-color 0.2s;
+    .input-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+    .input-row label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; font-weight: 700; }
+    .input-row input, .input-row textarea, .input-row select {
+      background: #000; border: 1px solid var(--border); color: #fff;
+      font-family: var(--font-code); padding: 11px 14px; font-size: 0.85rem; outline: none;
     }
-    .form-field input:focus, .form-field textarea:focus { border-color: var(--accent); }
+    .input-row input:focus, .input-row textarea:focus, .input-row select:focus {
+      border-color: var(--neo-cyan); box-shadow: 0 0 12px var(--neo-cyan-glow);
+    }
   </style>
 </head>
 <body>
 
   <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="neo-sidebar">
     <div>
-      <div class="brand">
-        <div class="brand-logo"><i class="fa-solid fa-bolt"></i></div>
-        <div>
-          <h2>CYBERHUB</h2>
-          <span>Console v2.4</span>
-        </div>
+      <div class="brand-box">
+        <h1>AKHIL // PROTOCOL</h1>
+        <div class="tagline">DARK NEO GATEWAY</div>
       </div>
-      <ul class="nav-links">
-        <li><a href="#" class="nav-link active"><i class="fa-solid fa-server"></i> API Gateway</a></li>
-        <li><a href="index.html" class="nav-link"><i class="fa-solid fa-globe"></i> Live Directory</a></li>
-        <li><a href="#" onclick="alert('Analytics engine running locally')" class="nav-link"><i class="fa-solid fa-chart-line"></i> Traffic Logs</a></li>
-        <li><a href="#" onclick="alert('Connected to GitHub Pages Runtime')" class="nav-link"><i class="fa-solid fa-shield-halved"></i> Security & Keys</a></li>
+      <ul class="nav-list">
+        <li class="nav-item"><a href="#" class="active"><i class="fa-solid fa-terminal"></i> CORE GATEWAY</a></li>
+        <li class="nav-item"><a href="index.html"><i class="fa-solid fa-network-wired"></i> LIVE HUB</a></li>
+        <li class="nav-item"><a href="#" onclick="alert('System running at maximum parity')"><i class="fa-solid fa-wave-square"></i> TELEMETRY</a></li>
+        <li class="nav-item"><a href="#" onclick="alert('Root access confirmed: AKHIL')"><i class="fa-solid fa-fingerprint"></i> CREDENTIALS</a></li>
       </ul>
     </div>
-    <div class="sidebar-footer">
-      <div class="system-health">
-        <span class="status-dot"></span>
-        <span>Gateway: 99.98% Uptime</span>
+    <div class="operator-card">
+      <div class="operator-badge">AK</div>
+      <div>
+        <div style="font-size:0.8rem; font-weight:800; color:#fff;">AKHIL (SUPERUSER)</div>
+        <div style="font-size:0.68rem; color:var(--neo-green);">● MATRIX ONLINE</div>
       </div>
     </div>
   </aside>
 
   <!-- MAIN VIEW -->
-  <main class="main-wrapper">
-    <div class="top-bar">
-      <div class="page-title">
-        <h1>API Gateway Console</h1>
-        <p>Manage, provision, and monitor custom developer endpoints.</p>
+  <main class="neo-main">
+    <div class="hud-header">
+      <div class="hud-title">
+        <h2>Console Gateway // Production</h2>
+        <p>[SYS_ID: AKHIL-CORE-2026] Runtime registry for provisioned RESTful nodes.</p>
       </div>
-      <div class="action-group">
-        <a href="index.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Live Hub</a>
-        <button class="btn btn-primary" onclick="toggleDrawer()"><i class="fa-solid fa-plus"></i> Deploy Endpoint</button>
+      <div style="display:flex; gap:12px;">
+        <a href="index.html" class="btn-neo btn-neo-ghost"><i class="fa-solid fa-arrow-left"></i> Hub View</a>
+        <button class="btn-neo btn-neo-primary" onclick="toggleDrawer()"><i class="fa-solid fa-plus"></i> Deploy Endpoint</button>
       </div>
     </div>
 
     <!-- METRICS -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-header"><span>ACTIVE REPOSITORY CATALOG</span><i class="fa-solid fa-database"></i></div>
-        <div class="kpi-value" id="kpiTotal">1,950</div>
-        <div class="kpi-footer">Standard verified public endpoints</div>
+    <div class="metrics-hud">
+      <div class="metric-panel">
+        <div class="metric-label">// GLOBAL CATALOG</div>
+        <div class="metric-val" id="kpiTotal">1,950</div>
+        <div style="font-size:0.72rem; color:var(--muted); margin-top:6px;">Verified open records</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-header"><span>CUSTOM PROVISIONED</span><i class="fa-solid fa-microchip"></i></div>
-        <div class="kpi-value" id="kpiCustom" style="color:var(--accent);">0</div>
-        <div class="kpi-footer">Injected directly to client runtime</div>
+      <div class="metric-panel">
+        <div class="metric-label">// PROVISIONED BY AKHIL</div>
+        <div class="metric-val glow" id="kpiCustom">0</div>
+        <div style="font-size:0.72rem; color:var(--neo-cyan); margin-top:6px;">Direct injected records</div>
       </div>
-      <div class="kpi-card">
-        <div class="kpi-header"><span>CORS COMPLIANCE</span><i class="fa-solid fa-network-wired"></i></div>
-        <div class="kpi-value" style="color:var(--success);">94.2%</div>
-        <div class="kpi-footer">Browser sandbox compatible</div>
+      <div class="metric-panel">
+        <div class="metric-label">// SYSTEM PARITY</div>
+        <div class="metric-val" style="color:var(--neo-green); text-shadow:0 0 12px var(--neo-green-glow);">99.98%</div>
+        <div style="font-size:0.72rem; color:var(--muted); margin-top:6px;">Latency &lt; 24ms</div>
       </div>
     </div>
 
-    <!-- DATA TABLE -->
-    <div class="panel">
-      <div class="panel-header">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <h3 style="font-size:0.95rem; font-weight:700;">Deployed Custom APIs</h3>
-          <span class="pill pill-cyan" id="countBadge">0 APIs</span>
+    <!-- TABLE HUD -->
+    <div class="table-hud">
+      <div class="table-top">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:0.82rem; font-weight:800; color:#fff;">ACTIVE PROVISION RECORDS</span>
+          <span class="neo-pill pill-cyan" id="countBadge">0 NODES</span>
         </div>
-        <div class="search-wrapper">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" class="search-input" id="searchTable" oninput="renderTable()" placeholder="Filter provisioned APIs...">
+        <div style="position:relative;">
+          <i class="fa-solid fa-terminal" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:0.75rem;"></i>
+          <input type="text" class="neo-search" id="searchTable" oninput="renderTable()" placeholder="grep endpoints...">
         </div>
       </div>
 
       <div style="overflow-x:auto;">
-        <table class="data-table">
+        <table class="hud-table">
           <thead>
             <tr>
-              <th>Service / Identifier</th>
-              <th>Category</th>
-              <th>Target URL</th>
-              <th>Auth Protocol</th>
-              <th>CORS</th>
-              <th style="text-align:right;">Actions</th>
+              <th>ENDPOINT / PAYLOAD</th>
+              <th>SECTOR</th>
+              <th>TARGET URI</th>
+              <th>AUTH SCHEMA</th>
+              <th>CORS POLICY</th>
+              <th style="text-align:right;">ACTION</th>
             </tr>
           </thead>
           <tbody id="apiTableBody">
             <tr>
-              <td colspan="6" style="text-align:center; padding:36px; color:var(--text-muted);">
-                No custom endpoints provisioned. Click "Deploy Endpoint" to add your first API.
+              <td colspan="6" style="text-align:center; padding:36px; color:var(--muted);">
+                // NO CUSTOM NODES PROVISIONED. INITIALIZE VIA "+ DEPLOY ENDPOINT"
               </td>
             </tr>
           </tbody>
@@ -256,62 +316,62 @@
     </div>
   </main>
 
-  <!-- SLIDE-OVER DRAWER FORM -->
+  <!-- SLIDE DRAWER -->
   <div class="drawer-overlay" id="drawerOverlay" onclick="if(event.target===this) toggleDrawer()">
     <div class="drawer">
       <div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px;">
           <div>
-            <h2 style="font-size:1.2rem; font-weight:800;">Provision New API</h2>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Endpoint will immediately register in live catalog.</p>
+            <h3 style="font-family:var(--font-display); font-size:1.3rem; font-weight:800; color:#fff; text-shadow:0 0 12px var(--neo-cyan-glow);">DEPLOY PROTOCOL</h3>
+            <p style="font-size:0.72rem; color:var(--muted); margin-top:4px;">Inject persistent REST node into Akhil gateway.</p>
           </div>
-          <button onclick="toggleDrawer()" style="background:transparent; border:none; color:var(--text-muted); font-size:1.4rem; cursor:pointer;">&times;</button>
+          <button onclick="toggleDrawer()" style="background:transparent; border:none; color:var(--muted); font-size:1.6rem; cursor:pointer;">&times;</button>
         </div>
 
-        <div class="form-field">
-          <label>Service Identifier (Name) *</label>
-          <input type="text" id="apiName" placeholder="e.g. Stripe Checkout Gateway">
+        <div class="input-row">
+          <label>// SERVICE IDENTIFIER *</label>
+          <input type="text" id="apiName" placeholder="e.g. OpenAI GPT-4o Gateway">
         </div>
 
-        <div class="form-field">
-          <label>Category *</label>
-          <input type="text" id="apiCat" placeholder="e.g. Payments, Artificial Intelligence">
+        <div class="input-row">
+          <label>// SECTOR / CATEGORY *</label>
+          <input type="text" id="apiCat" placeholder="e.g. Artificial Intelligence">
         </div>
 
-        <div class="form-field">
-          <label>Endpoint / Documentation URL *</label>
-          <input type="text" id="apiUrl" placeholder="https://api.domain.com/v1/resource">
+        <div class="input-row">
+          <label>// TARGET ENDPOINT URL *</label>
+          <input type="text" id="apiUrl" placeholder="https://api.domain.com/v1">
         </div>
 
-        <div class="form-field">
-          <label>Service Description *</label>
-          <textarea id="apiDesc" rows="3" placeholder="Provide technical description of payload and parameters..."></textarea>
+        <div class="input-row">
+          <label>// SYSTEM DESCRIPTION *</label>
+          <textarea id="apiDesc" rows="3" placeholder="Define JSON schema contract & rate limits..."></textarea>
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-          <div class="form-field">
-            <label>Authentication</label>
+          <div class="input-row">
+            <label>// AUTHENTICATION</label>
             <select id="apiAuth">
-              <option value="No Auth">No Auth (Public)</option>
-              <option value="apiKey">API Key Header</option>
-              <option value="OAuth">OAuth 2.0 Flow</option>
+              <option value="No Auth">No Auth</option>
+              <option value="apiKey">API Key</option>
+              <option value="OAuth">OAuth 2.0</option>
               <option value="Bearer">Bearer JWT</option>
             </select>
           </div>
-          <div class="form-field">
-            <label>CORS Access</label>
+          <div class="input-row">
+            <label>// CORS ACCESS</label>
             <select id="apiCors">
-              <option value="Yes">Enabled (Browser-friendly)</option>
-              <option value="No">Restricted (Backend Proxy)</option>
+              <option value="Yes">Enabled (Browser)</option>
+              <option value="No">Restricted</option>
               <option value="Unknown">Unknown</option>
             </select>
           </div>
         </div>
       </div>
 
-      <div style="display:flex; gap:10px; margin-top:24px;">
-        <button class="btn btn-secondary" onclick="toggleDrawer()" style="flex:1; justify-content:center;">Cancel</button>
-        <button class="btn btn-primary" onclick="saveApi()" style="flex:2; justify-content:center;"><i class="fa-solid fa-cloud-arrow-up"></i> Deploy to Production</button>
+      <div style="display:flex; gap:10px; margin-top:20px;">
+        <button class="btn-neo btn-neo-ghost" onclick="toggleDrawer()" style="flex:1; justify-content:center;">ABORT</button>
+        <button class="btn-neo btn-neo-primary" onclick="saveApi()" style="flex:2; justify-content:center;">INITIALIZE NODE ⚡</button>
       </div>
     </div>
   </div>
@@ -333,12 +393,12 @@
       const filtered = apis.filter(a => a.API.toLowerCase().includes(q) || a.Category.toLowerCase().includes(q));
 
       document.getElementById("kpiCustom").innerText = apis.length;
-      document.getElementById("countBadge").innerText = `${apis.length} Provisioned`;
+      document.getElementById("countBadge").innerText = `${apis.length} NODES`;
       document.getElementById("kpiTotal").innerText = (1950 + apis.length).toLocaleString();
 
       const tbody = document.getElementById("apiTableBody");
       if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:36px; color:var(--text-muted);">No custom APIs found. Click "Deploy Endpoint" to register one.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:36px; color:var(--muted); font-size:0.8rem;">// NO MATCHING NODES IDENTIFIED</td></tr>`;
         return;
       }
 
@@ -346,14 +406,14 @@
         <tr>
           <td>
             <div style="font-weight:700; color:#fff;">${api.API}</div>
-            <div style="font-size:0.75rem; color:var(--text-muted); max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${api.Description}</div>
+            <div style="font-size:0.72rem; color:var(--muted); max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${api.Description}</div>
           </td>
-          <td><span class="pill pill-gray">${api.Category}</span></td>
-          <td style="font-family:var(--font-mono); font-size:0.78rem; color:#38bdf8;">${api.Link}</td>
-          <td><span class="pill pill-cyan">${api.Auth || 'No Auth'}</span></td>
-          <td><span class="pill ${api.CORS === 'Yes' ? 'pill-green' : 'pill-gray'}">${api.CORS || 'Unknown'}</span></td>
+          <td><span class="neo-pill" style="border-color:var(--border); color:#fff;">${api.Category}</span></td>
+          <td style="color:var(--neo-cyan); font-size:0.78rem;">${api.Link}</td>
+          <td><span class="neo-pill pill-cyan">${api.Auth || 'No Auth'}</span></td>
+          <td><span class="neo-pill ${api.CORS === 'Yes' ? 'pill-green' : ''}">${api.CORS || 'Unknown'}</span></td>
           <td style="text-align:right;">
-            <button class="action-btn-del" onclick="removeApi(${idx})"><i class="fa-solid fa-trash-can"></i> Deprovision</button>
+            <button class="btn-kill" onclick="removeApi(${idx})"><i class="fa-solid fa-trash"></i> PURGE</button>
           </td>
         </tr>
       `).join("");
@@ -368,7 +428,7 @@
       const cors = document.getElementById("apiCors").value;
 
       if (!name || !url || !desc) {
-        alert("Validation error: API Name, URL, and Description are mandatory.");
+        alert("[!] SYNTAX ERROR: ALL MANDATORY FIELDS MUST BE POPULATED");
         return;
       }
 
@@ -377,7 +437,6 @@
       apis.unshift(item);
       localStorage.setItem("CYBER_CUSTOM_APIS", JSON.stringify(apis));
 
-      // Reset
       document.getElementById("apiName").value = "";
       document.getElementById("apiCat").value = "";
       document.getElementById("apiUrl").value = "";
@@ -388,7 +447,7 @@
     }
 
     function removeApi(idx) {
-      if (!confirm("Are you sure you want to deprovision this API endpoint?")) return;
+      if (!confirm("// CONFIRM PURGE OF SELECTED REST NODE?")) return;
       const apis = getStoredApis();
       apis.splice(idx, 1);
       localStorage.setItem("CYBER_CUSTOM_APIS", JSON.stringify(apis));
