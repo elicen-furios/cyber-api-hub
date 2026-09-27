@@ -436,25 +436,19 @@
     }
 
     function verifyRootAccess() {
-      const u = document.getElementById("rootUser").value.trim();
-      const p = document.getElementById("rootPass").value.trim();
+      const u = (document.getElementById("rootUser").value || "").trim();
+      const p = (document.getElementById("rootPass").value || "").trim();
       const err = document.getElementById("lockError");
 
-      // Exact Match Verification
-      if (u.toUpperCase() === "AKHIL" && p.toLowerCase() === "akhilrawat027@gmail.com") {
+      if (u === "AKHIL" && p === "akhilrawat027@gmail.com") {
         sessionStorage.setItem("AKHIL_ROOT_AUTH", "GRANTED");
         document.getElementById("securityGate").style.display = "none";
-
-        // AUTO PLAY MUSIC
         startBGM();
-
-        initInactivityWatchdog();
         logToTerminal("[AUTH_SUCCESS] Operator AKHIL Authenticated. Console unlocked.");
       } else {
         err.style.display = "block";
-        err.innerText = "ACCESS DENIED: INVALID USERNAME OR KEY";
+        err.innerText = "ACCESS DENIED: Username must be capital AKHIL & check password";
         document.getElementById("rootPass").value = "";
-        document.getElementById("rootPass").focus();
       }
     }
 
