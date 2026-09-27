@@ -416,6 +416,90 @@
     }
     .test-trigger-btn:hover { background: #10b981; color: #030712; }
 
+
+    /* --- ADMIN PANEL MODAL --- */
+    #adminModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(3,7,18,0.92);
+      backdrop-filter: blur(15px);
+      z-index: 100005;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
+    .admin-box {
+      background: #0b1329;
+      border: 1.5px solid #f43f5e;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 680px;
+      padding: 22px;
+      box-shadow: 0 0 45px rgba(244,63,94,0.3);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .admin-badge {
+      background: #f43f5e;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .admin-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .admin-stat-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+    .admin-stat-card h5 { margin: 0; color: #94a3b8; font-size: 0.75rem; }
+    .admin-stat-card p { margin: 4px 0 0 0; color: #00f2fe; font-size: 1.2rem; font-weight: 800; }
+    .admin-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .admin-input-group label {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .admin-input-group input, .admin-input-group select, .admin-input-group textarea {
+      background: #030712;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .admin-input-group input:focus { border-color: #00f2fe; }
+    .btn-admin-submit {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
+      width: 100%;
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
 </style>
 
 </head>
@@ -975,6 +1059,156 @@
       renderCards();
       document.getElementById("statApiCount").innerText = filteredApis.length.toLocaleString();
     }
+</script>
+
+  <!-- ADMIN PANEL MODAL -->
+  <div id="adminModal" onclick="if(event.target===this) toggleAdminModal()">
+    <div class="admin-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="admin-badge">Root Admin</span>
+          <h3 style="color:#fff; margin:0; font-size:1.1rem;">Cyber API Command Center</h3>
+        </div>
+        <span onclick="toggleAdminModal()" style="color:#94a3b8; font-size:1.5rem; cursor:pointer;">&times;</span>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <h5>Total Catalog</h5>
+          <p id="admTotalApis">1,950</p>
+        </div>
+        <div class="admin-stat-card">
+          <h5>Custom Added</h5>
+          <p id="admCustomApis">0</p>
+        </div>
+        <div class="admin-stat-card">
+          <h5>User Bookmarks</h5>
+          <p id="admBookmarks">0</p>
+        </div>
+      </div>
+
+      <!-- Add New API Form -->
+      <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px;">
+        <h4 style="color:#00f2fe; margin:0 0 14px 0; font-size:0.95rem;">➕ Add New API to Catalog</h4>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="admin-input-group">
+            <label>API Name *</label>
+            <input type="text" id="admApiName" placeholder="e.g. OpenAI GPT-4o">
+          </div>
+          <div class="admin-input-group">
+            <label>Category *</label>
+            <input type="text" id="admApiCat" placeholder="e.g. Machine Learning, Animals">
+          </div>
+        </div>
+
+        <div class="admin-input-group">
+          <label>Endpoint / Documentation URL *</label>
+          <input type="text" id="admApiUrl" placeholder="https://api.example.com/v1">
+        </div>
+
+        <div class="admin-input-group">
+          <label>Description *</label>
+          <textarea id="admApiDesc" rows="2" placeholder="Brief description of what this API does..."></textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="admin-input-group">
+            <label>Authentication</label>
+            <select id="admApiAuth">
+              <option value="No Auth">No Auth (Free/Open)</option>
+              <option value="apiKey">API Key</option>
+              <option value="OAuth">OAuth 2.0</option>
+              <option value="Bearer">Bearer Token</option>
+            </select>
+          </div>
+          <div class="admin-input-group">
+            <label>CORS Support</label>
+            <select id="admApiCors">
+              <option value="Yes">Yes (Browser Friendly)</option>
+              <option value="No">No (Server Side Only)</option>
+              <option value="Unknown">Unknown</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn-admin-submit" onclick="submitCustomApi()">Publish API To Catalog 🚀</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+    function getCustomApis() {
+      try { return JSON.parse(localStorage.getItem("CYBER_CUSTOM_APIS") || "[]"); }
+      catch(e) { return []; }
+    }
+
+    function toggleAdminModal() {
+      const m = document.getElementById("adminModal");
+      m.style.display = (m.style.display === "flex") ? "none" : "flex";
+      if (m.style.display === "flex") {
+        updateAdminStats();
+      }
+    }
+
+    function updateAdminStats() {
+      const custom = getCustomApis();
+      const bookmarks = getBookmarks();
+      document.getElementById("admTotalApis").innerText = (ALL_APIS ? ALL_APIS.length : 0).toLocaleString();
+      document.getElementById("admCustomApis").innerText = custom.length;
+      document.getElementById("admBookmarks").innerText = bookmarks.length;
+    }
+
+    function submitCustomApi() {
+      const name = document.getElementById("admApiName").value.trim();
+      const cat = document.getElementById("admApiCat").value.trim() || "General";
+      const url = document.getElementById("admApiUrl").value.trim();
+      const desc = document.getElementById("admApiDesc").value.trim();
+      const auth = document.getElementById("admApiAuth").value;
+      const cors = document.getElementById("admApiCors").value;
+
+      if (!name || !url || !desc) {
+        alert("Please fill all required fields (Name, URL, Description)!");
+        return;
+      }
+
+      const newApi = {
+        API: name,
+        Category: cat,
+        Description: desc,
+        Link: url,
+        Auth: auth,
+        CORS: cors
+      };
+
+      let custom = getCustomApis();
+      custom.unshift(newApi);
+      localStorage.setItem("CYBER_CUSTOM_APIS", JSON.stringify(custom));
+
+      // Prepend to live runtime database
+      if (typeof ALL_APIS !== "undefined") {
+        ALL_APIS.unshift(newApi);
+      }
+      applyFilters();
+
+      // Reset form
+      document.getElementById("admApiName").value = "";
+      document.getElementById("admApiCat").value = "";
+      document.getElementById("admApiUrl").value = "";
+      document.getElementById("admApiDesc").value = "";
+
+      alert(`✅ Success: API "${name}" published to live catalog!`);
+      toggleAdminModal();
+    }
+
+    // Auto merge custom APIs on boot
+    (function initCustomApis() {
+      const custom = getCustomApis();
+      if (custom.length && typeof ALL_APIS !== "undefined") {
+        ALL_APIS = [...custom, ...ALL_APIS];
+      }
+    })();
 </script>
 </body>
 </html>
