@@ -141,7 +141,119 @@
       width: 100%; padding: 12px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe;
       color: #00f2fe; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 14px;
     }
+  
+    /* --- AI ASSISTANT WIDGET --- */
+    #aiToggleBtn {
+      position: fixed;
+      bottom: 24px;
+      right: 20px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00f2fe, #2563eb);
+      color: #030712;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+      z-index: 1000;
+      border: 1.5px solid #00f2fe;
+      transition: transform 0.2s;
+    }
+    #aiToggleBtn:active { transform: scale(0.92); }
+
+    #aiChatWindow {
+      position: fixed;
+      bottom: 88px;
+      right: 20px;
+      width: 340px;
+      max-width: calc(100vw - 40px);
+      height: 440px;
+      background: rgba(10, 17, 32, 0.95);
+      border: 1.5px solid #00f2fe;
+      border-radius: 20px;
+      box-shadow: 0 0 35px rgba(0, 242, 254, 0.25);
+      backdrop-filter: blur(20px);
+      display: none;
+      flex-direction: column;
+      z-index: 1001;
+      overflow: hidden;
+    }
+
+    .ai-chat-header {
+      padding: 14px 16px;
+      background: rgba(3, 7, 18, 0.9);
+      border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #00f2fe;
+    }
+    .ai-chat-header span { display: flex; align-items: center; gap: 8px; }
+    .ai-close-btn { color: #94a3b8; font-size: 1.1rem; cursor: pointer; }
+
+    .ai-chat-messages {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.82rem;
+    }
+
+    .ai-msg {
+      max-width: 82%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      line-height: 1.4;
+    }
+    .ai-msg.bot {
+      background: #111a2e;
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      align-self: flex-start;
+      border-top-left-radius: 2px;
+    }
+    .ai-msg.user {
+      background: #0284c7;
+      color: #fff;
+      align-self: flex-end;
+      border-top-right-radius: 2px;
+    }
+
+    .ai-input-bar {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(3, 7, 18, 0.8);
+      gap: 6px;
+    }
+    .ai-input-bar input {
+      flex: 1;
+      background: #030712;
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+    }
+    .ai-input-bar button {
+      background: #00f2fe;
+      color: #030712;
+      border: none;
+      border-radius: 8px;
+      padding: 0 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
   </style>
+
 </head>
 <body>
 
@@ -443,5 +555,82 @@
       firebase.auth().signOut().then(() => location.reload());
     }
   </script>
+
+  <!-- AI CHAT ASSISTANT -->
+  <div id="aiToggleBtn" onclick="toggleAiChat()">
+    <i class="fa-solid fa-robot"></i>
+  </div>
+
+  <div id="aiChatWindow">
+    <div class="ai-chat-header">
+      <span><i class="fa-solid fa-bolt"></i> Cyber AI Guide</span>
+      <i class="fa-solid fa-xmark ai-close-btn" onclick="toggleAiChat()"></i>
+    </div>
+    <div class="ai-chat-messages" id="aiChatList">
+      <div class="ai-msg bot">
+        Hi! Main Cyber API ka AI assistant hu. Kisi bhi topic (jaise: <b>crypto, weather, dog facts, video games</b>) ke baare me poochho, main direct best API recommend kar dunga!
+      </div>
+    </div>
+    <div class="ai-input-bar">
+      <input type="text" id="aiInputText" placeholder="Ask for any API..." onkeydown="if(event.key==='Enter') sendAiMessage()">
+      <button onclick="sendAiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <script>
+    function toggleAiChat() {
+      const w = document.getElementById("aiChatWindow");
+      w.style.display = (w.style.display === "flex") ? "none" : "flex";
+      if (w.style.display === "flex") {
+        setTimeout(() => document.getElementById("aiInputText").focus(), 100);
+      }
+    }
+
+    function sendAiMessage() {
+      const input = document.getElementById("aiInputText");
+      const list = document.getElementById("aiChatList");
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      // Append User Message
+      const userDiv = document.createElement("div");
+      userDiv.className = "ai-msg user";
+      userDiv.innerText = userText;
+      list.appendChild(userDiv);
+      input.value = "";
+      list.scrollTop = list.scrollHeight;
+
+      // Generate AI Response from 1950 database
+      setTimeout(() => {
+        const botDiv = document.createElement("div");
+        botDiv.className = "ai-msg bot";
+
+        const q = userText.toLowerCase();
+        let matches = [];
+
+        if (typeof ALL_APIS !== "undefined" && ALL_APIS.length) {
+          matches = ALL_APIS.filter(a => 
+            (a.API && a.API.toLowerCase().includes(q)) ||
+            (a.Description && a.Description.toLowerCase().includes(q)) ||
+            (a.Category && a.Category.toLowerCase().includes(q))
+          );
+        }
+
+        if (matches.length > 0) {
+          const top = matches.slice(0, 3);
+          let reply = `Mujhe <b>${matches.length}</b> APIs mili! Top suggestions:\n<br>`;
+          top.forEach(api => {
+            reply += `• <b><a href="${api.Link}" target="_blank" style="color:#00f2fe; text-decoration:none;">${api.API}</a></b> (${api.Category}): ${api.Description.slice(0, 65)}...<br>`;
+          });
+          botDiv.innerHTML = reply;
+        } else {
+          botDiv.innerHTML = "Is query ke liye specific API nahi mili. Aap <i>Animals, Weather, AI, Crypto, Music, Books</i> jaise keywords search karke dekh sakte hain!";
+        }
+
+        list.appendChild(botDiv);
+        list.scrollTop = list.scrollHeight;
+      }, 400);
+    }
+</script>
 </body>
 </html>
