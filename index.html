@@ -271,7 +271,7 @@
       applyFilters();
 
       try {
-        const res = await fetch("https://raw.githubusercontent.com/marcelscruz/public-apis/main/db/database.json");
+        const res = await fetch("apis.json");
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data)) {
