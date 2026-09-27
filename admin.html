@@ -541,10 +541,15 @@
   </div>
 
   
-  <script>
-    // SECURE CRYPTOGRAPHIC HASH STRINGS (One-way irreversible)
-    const TARGET_USER_HASH = "2f67797c0e177b497a7825759d0af6f19c80f4440e4f6741633bfa437870f790";
-    const TARGET_PASS_HASH = "d1d9abcacec028f366b71e8d64d7fcc1178506f50d0674272f0a72d234ebe9f9";
+    <script>
+    // 1. CRYPTOGRAPHIC HASH KEYS (One-Way Irreversible SHA-256)
+    const TARGET_USER_HASH = "b588dbda096ee9a4f4cb3df0f2fe359a39ca25e2e85ab89dcfd092e0797f74c7";
+    const TARGET_PASS_HASH = "02f1a60cfb92d6e355609438067332d001614742a0ddfca7412f1ef550fdb0a6";
+
+    const MAX_ATTEMPTS = 3;
+    const LOCKOUT_DURATION_MS = 5 * 60 * 1000;
+    const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
+    let inactivityTimer = null;
 
     async function computeSHA256(str) {
       const buffer = new TextEncoder().encode(str);
@@ -552,28 +557,110 @@
       return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
     }
 
-    function checkAuthOnLoad() {
-      if (sessionStorage.getItem("AKHIL_ROOT_AUTH") === "GRANTED") {
-        const gate = document.getElementById("securityGate");
-        if (gate) gate.style.display = "none";
+    // 2. BRUTE-FORCE RATE LIMITING
+    function checkLockoutStatus() {
+      const lockUntil = parseInt(localStorage.getItem("AKHIL_LOCKOUT_UNTIL") || "0", 10);
+      const now = Date.now();
+      const errEl = document.getElementById("lockError");
+      const btnAuth = document.querySelector("#securityGate button[onclick*='verifyRootAccess']");
+
+      if (now < lockUntil) {
+        const remainingSec = Math.ceil((lockUntil - now) / 1000);
+        if (errEl) {
+          errEl.style.display = "block";
+          errEl.innerText = "[!] SYSTEM LOCKED: TOO MANY ATTEMPTS. RETRY IN " + remainingSec + "s";
+        }
+        if (btnAuth) btnAuth.disabled = true;
+        document.getElementById("rootUser").disabled = true;
+        document.getElementById("rootPass").disabled = true;
+        setTimeout(checkLockoutStatus, 1000);
+        return true;
+      } else {
+        if (btnAuth) btnAuth.disabled = false;
+        document.getElementById("rootUser").disabled = false;
+        document.getElementById("rootPass").disabled = false;
+        localStorage.removeItem("AKHIL_LOCKOUT_UNTIL");
+        return false;
       }
     }
 
+    function registerFailedAttempt() {
+      let attempts = parseInt(localStorage.getItem("AKHIL_FAIL_ATTEMPTS") || "0", 10) + 1;
+      localStorage.setItem("AKHIL_FAIL_ATTEMPTS", attempts.toString());
+
+      const errEl = document.getElementById("lockError");
+      if (attempts >= MAX_ATTEMPTS) {
+        const lockUntil = Date.now() + LOCKOUT_DURATION_MS;
+        localStorage.setItem("AKHIL_LOCKOUT_UNTIL", lockUntil.toString());
+        localStorage.setItem("AKHIL_FAIL_ATTEMPTS", "0");
+        checkLockoutStatus();
+      } else {
+        if (errEl) {
+          errEl.style.display = "block";
+          errEl.innerText = "ACCESS DENIED: INVALID KEY (" + (MAX_ATTEMPTS - attempts) + " ATTEMPTS REMAINING)";
+        }
+      }
+    }
+
+    // 3. AUTHENTICATION HANDLER
     async function verifyRootAccess() {
+      if (checkLockoutStatus()) return;
+
       const u = document.getElementById("rootUser").value.trim();
       const p = document.getElementById("rootPass").value.trim();
-      const err = document.getElementById("lockError");
 
       const uHash = await computeSHA256(u);
       const pHash = await computeSHA256(p);
 
       if (uHash === TARGET_USER_HASH && pHash === TARGET_PASS_HASH) {
         sessionStorage.setItem("AKHIL_ROOT_AUTH", "GRANTED");
+        localStorage.setItem("AKHIL_FAIL_ATTEMPTS", "0");
         document.getElementById("securityGate").style.display = "none";
+        initInactivityWatchdog();
       } else {
-        err.style.display = "block";
+        registerFailedAttempt();
         document.getElementById("rootPass").value = "";
         document.getElementById("rootPass").focus();
+      }
+    }
+
+    // 4. INACTIVITY TIMEOUT WATCHDOG (5 MINS)
+    function resetInactivityTimer() {
+      if (sessionStorage.getItem("AKHIL_ROOT_AUTH") !== "GRANTED") return;
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        sessionStorage.removeItem("AKHIL_ROOT_AUTH");
+        alert("[SECURITY ALERT] Session expired due to inactivity. Re-authentication required.");
+        location.reload();
+      }, INACTIVITY_LIMIT_MS);
+    }
+
+    function initInactivityWatchdog() {
+      resetInactivityTimer();
+      ["mousemove", "mousedown", "keydown", "touchstart", "scroll"].forEach(evt => {
+        window.addEventListener(evt, resetInactivityTimer, { passive: true });
+      });
+    }
+
+    // 5. ANTI-INSPECTION SHIELD
+    document.addEventListener("contextmenu", (e) => e.preventDefault());
+    document.addEventListener("keydown", (e) => {
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) ||
+        (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "s" || e.key === "S"))
+      ) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    function checkAuthOnLoad() {
+      checkLockoutStatus();
+      if (sessionStorage.getItem("AKHIL_ROOT_AUTH") === "GRANTED") {
+        const gate = document.getElementById("securityGate");
+        if (gate) gate.style.display = "none";
+        initInactivityWatchdog();
       }
     }
 
