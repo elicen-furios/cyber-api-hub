@@ -3,376 +3,540 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AKHIL // NEO GATEWAY PROTOCOL</title>
+  <title>AKHIL // ADMIN PANEL - POWER | CONTROL | NO LIMITS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=JetBrains+Mono:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg: #030508;
-      --panel: #070c14;
-      --panel-hover: #0c1524;
-      --border: #14243b;
-      --neo-cyan: #00f2fe;
-      --neo-cyan-glow: rgba(0, 242, 254, 0.45);
-      --neo-green: #00ff88;
-      --neo-green-glow: rgba(0, 255, 136, 0.4);
-      --neo-red: #ff2a5f;
-      --neo-red-glow: rgba(255, 42, 95, 0.4);
-      --text: #f0f6fc;
-      --muted: #64748b;
-      --font-display: 'Space Grotesk', sans-serif;
+      --bg: #050608;
+      --card-bg: rgba(14, 16, 22, 0.85);
+      --card-border: rgba(255, 30, 60, 0.22);
+      --red-neon: #ff1a40;
+      --red-glow: rgba(255, 26, 64, 0.45);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --green-neon: #00ff88;
       --font-code: 'JetBrains Mono', monospace;
+      --font-title: 'Cinzel', serif;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
       background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-code);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       display: flex;
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(0,242,254,0.06), transparent 45%),
+        radial-gradient(circle at 50% 0%, rgba(255,26,64,0.08), transparent 50%),
         linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-      background-size: 100% 100%, 30px 30px, 30px 30px;
+      background-size: 100% 100%, 35px 35px, 35px 35px;
+      overflow-x: hidden;
     }
 
     /* SIDEBAR */
-    .neo-sidebar {
-      width: 280px;
-      background: rgba(7, 12, 20, 0.95);
-      backdrop-filter: blur(14px);
-      border-right: 1.5px solid var(--border);
-      padding: 24px 20px;
+    .sidebar {
+      width: 250px;
+      background: rgba(8, 10, 15, 0.95);
+      border-right: 1px solid var(--card-border);
+      padding: 20px 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      min-height: 100vh;
       position: fixed;
-      inset: 0 auto 0 0;
+      left: 0; top: 0; bottom: 0;
       z-index: 100;
     }
-    .brand-box {
-      border: 1.5px solid var(--neo-cyan);
-      box-shadow: 4px 4px 0px var(--neo-cyan);
-      padding: 14px;
-      background: #000;
-    }
-    .brand-box h1 {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #fff;
-      text-shadow: 0 0 12px var(--neo-cyan-glow);
-    }
-    .brand-box .tagline {
-      font-size: 0.7rem;
-      color: var(--neo-cyan);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-top: 2px;
-    }
-
-    .nav-list { list-style: none; margin-top: 36px; display: flex; flex-direction: column; gap: 10px; }
-    .nav-item a {
-      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
-      color: var(--muted); text-decoration: none; font-size: 0.82rem; font-weight: 700;
-      border: 1px solid transparent; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .nav-item a:hover, .nav-item a.active {
-      color: var(--neo-cyan);
-      border-color: var(--neo-cyan);
-      background: rgba(0, 242, 254, 0.05);
-      box-shadow: 3px 3px 0px rgba(0, 242, 254, 0.3);
-      transform: translate(-1px, -1px);
-    }
-
-    .operator-card {
-      background: #020408;
-      border: 1px solid var(--border);
-      padding: 14px;
+    .brand-header {
       display: flex;
       align-items: center;
       gap: 12px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-    .operator-badge {
-      width: 36px; height: 36px; background: var(--neo-cyan); color: #000;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 0.9rem; box-shadow: 0 0 14px var(--neo-cyan-glow);
+    .crown-icon {
+      color: var(--red-neon);
+      font-size: 1.8rem;
+      filter: drop-shadow(0 0 10px var(--red-glow));
+    }
+    .brand-title h1 {
+      font-family: var(--font-title);
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+    .brand-title span {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--red-neon);
+      letter-spacing: 2px;
+      display: block;
     }
 
-    /* MAIN VIEW */
-    .neo-main { margin-left: 280px; flex: 1; padding: 36px 48px; min-width: 0; }
+    .nav-menu { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .nav-menu a {
+      display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+      color: var(--text-muted); text-decoration: none; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 600; transition: all 0.2s;
+    }
+    .nav-menu a:hover, .nav-menu a.active {
+      color: #fff;
+      background: rgba(255, 26, 64, 0.12);
+      border: 1px solid rgba(255, 26, 64, 0.35);
+      box-shadow: 0 0 14px rgba(255, 26, 64, 0.2);
+    }
+    .nav-menu a.active { color: var(--red-neon); }
+
+    .sidebar-footer {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+    .sidebar-footer p { font-size: 0.72rem; color: #cbd5e1; font-style: italic; }
+    .sidebar-footer span { font-size: 0.75rem; color: var(--red-neon); font-weight: 800; display: block; margin-top: 4px; }
+
+    /* MAIN CONTAINER */
+    .main-content {
+      margin-left: 250px;
+      flex: 1;
+      padding: 20px 28px;
+      min-width: 0;
+    }
     @media(max-width: 900px) {
-      .neo-sidebar { display: none; }
-      .neo-main { margin-left: 0; padding: 20px 16px; }
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; padding: 16px; }
     }
 
-    .hud-header {
+    /* TOP BAR */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .motto-banner {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-family: var(--font-code);
+    }
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(20,24,35,0.7);
+      padding: 6px 14px;
+      border-radius: 30px;
+      border: 1px solid var(--card-border);
+    }
+    .user-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 1.5px solid var(--red-neon);
+      object-fit: cover;
+    }
+    .user-meta h4 { font-size: 0.8rem; color: #fff; margin: 0; }
+    .user-meta span { font-size: 0.68rem; color: var(--green-neon); font-weight: 700; }
+
+    /* HERO BANNER SECTION */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media(max-width: 850px) { .hero-grid { grid-template-columns: 1fr; } }
+
+    .hero-banner {
+      background: linear-gradient(90deg, rgba(8,10,16,0.9), rgba(18,7,12,0.6)), 
+                  url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop') center/cover;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 200px;
+      box-shadow: 0 0 30px rgba(255,26,64,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,26,64,0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .banner-title {
+      font-family: var(--font-title);
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 20px var(--red-glow);
+    }
+    .banner-sub {
+      font-size: 0.8rem;
+      color: var(--red-neon);
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .banner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--red-neon);
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      color: #fff;
+      background: rgba(255,26,64,0.15);
+      font-family: var(--font-code);
+      width: fit-content;
+      margin-top: 14px;
+    }
+
+    .hero-profile {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      padding: 6px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.06);
+    }
+    .profile-row span:first-child { color: var(--text-muted); }
+    .profile-row span:last-child { color: #fff; font-weight: 600; font-family: var(--font-code); }
+
+    /* SYSTEM STATS */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    @media(max-width: 768px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .stat-icon {
+      width: 42px; height: 42px;
+      background: rgba(255, 26, 64, 0.1);
+      border: 1px solid rgba(255, 26, 64, 0.3);
+      color: var(--red-neon);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      border-radius: 8px;
+    }
+    .stat-info h5 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin: 0; }
+    .stat-info p { font-size: 1.25rem; font-weight: 800; color: #fff; margin: 2px 0 0 0; font-family: var(--font-code); }
+    .stat-info span { font-size: 0.7rem; color: var(--green-neon); }
+
+    /* MID SECTION: TERMINAL & ACTIONS */
+    .console-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media(max-width: 900px) { .console-grid { grid-template-columns: 1fr; } }
+
+    .terminal-box {
+      background: #020306;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 300px;
+    }
+    .terminal-header {
+      background: #090c14;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .term-title { font-size: 0.75rem; color: var(--red-neon); font-family: var(--font-code); font-weight: 700; }
+    .terminal-body {
+      padding: 14px;
+      flex: 1;
+      overflow-y: auto;
+      font-family: var(--font-code);
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .term-prompt { color: var(--green-neon); font-weight: 700; }
+    .term-input-line { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .term-input {
+      background: transparent; border: none; outline: none;
+      color: #fff; font-family: var(--font-code); font-size: 0.78rem; flex: 1;
+    }
+
+    .action-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .action-title { font-size: 0.85rem; font-weight: 800; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .action-list { display: flex; flex-direction: column; gap: 8px; }
+    .action-btn {
       display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 16px; margin-bottom: 36px;
-      border-bottom: 1px dashed var(--border); padding-bottom: 24px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      padding: 11px 14px; border-radius: 8px; color: #fff; text-decoration: none;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
     }
-    .hud-title h2 {
-      font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;
-      letter-spacing: -0.5px; text-transform: uppercase; color: #fff;
+    .action-btn:hover {
+      background: rgba(255, 26, 64, 0.12);
+      border-color: var(--red-neon);
+      transform: translateX(4px);
     }
-    .hud-title p { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
+    .action-btn i { color: var(--red-neon); }
 
-    .btn-neo {
-      font-family: var(--font-code); font-weight: 800; font-size: 0.8rem;
-      padding: 11px 20px; text-transform: uppercase; letter-spacing: 0.5px;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 10px;
-      transition: all 0.15s ease; border: none; text-decoration: none;
-    }
-    .btn-neo-primary {
-      background: var(--neo-cyan); color: #000;
-      box-shadow: 4px 4px 0px #fff;
-    }
-    .btn-neo-primary:hover {
-      box-shadow: 6px 6px 0px #fff; transform: translate(-2px, -2px);
-    }
-    .btn-neo-ghost {
-      background: #000; color: #fff; border: 1.5px solid var(--border);
-      box-shadow: 3px 3px 0px var(--border);
-    }
-    .btn-neo-ghost:hover {
-      border-color: var(--neo-cyan); color: var(--neo-cyan); box-shadow: 3px 3px 0px var(--neo-cyan);
-    }
-
-    /* KPI METRICS */
-    .metrics-hud { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 36px; }
-    .metric-panel {
-      background: var(--panel); border: 1.5px solid var(--border);
-      padding: 20px; position: relative; box-shadow: 4px 4px 0px #000;
-    }
-    .metric-panel::after {
-      content: ""; position: absolute; top: -1px; left: -1px; width: 6px; height: 6px; background: var(--neo-cyan);
-    }
-    .metric-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-    .metric-val {
-      font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
-      color: #fff; margin-top: 10px;
-    }
-    .metric-val.glow { color: var(--neo-cyan); text-shadow: 0 0 15px var(--neo-cyan-glow); }
-
-    /* TABLE HUD */
-    .table-hud {
-      background: var(--panel); border: 1.5px solid var(--border);
-      box-shadow: 6px 6px 0px #000; overflow: hidden;
-    }
-    .table-top {
-      padding: 18px 24px; border-bottom: 1.5px solid var(--border);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;
-      background: #05080e;
-    }
-    .neo-search {
-      background: #000; border: 1px solid var(--border); color: var(--neo-cyan);
-      font-family: var(--font-code); padding: 8px 14px 8px 36px; font-size: 0.8rem;
-      outline: none; width: 280px; transition: border-color 0.2s;
-    }
-    .neo-search:focus { border-color: var(--neo-cyan); box-shadow: 0 0 12px var(--neo-cyan-glow); }
-
-    .hud-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.82rem; }
-    .hud-table th {
-      padding: 14px 20px; background: #020408; color: var(--muted);
-      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px;
-      border-bottom: 1.5px solid var(--border);
-    }
-    .hud-table td { padding: 15px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-    .hud-table tr:hover { background: rgba(0, 242, 254, 0.02); }
-
-    .neo-pill {
-      font-size: 0.7rem; font-weight: 700; padding: 3px 8px; text-transform: uppercase;
-      letter-spacing: 0.5px; border: 1px solid;
-    }
-    .pill-cyan { border-color: var(--neo-cyan); color: var(--neo-cyan); background: rgba(0,242,254,0.06); }
-    .pill-green { border-color: var(--neo-green); color: var(--neo-green); background: rgba(0,255,136,0.06); }
-
-    .btn-kill {
-      background: transparent; border: 1px solid var(--neo-red); color: var(--neo-red);
-      font-family: var(--font-code); font-size: 0.72rem; font-weight: 800;
-      padding: 5px 10px; cursor: pointer; text-transform: uppercase;
-    }
-    .btn-kill:hover { background: var(--neo-red); color: #000; box-shadow: 0 0 10px var(--neo-red-glow); }
-
-    /* DRAWER */
-    .drawer-overlay {
+    /* SLIDE MODAL */
+    .modal-overlay {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(10px); z-index: 200; justify-content: flex-end;
+      backdrop-filter: blur(8px); z-index: 200; justify-content: flex-end;
     }
     .drawer {
-      width: 100%; max-width: 500px; background: #070c14;
-      border-left: 2px solid var(--neo-cyan); height: 100%;
-      padding: 36px; display: flex; flex-direction: column; justify-content: space-between;
-      box-shadow: -10px 0 40px rgba(0, 242, 254, 0.2); overflow-y: auto;
+      width: 100%; max-width: 480px; background: #090c14;
+      border-left: 2px solid var(--red-neon); height: 100%;
+      padding: 28px; display: flex; flex-direction: column; justify-content: space-between;
+      overflow-y: auto;
     }
-    .input-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
-    .input-row label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; font-weight: 700; }
-    .input-row input, .input-row textarea, .input-row select {
-      background: #000; border: 1px solid var(--border); color: #fff;
-      font-family: var(--font-code); padding: 11px 14px; font-size: 0.85rem; outline: none;
+    .form-grp { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .form-grp label { font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-code); font-weight: 700; }
+    .form-grp input, .form-grp textarea, .form-grp select {
+      background: #020306; border: 1px solid var(--card-border); color: #fff;
+      font-family: var(--font-code); padding: 10px 12px; font-size: 0.82rem; outline: none; border-radius: 6px;
     }
-    .input-row input:focus, .input-row textarea:focus, .input-row select:focus {
-      border-color: var(--neo-cyan); box-shadow: 0 0 12px var(--neo-cyan-glow);
+    .form-grp input:focus, .form-grp textarea:focus { border-color: var(--red-neon); }
+    .btn-red {
+      background: linear-gradient(135deg, var(--red-neon), #c00028);
+      color: #fff; border: none; padding: 12px; border-radius: 8px;
+      font-weight: 800; cursor: pointer; font-family: var(--font-code); font-size: 0.85rem;
+      box-shadow: 0 0 16px var(--red-glow);
     }
   </style>
 </head>
 <body>
 
   <!-- SIDEBAR -->
-  <aside class="neo-sidebar">
+  <aside class="sidebar">
     <div>
-      <div class="brand-box">
-        <h1>AKHIL // PROTOCOL</h1>
-        <div class="tagline">DARK NEO GATEWAY</div>
+      <div class="brand-header">
+        <i class="fa-solid fa-crown crown-icon"></i>
+        <div class="brand-title">
+          <h1>AKHIL</h1>
+          <span>ADMIN PANEL</span>
+        </div>
       </div>
-      <ul class="nav-list">
-        <li class="nav-item"><a href="#" class="active"><i class="fa-solid fa-terminal"></i> CORE GATEWAY</a></li>
-        <li class="nav-item"><a href="index.html"><i class="fa-solid fa-network-wired"></i> LIVE HUB</a></li>
-        <li class="nav-item"><a href="#" onclick="alert('System running at maximum parity')"><i class="fa-solid fa-wave-square"></i> TELEMETRY</a></li>
-        <li class="nav-item"><a href="#" onclick="alert('Root access confirmed: AKHIL')"><i class="fa-solid fa-fingerprint"></i> CREDENTIALS</a></li>
+      <ul class="nav-menu">
+        <li><a href="#" class="active"><i class="fa-solid fa-gauge-high"></i> Dashboard</a></li>
+        <li><a href="index.html"><i class="fa-solid fa-globe"></i> API Hub (Live)</a></li>
+        <li><a href="#" onclick="toggleDrawer()"><i class="fa-solid fa-plus-circle"></i> Add API</a></li>
+        <li><a href="#" onclick="runTermCommand('help')"><i class="fa-solid fa-terminal"></i> Terminal</a></li>
+        <li><a href="#" onclick="alert('Network: Latency 22ms | 100% Up')"><i class="fa-solid fa-network-wired"></i> Network</a></li>
+        <li><a href="#" onclick="alert('Security Protocols Active')"><i class="fa-solid fa-shield-halved"></i> Security</a></li>
       </ul>
     </div>
-    <div class="operator-card">
-      <div class="operator-badge">AK</div>
-      <div>
-        <div style="font-size:0.8rem; font-weight:800; color:#fff;">AKHIL (SUPERUSER)</div>
-        <div style="font-size:0.68rem; color:var(--neo-green);">● MATRIX ONLINE</div>
-      </div>
+    <div class="sidebar-footer">
+      <i class="fa-solid fa-crown" style="color:var(--red-neon); font-size:1.1rem; margin-bottom:6px;"></i>
+      <p>"Not just a user, I'm the system."</p>
+      <span>— AKHIL</span>
     </div>
   </aside>
 
   <!-- MAIN VIEW -->
-  <main class="neo-main">
-    <div class="hud-header">
-      <div class="hud-title">
-        <h2>Console Gateway // Production</h2>
-        <p>[SYS_ID: AKHIL-CORE-2026] Runtime registry for provisioned RESTful nodes.</p>
-      </div>
-      <div style="display:flex; gap:12px;">
-        <a href="index.html" class="btn-neo btn-neo-ghost"><i class="fa-solid fa-arrow-left"></i> Hub View</a>
-        <button class="btn-neo btn-neo-primary" onclick="toggleDrawer()"><i class="fa-solid fa-plus"></i> Deploy Endpoint</button>
+  <main class="main-content">
+    <div class="top-header">
+      <span class="motto-banner">CONTROL / MANAGE / DOMINATE</span>
+      <div class="user-pill">
+        <img class="user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop" alt="Akhil">
+        <div class="user-meta">
+          <h4>AKHIL</h4>
+          <span>Root Admin ● Online</span>
+        </div>
       </div>
     </div>
 
-    <!-- METRICS -->
-    <div class="metrics-hud">
-      <div class="metric-panel">
-        <div class="metric-label">// GLOBAL CATALOG</div>
-        <div class="metric-val" id="kpiTotal">1,950</div>
-        <div style="font-size:0.72rem; color:var(--muted); margin-top:6px;">Verified open records</div>
+    <!-- HERO SECTION -->
+    <div class="hero-grid">
+      <div class="hero-banner">
+        <div>
+          <h2 class="banner-title">AKHIL</h2>
+          <div class="banner-sub">ADMIN PANEL</div>
+          <div class="banner-badge"><i class="fa-solid fa-shield"></i> SYSTEM SECURE // LEVEL 0 ROOT</div>
+        </div>
+        <div style="font-size:0.75rem; color:#94a3b8; font-family:var(--font-code); margin-top:20px;">
+          POWER &nbsp;|&nbsp; CONTROL &nbsp;|&nbsp; NO LIMITS
+        </div>
       </div>
-      <div class="metric-panel">
-        <div class="metric-label">// PROVISIONED BY AKHIL</div>
-        <div class="metric-val glow" id="kpiCustom">0</div>
-        <div style="font-size:0.72rem; color:var(--neo-cyan); margin-top:6px;">Direct injected records</div>
-      </div>
-      <div class="metric-panel">
-        <div class="metric-label">// SYSTEM PARITY</div>
-        <div class="metric-val" style="color:var(--neo-green); text-shadow:0 0 12px var(--neo-green-glow);">99.98%</div>
-        <div style="font-size:0.72rem; color:var(--muted); margin-top:6px;">Latency &lt; 24ms</div>
+
+      <div class="hero-profile">
+        <div class="profile-row"><span>Username</span><span>AKHIL</span></div>
+        <div class="profile-row"><span>Role</span><span style="color:var(--red-neon);">Root Admin</span></div>
+        <div class="profile-row"><span>Status</span><span style="color:var(--green-neon);">Online</span></div>
+        <div class="profile-row"><span>Location</span><span>Dehradun, India</span></div>
+        <div class="profile-row"><span>Catalog</span><span id="txtCatalog">1,950 Nodes</span></div>
+        <div class="profile-row"><span>Engine</span><span>V8 / Termux-Git</span></div>
       </div>
     </div>
 
-    <!-- TABLE HUD -->
-    <div class="table-hud">
-      <div class="table-top">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <span style="font-size:0.82rem; font-weight:800; color:#fff;">ACTIVE PROVISION RECORDS</span>
-          <span class="neo-pill pill-cyan" id="countBadge">0 NODES</span>
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+        <div class="stat-info">
+          <h5>SYSTEM UPTIME</h5>
+          <p>12h 34m</p>
+          <span>● Running</span>
         </div>
-        <div style="position:relative;">
-          <i class="fa-solid fa-terminal" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:0.75rem;"></i>
-          <input type="text" class="neo-search" id="searchTable" oninput="renderTable()" placeholder="grep endpoints...">
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-microchip"></i></div>
+        <div class="stat-info">
+          <h5>CPU USAGE</h5>
+          <p>23%</p>
+          <span>Normal</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-memory"></i></div>
+        <div class="stat-info">
+          <h5>RAM USAGE</h5>
+          <p>48%</p>
+          <span>Stable</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-server"></i></div>
+        <div class="stat-info">
+          <h5>CUSTOM APIS</h5>
+          <p id="statCustomCount">0</p>
+          <span>Provisioned</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TERMINAL & ACTIONS -->
+    <div class="console-grid">
+      <!-- LIVE TERMINAL -->
+      <div class="terminal-box">
+        <div class="terminal-header">
+          <span class="term-title"><i class="fa-solid fa-terminal"></i> LIVE TERMINAL</span>
+          <span style="color:#64748b; font-size:0.75rem;">AKHIL@root:~</span>
+        </div>
+        <div class="terminal-body" id="termOutput">
+          <div><span class="term-prompt">AKHIL@admin:~$</span> neofetch</div>
+          <div style="color:var(--red-neon); margin:6px 0;">
+  /\_/\   AKHIL@admin<br>
+ ( o.o )  OS: Android 14 (Termux Linux)<br>
+  > ^ <   Kernel: 5.10.198-android<br>
+          Uptime: 12h 34m<br>
+          Packages: 287 (git, python, bash)<br>
+          API Engine: Cyber-Hub v3.0
+          </div>
+          <div style="color:#64748b;">Type 'help' or 'add' or 'apis' for quick execution.</div>
+        </div>
+        <div style="padding:8px 14px; background:#05070d; border-top:1px solid rgba(255,255,255,0.06);">
+          <div class="term-input-line">
+            <span class="term-prompt">AKHIL@admin:~$</span>
+            <input type="text" class="term-input" id="termCmd" placeholder="enter command..." onkeydown="handleTerm(event)">
+          </div>
         </div>
       </div>
 
-      <div style="overflow-x:auto;">
-        <table class="hud-table">
-          <thead>
-            <tr>
-              <th>ENDPOINT / PAYLOAD</th>
-              <th>SECTOR</th>
-              <th>TARGET URI</th>
-              <th>AUTH SCHEMA</th>
-              <th>CORS POLICY</th>
-              <th style="text-align:right;">ACTION</th>
-            </tr>
-          </thead>
-          <tbody id="apiTableBody">
-            <tr>
-              <td colspan="6" style="text-align:center; padding:36px; color:var(--muted);">
-                // NO CUSTOM NODES PROVISIONED. INITIALIZE VIA "+ DEPLOY ENDPOINT"
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- QUICK ACTIONS -->
+      <div class="action-panel">
+        <div class="action-title"><i class="fa-solid fa-bolt" style="color:var(--red-neon);"></i> QUICK ACTIONS</div>
+        <div class="action-list">
+          <div class="action-btn" onclick="toggleDrawer()">
+            <span>➕ Deploy New API to Hub</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+          <div class="action-btn" onclick="runTermCommand('apis')">
+            <span>📋 View Custom Injected APIs</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+          <a href="index.html" class="action-btn">
+            <span>🌐 Open Public User Portal</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <div class="action-btn" onclick="runTermCommand('clear')">
+            <span>🧹 Flush Terminal History</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        </div>
       </div>
     </div>
   </main>
 
   <!-- SLIDE DRAWER -->
-  <div class="drawer-overlay" id="drawerOverlay" onclick="if(event.target===this) toggleDrawer()">
+  <div class="modal-overlay" id="modalDrawer" onclick="if(event.target===this) toggleDrawer()">
     <div class="drawer">
       <div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px;">
-          <div>
-            <h3 style="font-family:var(--font-display); font-size:1.3rem; font-weight:800; color:#fff; text-shadow:0 0 12px var(--neo-cyan-glow);">DEPLOY PROTOCOL</h3>
-            <p style="font-size:0.72rem; color:var(--muted); margin-top:4px;">Inject persistent REST node into Akhil gateway.</p>
-          </div>
-          <button onclick="toggleDrawer()" style="background:transparent; border:none; color:var(--muted); font-size:1.6rem; cursor:pointer;">&times;</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+          <h3 style="font-family:var(--font-title); font-size:1.2rem; color:#fff;">DEPLOY NEW API</h3>
+          <span onclick="toggleDrawer()" style="color:#94a3b8; font-size:1.5rem; cursor:pointer;">&times;</span>
         </div>
 
-        <div class="input-row">
-          <label>// SERVICE IDENTIFIER *</label>
-          <input type="text" id="apiName" placeholder="e.g. OpenAI GPT-4o Gateway">
+        <div class="form-grp">
+          <label>API NAME *</label>
+          <input type="text" id="apiName" placeholder="e.g. Weather Matrix Pro">
         </div>
-
-        <div class="input-row">
-          <label>// SECTOR / CATEGORY *</label>
+        <div class="form-grp">
+          <label>CATEGORY *</label>
           <input type="text" id="apiCat" placeholder="e.g. Artificial Intelligence">
         </div>
-
-        <div class="input-row">
-          <label>// TARGET ENDPOINT URL *</label>
-          <input type="text" id="apiUrl" placeholder="https://api.domain.com/v1">
+        <div class="form-grp">
+          <label>ENDPOINT URL *</label>
+          <input type="text" id="apiUrl" placeholder="https://api.example.com/v1">
         </div>
-
-        <div class="input-row">
-          <label>// SYSTEM DESCRIPTION *</label>
-          <textarea id="apiDesc" rows="3" placeholder="Define JSON schema contract & rate limits..."></textarea>
+        <div class="form-grp">
+          <label>DESCRIPTION *</label>
+          <textarea id="apiDesc" rows="3" placeholder="Endpoint response payload details..."></textarea>
         </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-          <div class="input-row">
-            <label>// AUTHENTICATION</label>
-            <select id="apiAuth">
-              <option value="No Auth">No Auth</option>
-              <option value="apiKey">API Key</option>
-              <option value="OAuth">OAuth 2.0</option>
-              <option value="Bearer">Bearer JWT</option>
-            </select>
-          </div>
-          <div class="input-row">
-            <label>// CORS ACCESS</label>
-            <select id="apiCors">
-              <option value="Yes">Enabled (Browser)</option>
-              <option value="No">Restricted</option>
-              <option value="Unknown">Unknown</option>
-            </select>
-          </div>
+        <div class="form-grp">
+          <label>AUTHENTICATION</label>
+          <select id="apiAuth">
+            <option value="No Auth">No Auth (Public)</option>
+            <option value="apiKey">API Key</option>
+            <option value="OAuth">OAuth 2.0</option>
+          </select>
         </div>
       </div>
-
-      <div style="display:flex; gap:10px; margin-top:20px;">
-        <button class="btn-neo btn-neo-ghost" onclick="toggleDrawer()" style="flex:1; justify-content:center;">ABORT</button>
-        <button class="btn-neo btn-neo-primary" onclick="saveApi()" style="flex:2; justify-content:center;">INITIALIZE NODE ⚡</button>
-      </div>
+      <button class="btn-red" onclick="saveNewApi()">DEPLOY TO PRODUCTION ⚡</button>
     </div>
   </div>
 
@@ -383,59 +547,32 @@
     }
 
     function toggleDrawer() {
-      const el = document.getElementById("drawerOverlay");
-      el.style.display = (el.style.display === "flex") ? "none" : "flex";
+      const d = document.getElementById("modalDrawer");
+      d.style.display = (d.style.display === "flex") ? "none" : "flex";
     }
 
-    function renderTable() {
+    function updateStats() {
       const apis = getStoredApis();
-      const q = document.getElementById("searchTable").value.toLowerCase();
-      const filtered = apis.filter(a => a.API.toLowerCase().includes(q) || a.Category.toLowerCase().includes(q));
-
-      document.getElementById("kpiCustom").innerText = apis.length;
-      document.getElementById("countBadge").innerText = `${apis.length} NODES`;
-      document.getElementById("kpiTotal").innerText = (1950 + apis.length).toLocaleString();
-
-      const tbody = document.getElementById("apiTableBody");
-      if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:36px; color:var(--muted); font-size:0.8rem;">// NO MATCHING NODES IDENTIFIED</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map((api, idx) => `
-        <tr>
-          <td>
-            <div style="font-weight:700; color:#fff;">${api.API}</div>
-            <div style="font-size:0.72rem; color:var(--muted); max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${api.Description}</div>
-          </td>
-          <td><span class="neo-pill" style="border-color:var(--border); color:#fff;">${api.Category}</span></td>
-          <td style="color:var(--neo-cyan); font-size:0.78rem;">${api.Link}</td>
-          <td><span class="neo-pill pill-cyan">${api.Auth || 'No Auth'}</span></td>
-          <td><span class="neo-pill ${api.CORS === 'Yes' ? 'pill-green' : ''}">${api.CORS || 'Unknown'}</span></td>
-          <td style="text-align:right;">
-            <button class="btn-kill" onclick="removeApi(${idx})"><i class="fa-solid fa-trash"></i> PURGE</button>
-          </td>
-        </tr>
-      `).join("");
+      document.getElementById("statCustomCount").innerText = apis.length;
+      document.getElementById("txtCatalog").innerText = (1950 + apis.length).toLocaleString() + " Nodes";
     }
 
-    function saveApi() {
+    function saveNewApi() {
       const name = document.getElementById("apiName").value.trim();
       const cat = document.getElementById("apiCat").value.trim() || "General";
       const url = document.getElementById("apiUrl").value.trim();
       const desc = document.getElementById("apiDesc").value.trim();
       const auth = document.getElementById("apiAuth").value;
-      const cors = document.getElementById("apiCors").value;
 
       if (!name || !url || !desc) {
-        alert("[!] SYNTAX ERROR: ALL MANDATORY FIELDS MUST BE POPULATED");
+        alert("Fill all required parameters.");
         return;
       }
 
-      const item = { API: name, Category: cat, Link: url, Description: desc, Auth: auth, CORS: cors };
-      const apis = getStoredApis();
-      apis.unshift(item);
-      localStorage.setItem("CYBER_CUSTOM_APIS", JSON.stringify(apis));
+      const item = { API: name, Category: cat, Link: url, Description: desc, Auth: auth, CORS: "Yes" };
+      const list = getStoredApis();
+      list.unshift(item);
+      localStorage.setItem("CYBER_CUSTOM_APIS", JSON.stringify(list));
 
       document.getElementById("apiName").value = "";
       document.getElementById("apiCat").value = "";
@@ -443,18 +580,47 @@
       document.getElementById("apiDesc").value = "";
 
       toggleDrawer();
-      renderTable();
+      updateStats();
+      printTerm(`[OK] API Node '${name}' deployed to production hub.`);
     }
 
-    function removeApi(idx) {
-      if (!confirm("// CONFIRM PURGE OF SELECTED REST NODE?")) return;
-      const apis = getStoredApis();
-      apis.splice(idx, 1);
-      localStorage.setItem("CYBER_CUSTOM_APIS", JSON.stringify(apis));
-      renderTable();
+    function printTerm(txt) {
+      const box = document.getElementById("termOutput");
+      box.innerHTML += `<div>${txt}</div>`;
+      box.scrollTop = box.scrollHeight;
     }
 
-    window.onload = renderTable;
+    function handleTerm(e) {
+      if (e.key === "Enter") {
+        const val = e.target.value.trim();
+        e.target.value = "";
+        runTermCommand(val);
+      }
+    }
+
+    function runTermCommand(cmd) {
+      printTerm(`<div><span class="term-prompt">AKHIL@admin:~$</span> ${cmd}</div>`);
+      const c = cmd.toLowerCase();
+      if (c === "help") {
+        printTerm("Available: help, neofetch, apis, add, clear, ping, date");
+      } else if (c === "clear") {
+        document.getElementById("termOutput").innerHTML = "";
+      } else if (c === "apis") {
+        const a = getStoredApis();
+        printTerm(`Custom provisioned APIs: ${a.length}`);
+        a.forEach((x, i) => printTerm(` [${i+1}] ${x.API} (${x.Category}) -> ${x.Link}`));
+      } else if (c === "add") {
+        toggleDrawer();
+      } else if (c === "ping") {
+        printTerm("64 bytes from root.akhil.gateway: icmp_seq=1 ttl=64 time=14.2 ms");
+      } else if (c === "date") {
+        printTerm(new Date().toString());
+      } else {
+        printTerm(`command not found: ${cmd}`);
+      }
+    }
+
+    window.onload = updateStats;
   </script>
 </body>
 </html>
