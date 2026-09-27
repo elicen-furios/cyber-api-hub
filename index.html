@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-  <title>FREE API WEB</title>
+  <title>FREE API WEB - Public API Hub</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -11,7 +11,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     html, body { background: #070b14; color: #f8fafc; width: 100%; min-height: 100%; -webkit-text-size-adjust: 100%; }
 
-    /* GATE */
+    /* GATE SCREEN */
     #gateScreen {
       min-height: 100vh; width: 100%; display: none; flex-direction: column;
       justify-content: space-between; align-items: center; padding: 16px;
@@ -47,7 +47,7 @@
     .btn-row.accent { border: 1.5px solid #00f2fe; background: rgba(0, 242, 254, 0.08); }
     .btn-left { display: flex; align-items: center; gap: 10px; }
 
-    .divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; font-size: 0.65rem; color: #64748b; font-weight: 700; letter-spacing: 1px; }
+    .divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; font-size: 0.65rem; color: #64748b; font-weight: 700; }
     .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
 
     #phoneForm { display: none; flex-direction: column; gap: 10px; margin-bottom: 12px; text-align: left; }
@@ -60,7 +60,7 @@
     .strip-col span { font-size: 0.58rem; color: #94a3b8; text-align: center; }
 
     /* DASHBOARD */
-    #dashScreen { display: none; width: 100%; min-height: 100vh; }
+    #dashScreen { display: none; width: 100%; min-height: 100vh; padding-bottom: 40px; }
     .navbar {
       display: flex; justify-content: space-between; align-items: center;
       padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -82,7 +82,7 @@
     .dash-container { max-width: 900px; margin: 0 auto; padding: 22px 16px; }
     .hero-banner {
       background: rgba(13, 21, 39, 0.6); border: 1px solid rgba(0, 242, 254, 0.2);
-      border-radius: 18px; padding: 24px 16px; text-align: center; margin-bottom: 24px;
+      border-radius: 18px; padding: 24px 16px; text-align: center; margin-bottom: 20px;
     }
     .hero-title { font-size: 1.45rem; font-weight: 900; margin-bottom: 6px; }
     .hero-desc { font-size: 0.82rem; color: #94a3b8; margin-bottom: 18px; }
@@ -91,22 +91,55 @@
       background: #030712; padding: 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
     }
     .search-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; padding-left: 12px; font-size: 16px !important; }
-    .search-btn { background: #0284c7; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    .search-btn { background: #0284c7; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+    /* Category Chips */
+    .chip-container {
+      display: flex; gap: 8px; overflow-x: auto; padding: 10px 0 16px;
+      scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .chip-container::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      padding: 7px 14px; border-radius: 20px; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12); font-size: 0.78rem; font-weight: 600;
+      white-space: nowrap; cursor: pointer; color: #94a3b8; transition: 0.2s;
+    }
+    .filter-chip.active { background: #00f2fe; color: #030712; border-color: #00f2fe; font-weight: 800; }
 
     .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
     .stat-card { background: rgba(13, 21, 39, 0.7); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 14px; }
     .stat-num { font-size: 1.3rem; font-weight: 800; color: #00f2fe; }
     .stat-label { font-size: 0.75rem; color: #94a3b8; }
 
-    .sec-head { font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .sec-head {
+      font-size: 1.05rem; font-weight: 800; margin-bottom: 14px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .api-count-tag { font-size: 0.75rem; color: #00f2fe; font-weight: normal; }
+
+    /* API Cards */
     .api-list { display: flex; flex-direction: column; gap: 12px; }
     .api-item {
-      background: rgba(13, 21, 39, 0.8); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px; padding: 16px; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(13, 21, 39, 0.85); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px;
+      transition: transform 0.2s, border-color 0.2s;
     }
-    .api-meta h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
-    .api-meta p { font-size: 0.78rem; color: #94a3b8; }
-    .tag-category { font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
+    .api-item:hover { border-color: rgba(0, 242, 254, 0.35); transform: translateY(-2px); }
+    .api-top-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .api-meta h4 { font-size: 1rem; font-weight: 800; margin-bottom: 4px; color: #fff; }
+    .api-meta p { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; }
+    .tag-category { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
+
+    .api-footer-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.75rem;
+    }
+    .api-link-btn {
+      color: #00f2fe; text-decoration: none; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .api-link-btn:hover { text-decoration: underline; }
+    .api-auth-pill { color: #64748b; font-size: 0.7rem; }
   </style>
 </head>
 <body>
@@ -176,7 +209,7 @@
     <div style="height:10px;"></div>
   </div>
 
-  <!-- VIEW 2: DASHBOARD -->
+  <!-- VIEW 2: FULL REAL API DASHBOARD -->
   <div id="dashScreen">
     <header class="navbar">
       <div class="brand">
@@ -184,7 +217,7 @@
         FREE API WEB
       </div>
       <div class="user-bar">
-        <div class="user-badge" id="badgeUser"><i class="fa-solid fa-circle-check"></i> Jitendra</div>
+        <div class="user-badge" id="badgeUser"><i class="fa-solid fa-circle-check"></i> User</div>
         <button class="btn-logout" onclick="userLogout()">Logout</button>
       </div>
     </header>
@@ -194,53 +227,261 @@
         <h1 class="hero-title">WELCOME TO THIS FREE API WEB ✨</h1>
         <p class="hero-desc">Discover thousands of public APIs. Explore, test and build something amazing. 🚀</p>
         <div class="search-box">
-          <input type="text" id="dashSearchBox" class="search-input" placeholder="Search APIs by name, category..." readonly onfocus="this.removeAttribute('readonly');">
-          <button class="search-btn">Search →</button>
+          <input type="text" id="dashSearchBox" class="search-input" placeholder="Search APIs (e.g. Animal, Weather, Crypto, Anime)..." oninput="handleSearch()">
+          <button class="search-btn" onclick="handleSearch()">Search →</button>
         </div>
       </div>
 
+      <!-- Quick Filter Chips -->
+      <div class="chip-container">
+        <div class="filter-chip active" onclick="setCategory('All', this)">All APIs</div>
+        <div class="filter-chip" onclick="setCategory('Animals', this)">🐾 Animals</div>
+        <div class="filter-chip" onclick="setCategory('Weather', this)">⛅ Weather</div>
+        <div class="filter-chip" onclick="setCategory('Music', this)">🎵 Music</div>
+        <div class="filter-chip" onclick="setCategory('Anime', this)">🍙 Anime</div>
+        <div class="filter-chip" onclick="setCategory('Crypto', this)">🪙 Cryptocurrency</div>
+        <div class="filter-chip" onclick="setCategory('AI & ML', this)">🤖 AI & Machine Learning</div>
+        <div class="filter-chip" onclick="setCategory('Games', this)">🎮 Games</div>
+      </div>
+
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num">1,953</div><div class="stat-label">APIs Available</div></div>
+        <div class="stat-card"><div class="stat-num" id="statApiCount">1,953</div><div class="stat-label">APIs Available</div></div>
         <div class="stat-card"><div class="stat-num">50+</div><div class="stat-label">Categories</div></div>
         <div class="stat-card"><div class="stat-num">10K+</div><div class="stat-label">Developers</div></div>
         <div class="stat-card"><div class="stat-num">99.9%</div><div class="stat-label">Uptime Status</div></div>
       </div>
 
-      <div class="sec-head"><i class="fa-solid fa-fire" style="color:#f97316;"></i> Popular APIs</div>
-      <div class="api-list">
-        <div class="api-item">
-          <div class="api-meta">
-            <h4>Spotify API</h4>
-            <p>Access millions of songs, albums, and artists metadata directly.</p>
-          </div>
-          <span class="tag-category" style="background:rgba(34,197,94,0.12); color:#22c55e;">MUSIC</span>
-        </div>
-        <div class="api-item">
-          <div class="api-meta">
-            <h4>OpenWeather</h4>
-            <p>Get accurate global weather forecasts and historical climate records.</p>
-          </div>
-          <span class="tag-category" style="background:rgba(59,130,246,0.12); color:#3b82f6;">WEATHER</span>
-        </div>
-        <div class="api-item">
-          <div class="api-meta">
-            <h4>Jikan API</h4>
-            <p>Unofficial MyAnimeList API for anime, manga and characters.</p>
-          </div>
-          <span class="tag-category" style="background:rgba(168,85,247,0.12); color:#a855f7;">ANIME</span>
-        </div>
+      <div class="sec-head">
+        <div><i class="fa-solid fa-fire" style="color:#f97316;"></i> <span id="sectionTitle">Available APIs</span></div>
+        <div class="api-count-tag" id="resultsCount"></div>
       </div>
+
+      <!-- Live API Cards Render Container -->
+      <div class="api-list" id="apiCardsContainer"></div>
     </main>
   </div>
 
   <script>
-    // Remove auto-focus on load
-    window.addEventListener('DOMContentLoaded', () => {
-      if (document.activeElement && document.activeElement.blur) {
-        document.activeElement.blur();
+    // --- REAL API DATABASE ---
+    const API_DIRECTORY = [
+      // Animals
+      {
+        name: "Dog CEO API",
+        category: "Animals",
+        color: "#10b981",
+        desc: "High-resolution pictures of dogs categorized by over 120 breeds worldwide.",
+        link: "https://dog.ceo/dog-api/",
+        auth: "No Auth • CORS: Yes"
+      },
+      {
+        name: "Cat Facts API",
+        category: "Animals",
+        color: "#10b981",
+        desc: "Daily random facts and metadata about domestic and wild cats.",
+        link: "https://catfact.ninja/",
+        auth: "No Auth • CORS: Yes"
+      },
+      {
+        name: "RandomFox API",
+        category: "Animals",
+        color: "#10b981",
+        desc: "Curated collection of foxes photography with JSON endpoints.",
+        link: "https://randomfox.ca/floof/",
+        auth: "No Auth • CORS: Yes"
+      },
+      {
+        name: "Zoo Animal API",
+        category: "Animals",
+        color: "#10b981",
+        desc: "Comprehensive stats including habitat, lifespan, diet, and scientific names for zoo animals.",
+        link: "https://zoo-animal-api.herokuapp.com/",
+        auth: "No Auth • CORS: Yes"
+      },
+      {
+        name: "Axolotl API",
+        category: "Animals",
+        color: "#10b981",
+        desc: "Clean REST endpoint supplying random pictures and facts of Mexican Axolotls.",
+        link: "https://axoltlapi.herokuapp.com/",
+        auth: "No Auth • CORS: Yes"
+      },
+      // Music
+      {
+        name: "Spotify Web API",
+        category: "Music",
+        color: "#22c55e",
+        desc: "Access millions of songs, albums, playlists, and artists metadata directly.",
+        link: "https://developer.spotify.com/documentation/web-api",
+        auth: "OAuth 2.0 • CORS: Yes"
+      },
+      {
+        name: "Deezer Public API",
+        category: "Music",
+        color: "#22c55e",
+        desc: "Music streaming catalog with artist top charts, radio streams and previews.",
+        link: "https://developers.deezer.com/api",
+        auth: "No Auth • CORS: Yes"
+      },
+      // Weather
+      {
+        name: "OpenWeather",
+        category: "Weather",
+        color: "#3b82f6",
+        desc: "Get accurate global weather forecasts, UV index, and historical climate records.",
+        link: "https://openweathermap.org/api",
+        auth: "API Key • CORS: Yes"
+      },
+      {
+        name: "WeatherAPI",
+        category: "Weather",
+        color: "#3b82f6",
+        desc: "Real-time weather, 14-day forecasts, astronomy, timezones and air quality alerts.",
+        link: "https://www.weatherapi.com/",
+        auth: "API Key • CORS: Yes"
+      },
+      // Anime
+      {
+        name: "Jikan API",
+        category: "Anime",
+        color: "#a855f7",
+        desc: "Unofficial open-source MyAnimeList REST API for anime, manga, and characters.",
+        link: "https://jikan.moe/",
+        auth: "No Auth • CORS: Yes"
+      },
+      {
+        name: "AniList GraphQL",
+        category: "Anime",
+        color: "#a855f7",
+        desc: "Extensive anime and manga tracking service via flexible GraphQL query endpoints.",
+        link: "https://anilist.gitbook.io/anilist-apiv2-docs/",
+        auth: "OAuth 2.0 • CORS: Yes"
+      },
+      // AI & ML
+      {
+        name: "Hugging Face Inference",
+        category: "AI & ML",
+        color: "#f59e0b",
+        desc: "Run inference on 100,000+ open-source AI models including LLMs and computer vision.",
+        link: "https://huggingface.co/docs/api-inference/index",
+        auth: "API Key • CORS: Yes"
+      },
+      {
+        name: "Cohere AI API",
+        category: "AI & ML",
+        color: "#f59e0b",
+        desc: "Enterprise-grade natural language processing for text generation, embeddings and summarization.",
+        link: "https://docs.cohere.com/",
+        auth: "API Key • CORS: Yes"
+      },
+      // Crypto
+      {
+        name: "CoinGecko API",
+        category: "Crypto",
+        color: "#ec4899",
+        desc: "Live prices, trading volume, market capitalization and DeFi data for over 10,000 coins.",
+        link: "https://www.coingecko.com/en/api",
+        auth: "No Auth • CORS: Yes"
+      },
+      {
+        name: "Binance Public API",
+        category: "Crypto",
+        color: "#ec4899",
+        desc: "Live ticker prices, order books, and historical candlestick charts.",
+        link: "https://binance-docs.github.io/apidocs/spot/en/",
+        auth: "API Key (Optional) • CORS: Yes"
+      },
+      // Games
+      {
+        name: "RAWG Video Games API",
+        category: "Games",
+        color: "#06b6d4",
+        desc: "The largest database of 500,000+ video games with ratings, screenshots and platforms.",
+        link: "https://rawg.io/apidocs",
+        auth: "API Key • CORS: Yes"
+      },
+      {
+        name: "FreeToGame API",
+        category: "Games",
+        color: "#06b6d4",
+        desc: "Curated lists of top free-to-play PC and browser games with real-time news.",
+        link: "https://www.freetogame.com/api-doc",
+        auth: "No Auth • CORS: Yes"
       }
+    ];
+
+    let currentSelectedCategory = 'All';
+
+    function renderApiCards(list) {
+      const container = document.getElementById("apiCardsContainer");
+      const resultsCount = document.getElementById("resultsCount");
+      
+      if (!list.length) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:40px 16px; background:rgba(13,21,39,0.5); border-radius:14px; border:1px dashed rgba(255,255,255,0.15);">
+            <i class="fa-solid fa-magnifying-glass" style="font-size:2rem; color:#64748b; margin-bottom:10px;"></i>
+            <h4 style="color:#fff; margin-bottom:6px;">No APIs Found</h4>
+            <p style="color:#94a3b8; font-size:0.8rem;">Try searching for "Animals", "Weather", "Crypto" or "Music"</p>
+          </div>
+        `;
+        resultsCount.innerText = "0 APIs found";
+        return;
+      }
+
+      resultsCount.innerText = `${list.length} APIs available`;
+      container.innerHTML = list.map(api => `
+        <div class="api-item">
+          <div class="api-top-row">
+            <div class="api-meta">
+              <h4>${api.name}</h4>
+              <p>${api.desc}</p>
+            </div>
+            <span class="tag-category" style="background:${api.color}20; color:${api.color}; border:1px solid ${api.color}40;">
+              ${api.category.toUpperCase()}
+            </span>
+          </div>
+          <div class="api-footer-row">
+            <span class="api-auth-pill"><i class="fa-solid fa-lock" style="font-size:0.65rem;"></i> ${api.auth}</span>
+            <a href="${api.link}" target="_blank" rel="noopener" class="api-link-btn">
+              Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function handleSearch() {
+      const query = document.getElementById("dashSearchBox").value.trim().toLowerCase();
+      let filtered = API_DIRECTORY;
+
+      if (currentSelectedCategory !== 'All') {
+        filtered = filtered.filter(a => a.category.toLowerCase() === currentSelectedCategory.toLowerCase());
+      }
+
+      if (query) {
+        filtered = filtered.filter(a => 
+          a.name.toLowerCase().includes(query) ||
+          a.category.toLowerCase().includes(query) ||
+          a.desc.toLowerCase().includes(query)
+        );
+      }
+
+      renderApiCards(filtered);
+    }
+
+    function setCategory(category, elem) {
+      currentSelectedCategory = category;
+      document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+      if (elem) elem.classList.add("active");
+      document.getElementById("sectionTitle").innerText = category === 'All' ? 'Available APIs' : `${category} APIs`;
+      handleSearch();
+    }
+
+    // Initial render
+    window.addEventListener('DOMContentLoaded', () => {
+      renderApiCards(API_DIRECTORY);
     });
 
+    // Firebase Auth config & Session State
     const firebaseConfig = {
       apiKey: "AIzaSyBt_zPZndgJh82AK8tXWvOyN8ec3dY31KQ",
       authDomain: "free-api-web-2a7bc.firebaseapp.com",
@@ -251,9 +492,7 @@
       measurementId: "G-2PG8X0PK0R"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
     function renderScreen(user) {
       const g = document.getElementById("gateScreen");
@@ -263,15 +502,14 @@
         d.style.display = "block";
         const n = (user.displayName || user.phoneNumber || user.email || "Member").split(" ")[0];
         document.getElementById("badgeUser").innerHTML = `<i class="fa-solid fa-circle-check"></i> ${n}`;
+        renderApiCards(API_DIRECTORY);
       } else {
         g.style.display = "flex";
         d.style.display = "none";
       }
     }
 
-    firebase.auth().onAuthStateChanged((user) => {
-      renderScreen(user);
-    });
+    firebase.auth().onAuthStateChanged((user) => renderScreen(user));
 
     function togglePhone() {
       const el = document.getElementById("phoneForm");
@@ -280,7 +518,7 @@
 
     function getQuota() {
       const today = new Date().toISOString().slice(0, 10);
-      let q = JSON.parse(localStorage.getItem("otp_quota_akhil_final") || "{}");
+      let q = JSON.parse(localStorage.getItem("otp_quota_hub") || "{}");
       if (q.date !== today) q = { date: today, count: 0 };
       return q;
     }
@@ -289,27 +527,23 @@
       const q = getQuota();
       const err = document.getElementById("errTxt");
       err.innerText = "";
-
       if (q.count >= 5) {
         err.innerText = "Daily Limit: 5 OTP requests allowed per day.";
         return;
       }
-
       const ph = document.getElementById("telNum").value.trim();
       if (!ph || ph.length < 10) {
         err.innerText = "Enter phone with country code (+91XXXXXXXXXX)";
         return;
       }
-
       if (!window.recaptchaVerifier) {
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("reBox", { size: "invisible" });
       }
-
       firebase.auth().signInWithPhoneNumber(ph, window.recaptchaVerifier)
         .then(conf => {
           window.confirmation = conf;
           q.count += 1;
-          localStorage.setItem("otp_quota_akhil_final", JSON.stringify(q));
+          localStorage.setItem("otp_quota_hub", JSON.stringify(q));
           document.getElementById("btnReq").style.display = "none";
           document.getElementById("otpInputWrap").style.display = "flex";
           document.getElementById("quotaTxt").innerText = "Attempts left today: " + (5 - q.count);
@@ -340,9 +574,7 @@
     }
 
     function userLogout() {
-      firebase.auth().signOut().then(() => {
-        location.reload();
-      });
+      firebase.auth().signOut().then(() => location.reload());
     }
   </script>
 </body>
