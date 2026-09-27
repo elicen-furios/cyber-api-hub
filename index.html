@@ -266,30 +266,17 @@
     ];
 
     // Fetch the complete public-apis database
+    
     async function loadFullDatabase() {
-      ALL_APIS = SEED_APIS;
-      applyFilters();
-
       try {
         const res = await fetch("apis.json");
         if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data)) {
-            ALL_APIS = data.map(item => ({
-              API: item.name || item.API,
-              Description: item.description || item.Description,
-              Category: item.category || item.Category || "General",
-              Auth: item.auth || item.Auth || "No Auth",
-              Link: item.url || item.Link || "#"
-            }));
-          } else if (data.entries) {
-            ALL_APIS = data.entries;
-          }
+          ALL_APIS = await res.json();
           document.getElementById("statApiCount").innerText = ALL_APIS.length.toLocaleString();
           applyFilters();
         }
       } catch (err) {
-        // Keeps SEED_APIS if fetch is blocked
+        console.error("Failed to load apis.json", err);
       }
     }
 
