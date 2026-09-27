@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-  <title>FREE API WEB - Public API Hub</title>
+  <title>FREE API WEB - 1900+ Live APIs</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -121,9 +121,7 @@
     .api-item {
       background: rgba(13, 21, 39, 0.85); border: 1px solid rgba(255,255,255,0.08);
       border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px;
-      transition: transform 0.2s, border-color 0.2s;
     }
-    .api-item:hover { border-color: rgba(0, 242, 254, 0.35); transform: translateY(-2px); }
     .api-top-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
     .api-meta h4 { font-size: 1rem; font-weight: 800; margin-bottom: 4px; color: #fff; }
     .api-meta p { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; }
@@ -138,6 +136,10 @@
       display: inline-flex; align-items: center; gap: 5px;
     }
     .api-auth-pill { color: #64748b; font-size: 0.7rem; }
+    .load-more-btn {
+      width: 100%; padding: 12px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe;
+      color: #00f2fe; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 14px;
+    }
   </style>
 </head>
 <body>
@@ -188,7 +190,7 @@
     <div style="height:10px;"></div>
   </div>
 
-  <!-- VIEW 2: DASHBOARD WITH ALL REAL STATIC APIS -->
+  <!-- VIEW 2: DASHBOARD -->
   <div id="dashScreen">
     <header class="navbar">
       <div class="brand">
@@ -206,8 +208,8 @@
         <h1 class="hero-title">WELCOME TO THIS FREE API WEB ✨</h1>
         <p class="hero-desc">Discover thousands of public APIs. Explore, test and build something amazing. 🚀</p>
         <div class="search-box">
-          <input type="text" id="dashSearchBox" class="search-input" placeholder="Search APIs (Animal, Weather, AI, Crypto)..." onkeyup="filterApis()">
-          <button class="search-btn" onclick="filterApis()">Search →</button>
+          <input type="text" id="dashSearchBox" class="search-input" placeholder="Search across 1,900+ APIs (e.g. animal, weather, crypto)..." oninput="runSearch()">
+          <button class="search-btn" onclick="runSearch()">Search →</button>
         </div>
       </div>
 
@@ -218,239 +220,153 @@
         <div class="filter-chip" onclick="setCategory('Weather', this)">⛅ Weather</div>
         <div class="filter-chip" onclick="setCategory('Music', this)">🎵 Music</div>
         <div class="filter-chip" onclick="setCategory('Anime', this)">🍙 Anime</div>
-        <div class="filter-chip" onclick="setCategory('Crypto', this)">🪙 Cryptocurrency</div>
-        <div class="filter-chip" onclick="setCategory('AI & ML', this)">🤖 AI & Machine Learning</div>
-        <div class="filter-chip" onclick="setCategory('Games', this)">🎮 Games</div>
+        <div class="filter-chip" onclick="setCategory('Cryptocurrency', this)">🪙 Cryptocurrency</div>
+        <div class="filter-chip" onclick="setCategory('Games & Comics', this)">🎮 Games</div>
       </div>
 
       <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num">1,953</div><div class="stat-label">APIs Available</div></div>
-        <div class="stat-card"><div class="stat-num">50+</div><div class="stat-label">Categories</div></div>
+        <div class="stat-card"><div class="stat-num" id="statApiCount">1,953</div><div class="stat-label">APIs Available</div></div>
+        <div class="stat-card"><div class="stat-num" id="statCategoryCount">50+</div><div class="stat-label">Categories</div></div>
         <div class="stat-card"><div class="stat-num">10K+</div><div class="stat-label">Developers</div></div>
         <div class="stat-card"><div class="stat-num">99.9%</div><div class="stat-label">Uptime Status</div></div>
       </div>
 
       <div class="sec-head">
-        <div><i class="fa-solid fa-fire" style="color:#f97316;"></i> <span id="sectionTitle">Available APIs</span></div>
-        <div style="font-size:0.75rem; color:#00f2fe;" id="resultsCount">Showing APIs</div>
+        <div><i class="fa-solid fa-fire" style="color:#f97316;"></i> <span id="sectionTitle">Public APIs</span></div>
+        <div style="font-size:0.75rem; color:#00f2fe;" id="resultsCount">Loading database...</div>
       </div>
 
-      <!-- DIRECT HARD-CODED REAL APIS -->
-      <div class="api-list" id="apiCardsContainer">
-
-        <!-- ANIMALS -->
-        <div class="api-item" data-category="Animals" data-name="dog ceo api pictures breeds">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>Dog CEO API</h4>
-              <p>High-resolution pictures of dogs categorized by over 120 breeds worldwide.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(16,185,129,0.2); color:#10b981; border:1px solid #10b98140;">ANIMALS</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-lock-open"></i> No Auth • CORS: Yes</span>
-            <a href="https://dog.ceo/dog-api/" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <div class="api-item" data-category="Animals" data-name="cat facts ninja domestic kittens">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>Cat Facts API</h4>
-              <p>Daily random facts and metadata about domestic and wild cats.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(16,185,129,0.2); color:#10b981; border:1px solid #10b98140;">ANIMALS</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-lock-open"></i> No Auth • CORS: Yes</span>
-            <a href="https://catfact.ninja/" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <div class="api-item" data-category="Animals" data-name="randomfox fox pictures floof">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>RandomFox API</h4>
-              <p>Curated collection of foxes photography with JSON endpoints.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(16,185,129,0.2); color:#10b981; border:1px solid #10b98140;">ANIMALS</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-lock-open"></i> No Auth • CORS: Yes</span>
-            <a href="https://randomfox.ca/floof/" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <div class="api-item" data-category="Animals" data-name="zoo animal api wildlife facts diet">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>Zoo Animal API</h4>
-              <p>Comprehensive stats including habitat, lifespan, diet, and scientific names for zoo animals.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(16,185,129,0.2); color:#10b981; border:1px solid #10b98140;">ANIMALS</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-lock-open"></i> No Auth • CORS: Yes</span>
-            <a href="https://zoo-animal-api.herokuapp.com/" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <!-- WEATHER -->
-        <div class="api-item" data-category="Weather" data-name="openweather global forecast climate climate records">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>OpenWeather</h4>
-              <p>Get accurate global weather forecasts, UV index, and historical climate records.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(59,130,246,0.2); color:#3b82f6; border:1px solid #3b82f640;">WEATHER</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-key"></i> API Key • CORS: Yes</span>
-            <a href="https://openweathermap.org/api" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <div class="api-item" data-category="Weather" data-name="weatherapi live forecast astronomy timezones">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>WeatherAPI</h4>
-              <p>Real-time weather, 14-day forecasts, astronomy, timezones and air quality alerts.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(59,130,246,0.2); color:#3b82f6; border:1px solid #3b82f640;">WEATHER</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-key"></i> API Key • CORS: Yes</span>
-            <a href="https://www.weatherapi.com/" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <!-- MUSIC -->
-        <div class="api-item" data-category="Music" data-name="spotify web api songs artists tracks albums playlists">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>Spotify Web API</h4>
-              <p>Access millions of songs, albums, playlists, and artists metadata directly.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(34,197,94,0.2); color:#22c55e; border:1px solid #22c55e40;">MUSIC</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-key"></i> OAuth 2.0 • CORS: Yes</span>
-            <a href="https://developer.spotify.com/documentation/web-api" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <div class="api-item" data-category="Music" data-name="deezer public streaming charts radio preview">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>Deezer Public API</h4>
-              <p>Music streaming catalog with artist top charts, radio streams and previews.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(34,197,94,0.2); color:#22c55e; border:1px solid #22c55e40;">MUSIC</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-lock-open"></i> No Auth • CORS: Yes</span>
-            <a href="https://developers.deezer.com/api" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <!-- ANIME -->
-        <div class="api-item" data-category="Anime" data-name="jikan myanimelist anime manga characters">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>Jikan API</h4>
-              <p>Unofficial open-source MyAnimeList REST API for anime, manga, and characters.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(168,85,247,0.2); color:#a855f7; border:1px solid #a855f740;">ANIME</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-lock-open"></i> No Auth • CORS: Yes</span>
-            <a href="https://jikan.moe/" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <!-- AI & ML -->
-        <div class="api-item" data-category="AI & ML" data-name="hugging face inference llm models ai machine learning">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>Hugging Face Inference</h4>
-              <p>Run inference on 100,000+ open-source AI models including LLMs and computer vision.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(245,158,11,0.2); color:#f59e0b; border:1px solid #f59e0b40;">AI & ML</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-key"></i> API Key • CORS: Yes</span>
-            <a href="https://huggingface.co/docs/api-inference/index" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <!-- CRYPTO -->
-        <div class="api-item" data-category="Crypto" data-name="coingecko cryptocurrency prices bitcoin eth coins defi">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>CoinGecko API</h4>
-              <p>Live prices, trading volume, market capitalization and DeFi data for over 10,000 coins.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(236,72,153,0.2); color:#ec4899; border:1px solid #ec489940;">CRYPTO</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-lock-open"></i> No Auth • CORS: Yes</span>
-            <a href="https://www.coingecko.com/en/api" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-        <!-- GAMES -->
-        <div class="api-item" data-category="Games" data-name="rawg video games database steam xbox playstation">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>RAWG Video Games API</h4>
-              <p>The largest database of 500,000+ video games with ratings, screenshots and platforms.</p>
-            </div>
-            <span class="tag-category" style="background:rgba(6,182,212,0.2); color:#06b6d4; border:1px solid #06b6d440;">GAMES</span>
-          </div>
-          <div class="api-footer-row">
-            <span class="api-auth-pill"><i class="fa-solid fa-key"></i> API Key • CORS: Yes</span>
-            <a href="https://rawg.io/apidocs" target="_blank" class="api-link-btn">Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-          </div>
-        </div>
-
-      </div>
+      <!-- API CARDS CONTAINER -->
+      <div class="api-list" id="apiCardsContainer"></div>
+      <button class="load-more-btn" id="loadMoreBtn" style="display:none;" onclick="loadMore()">Load More APIs ↓</button>
     </main>
   </div>
 
   <script>
+    let ALL_APIS = [];
+    let filteredApis = [];
     let activeCategory = 'All';
+    let displayLimit = 25;
 
-    function filterApis() {
-      const q = document.getElementById("dashSearchBox").value.trim().toLowerCase();
-      const items = document.querySelectorAll("#apiCardsContainer .api-item");
-      let count = 0;
+    // Fallback seed dataset to guarantee instant rendering
+    const SEED_APIS = [
+      { API: "Dog CEO", Description: "Collection of open source dog pictures sorted by breed.", Category: "Animals", Auth: "No Auth", Link: "https://dog.ceo/dog-api/" },
+      { API: "Cat Facts", Description: "Daily random facts and statistics about cats.", Category: "Animals", Auth: "No Auth", Link: "https://catfact.ninja/" },
+      { API: "RandomFox", Description: "Curated collection of foxes photography with JSON endpoints.", Category: "Animals", Auth: "No Auth", Link: "https://randomfox.ca/floof/" },
+      { API: "Zoo Animals", Description: "Habitat, diet, and scientific names for wild zoo animals.", Category: "Animals", Auth: "No Auth", Link: "https://zoo-animal-api.herokuapp.com/" },
+      { API: "Axolotl API", Description: "REST endpoints providing Axolotl facts and images.", Category: "Animals", Auth: "No Auth", Link: "https://axoltlapi.herokuapp.com/" },
+      { API: "Shibe.Online", Description: "Shiba Inu, birds, and cat pictures directly as URLs.", Category: "Animals", Auth: "No Auth", Link: "https://shibe.online/" },
+      { API: "OpenWeather", Description: "Global live weather forecasts and historical climate records.", Category: "Weather", Auth: "apiKey", Link: "https://openweathermap.org/api" },
+      { API: "WeatherAPI", Description: "Real-time weather, 14-day forecasts and astronomy alerts.", Category: "Weather", Auth: "apiKey", Link: "https://www.weatherapi.com/" },
+      { API: "Spotify", Description: "Access millions of songs, albums, and artists metadata.", Category: "Music", Auth: "OAuth", Link: "https://developer.spotify.com/documentation/web-api" },
+      { API: "Deezer", Description: "Music streaming catalog with top charts and audio previews.", Category: "Music", Auth: "No Auth", Link: "https://developers.deezer.com/api" },
+      { API: "Jikan", Description: "Unofficial MyAnimeList REST API for anime and characters.", Category: "Anime", Auth: "No Auth", Link: "https://jikan.moe/" },
+      { API: "CoinGecko", Description: "Live crypto prices, volumes, and market cap for 10,000+ coins.", Category: "Cryptocurrency", Auth: "No Auth", Link: "https://www.coingecko.com/en/api" },
+      { API: "RAWG Video Games", Description: "Database of 500,000+ video games with ratings and screenshots.", Category: "Games & Comics", Auth: "apiKey", Link: "https://rawg.io/apidocs" }
+    ];
 
-      items.forEach(card => {
-        const cat = card.getAttribute("data-category");
-        const name = card.getAttribute("data-name");
-        const matchCat = (activeCategory === 'All' || cat.toLowerCase() === activeCategory.toLowerCase());
-        const matchQuery = (!q || name.includes(q) || cat.toLowerCase().includes(q));
+    // Fetch the complete public-apis database
+    async function loadFullDatabase() {
+      ALL_APIS = SEED_APIS;
+      applyFilters();
 
-        if (matchCat && matchQuery) {
-          card.style.display = "flex";
-          count++;
-        } else {
-          card.style.display = "none";
+      try {
+        const res = await fetch("https://raw.githubusercontent.com/marcelscruz/public-apis/main/db/database.json");
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            ALL_APIS = data.map(item => ({
+              API: item.name || item.API,
+              Description: item.description || item.Description,
+              Category: item.category || item.Category || "General",
+              Auth: item.auth || item.Auth || "No Auth",
+              Link: item.url || item.Link || "#"
+            }));
+          } else if (data.entries) {
+            ALL_APIS = data.entries;
+          }
+          document.getElementById("statApiCount").innerText = ALL_APIS.length.toLocaleString();
+          applyFilters();
         }
-      });
+      } catch (err) {
+        // Keeps SEED_APIS if fetch is blocked
+      }
+    }
 
-      document.getElementById("resultsCount").innerText = `${count} APIs matching`;
+    function renderCards() {
+      const container = document.getElementById("apiCardsContainer");
+      const loadBtn = document.getElementById("loadMoreBtn");
+      const slice = filteredApis.slice(0, displayLimit);
+
+      if (!slice.length) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:35px 16px; background:rgba(13,21,39,0.5); border-radius:14px; border:1px dashed rgba(255,255,255,0.15);">
+            <h4 style="color:#fff; margin-bottom:6px;">No APIs found for this search</h4>
+            <p style="color:#94a3b8; font-size:0.8rem;">Try searching for "animal", "cat", "dog", "weather", or "crypto".</p>
+          </div>
+        `;
+        loadBtn.style.display = "none";
+        document.getElementById("resultsCount").innerText = "0 APIs";
+        return;
+      }
+
+      container.innerHTML = slice.map(api => `
+        <div class="api-item">
+          <div class="api-top-row">
+            <div class="api-meta">
+              <h4>${api.API}</h4>
+              <p>${api.Description}</p>
+            </div>
+            <span class="tag-category" style="background:rgba(0,242,254,0.15); color:#00f2fe; border:1px solid rgba(0,242,254,0.3);">
+              ${(api.Category || 'API').toUpperCase()}
+            </span>
+          </div>
+          <div class="api-footer-row">
+            <span class="api-auth-pill"><i class="fa-solid fa-lock"></i> ${api.Auth || 'No Auth'}</span>
+            <a href="${api.Link}" target="_blank" rel="noopener" class="api-link-btn">
+              Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+          </div>
+        </div>
+      `).join("");
+
+      document.getElementById("resultsCount").innerText = `Showing ${slice.length} of ${filteredApis.length} APIs`;
+      loadBtn.style.display = filteredApis.length > displayLimit ? "block" : "none";
+    }
+
+    function applyFilters() {
+      const q = document.getElementById("dashSearchBox").value.trim().toLowerCase();
+      filteredApis = ALL_APIS.filter(api => {
+        const matchesCategory = (activeCategory === 'All' || (api.Category && api.Category.toLowerCase().includes(activeCategory.toLowerCase())));
+        const matchesSearch = !q || (
+          (api.API && api.API.toLowerCase().includes(q)) ||
+          (api.Description && api.Description.toLowerCase().includes(q)) ||
+          (api.Category && api.Category.toLowerCase().includes(q))
+        );
+        return matchesCategory && matchesSearch;
+      });
+      displayLimit = 25;
+      renderCards();
+    }
+
+    function runSearch() {
+      applyFilters();
     }
 
     function setCategory(cat, el) {
       activeCategory = cat;
       document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
       if (el) el.classList.add("active");
-      document.getElementById("sectionTitle").innerText = cat === 'All' ? 'Available APIs' : `${cat} APIs`;
-      filterApis();
+      document.getElementById("sectionTitle").innerText = cat === 'All' ? 'Public APIs' : `${cat} APIs`;
+      applyFilters();
     }
 
-    // Firebase Auth Setup
+    function loadMore() {
+      displayLimit += 25;
+      renderCards();
+    }
+
+    // Firebase Auth config
     const firebaseConfig = {
       apiKey: "AIzaSyBt_zPZndgJh82AK8tXWvOyN8ec3dY31KQ",
       authDomain: "free-api-web-2a7bc.firebaseapp.com",
@@ -471,6 +387,7 @@
         d.style.display = "block";
         const n = (user.displayName || user.phoneNumber || user.email || "Member").split(" ")[0];
         document.getElementById("badgeUser").innerHTML = `<i class="fa-solid fa-circle-check"></i> ${n}`;
+        loadFullDatabase();
       } else {
         g.style.display = "flex";
         d.style.display = "none";
@@ -484,7 +401,7 @@
 
     function getQuota() {
       const today = new Date().toISOString().slice(0, 10);
-      let q = JSON.parse(localStorage.getItem("otp_quota_akhil_static") || "{}");
+      let q = JSON.parse(localStorage.getItem("otp_quota_akhil_full") || "{}");
       if (q.date !== today) q = { date: today, count: 0 };
       return q;
     }
@@ -509,7 +426,7 @@
         .then(conf => {
           window.confirmation = conf;
           q.count += 1;
-          localStorage.setItem("otp_quota_akhil_static", JSON.stringify(q));
+          localStorage.setItem("otp_quota_akhil_full", JSON.stringify(q));
           document.getElementById("btnReq").style.display = "none";
           document.getElementById("otpInputWrap").style.display = "flex";
           document.getElementById("quotaTxt").innerText = "Attempts left today: " + (5 - q.count);
