@@ -622,5 +622,60 @@
 
     window.onload = updateStats;
   </script>
+<!-- CYBER ROOT SECURITY LOCK -->
+  <div id="securityGate" style="position:fixed; inset:0; background:#020408; z-index:999999; display:flex; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#090d16; border:1.5px solid #ff1a40; box-shadow:0 0 45px rgba(255,26,64,0.35); border-radius:14px; max-width:420px; width:100%; padding:30px 24px; text-align:center; font-family:monospace;">
+      <div style="color:#ff1a40; font-size:2.4rem; margin-bottom:12px;">🔒</div>
+      <h3 style="color:#fff; margin:0; font-size:1.15rem; letter-spacing:1px; text-transform:uppercase;">AKHIL PROTOCOL GATEWAY</h3>
+      <p style="color:#94a3b8; font-size:0.75rem; margin:6px 0 20px 0;">ENTER ROOT IDENTIFIER & ACCESS KEY</p>
+      
+      <div style="display:flex; flex-direction:column; gap:12px; text-align:left;">
+        <div>
+          <label style="font-size:0.72rem; color:#94a3b8; font-weight:bold; display:block; margin-bottom:4px;">USERNAME</label>
+          <input type="text" id="rootUser" placeholder="ENTER USERNAME" style="background:#000; border:1px solid rgba(255,26,64,0.4); color:#00ff88; font-family:monospace; padding:12px; width:100%; border-radius:8px; outline:none; font-size:0.9rem;" onkeydown="if(event.key==='Enter') verifyRootAccess()">
+        </div>
+
+        <div>
+          <label style="font-size:0.72rem; color:#94a3b8; font-weight:bold; display:block; margin-bottom:4px;">PASSWORD / KEY</label>
+          <input type="password" id="rootPass" placeholder="ENTER ACCESS KEY" style="background:#000; border:1px solid rgba(255,26,64,0.4); color:#00ff88; font-family:monospace; padding:12px; width:100%; border-radius:8px; outline:none; font-size:0.9rem;" onkeydown="if(event.key==='Enter') verifyRootAccess()">
+        </div>
+      </div>
+      
+      <div style="display:flex; gap:10px; margin-top:20px;">
+        <button onclick="window.location.href='index.html'" style="background:#1e293b; color:#94a3b8; border:none; padding:12px; flex:1; border-radius:6px; cursor:pointer; font-weight:bold; font-size:0.8rem;">ABORT</button>
+        <button onclick="verifyRootAccess()" style="background:#ff1a40; color:#fff; border:none; padding:12px; flex:1.5; border-radius:6px; cursor:pointer; font-weight:bold; font-size:0.8rem; box-shadow:0 0 18px rgba(255,26,64,0.4);">AUTHENTICATE ⚡</button>
+      </div>
+      <p id="lockError" style="color:#ff1a40; font-size:0.75rem; margin-top:14px; display:none; font-weight:bold;">ACCESS DENIED: INVALID USERNAME OR KEY</p>
+    </div>
+  </div>
+
+  <script>
+    const VALID_USER = "AKHIL";
+    const VALID_PASS = "akhilrawat027@gmail.com";
+
+    function checkAuthOnLoad() {
+      if (sessionStorage.getItem("AKHIL_ROOT_AUTH") === "GRANTED") {
+        const gate = document.getElementById("securityGate");
+        if (gate) gate.style.display = "none";
+      }
+    }
+
+    function verifyRootAccess() {
+      const u = document.getElementById("rootUser").value.trim();
+      const p = document.getElementById("rootPass").value.trim();
+      const err = document.getElementById("lockError");
+      
+      if (u === VALID_USER && p === VALID_PASS) {
+        sessionStorage.setItem("AKHIL_ROOT_AUTH", "GRANTED");
+        document.getElementById("securityGate").style.display = "none";
+      } else {
+        err.style.display = "block";
+        document.getElementById("rootPass").value = "";
+        document.getElementById("rootPass").focus();
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", checkAuthOnLoad);
+  </script>
 </body>
 </html>
