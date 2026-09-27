@@ -2,182 +2,129 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AKHIL - API DEVELOPER HUB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FREE API WEB</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    
-    html, body {
-      background: #030712;
-      color: #fff;
-      min-height: 100%;
-      width: 100%;
-      -webkit-tap-highlight-color: transparent;
-    }
+    body { background: #070b14; color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
 
-    /* GATE VIEW */
+    /* --- AKHIL NEON LOGIN GATE --- */
     #gateScreen {
-      min-height: 100dvh;
-      display: flex;
+      min-height: 100vh;
+      width: 100%;
+      display: none;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       padding: 16px;
-      background: #070d18;
+      background: #000 url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    }
+    #gateScreen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(3, 10, 20, 0.82) 0%, rgba(1, 4, 9, 0.95) 100%);
+      z-index: 1;
     }
 
     .ambient-header {
-      width: 100%;
-      max-width: 380px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.65rem;
-      letter-spacing: 2px;
-      color: #64748b;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 6px 0;
+      position: relative; z-index: 2; width: 100%; max-width: 390px;
+      display: flex; justify-content: space-between; font-size: 0.65rem;
+      letter-spacing: 2px; color: #64748b; font-weight: 700; text-transform: uppercase; padding: 6px 0;
     }
 
     .neon-card {
-      width: 100%;
-      max-width: 380px;
-      background: #0a1120;
-      border: 1.5px solid #00f2fe;
-      border-radius: 20px;
-      padding: 24px 18px;
-      box-shadow: 0 4px 20px rgba(0, 242, 254, 0.2);
-      text-align: center;
-      margin: auto 0;
+      position: relative; z-index: 2; width: 100%; max-width: 390px;
+      background: rgba(10, 18, 26, 0.85); border: 1.5px solid #00f2fe;
+      border-radius: 26px; padding: 28px 20px; box-shadow: 0 0 35px rgba(0, 242, 254, 0.35);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); text-align: center; margin: auto 0;
     }
-
-    .logo-icon { font-size: 2.2rem; color: #00f2fe; margin-bottom: 4px; }
-    .title-main { font-size: 1.6rem; font-weight: 900; letter-spacing: 4px; color: #fff; }
+    .logo-icon { font-size: 2.3rem; color: #00f2fe; margin-bottom: 2px; filter: drop-shadow(0 0 12px rgba(0,242,254,0.7)); }
+    .title-main { font-size: 1.7rem; font-weight: 900; letter-spacing: 4px; color: #fff; }
     .title-sub { font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; color: #00f2fe; margin-bottom: 18px; text-transform: uppercase; }
-    .lead-head { font-size: 1.2rem; font-weight: 800; margin-bottom: 4px; }
+    .lead-head { font-size: 1.25rem; font-weight: 800; margin-bottom: 4px; }
     .lead-desc { font-size: 0.78rem; color: #94a3b8; margin-bottom: 18px; }
 
     .btn-row {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 13px 16px;
-      border-radius: 12px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 10px;
-      background: #111a2e;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #fff;
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 13px 16px; border-radius: 12px; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; margin-bottom: 10px; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; transition: 0.2s;
     }
-    .btn-row.accent {
-      border: 1.5px solid #00f2fe;
-      background: #0b2238;
-    }
+    .btn-row.accent { border: 1.5px solid #00f2fe; background: rgba(0, 242, 254, 0.08); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
+    .btn-row:active { transform: scale(0.98); }
     .btn-left { display: flex; align-items: center; gap: 10px; }
 
-    .divider {
-      display: flex; align-items: center; gap: 10px; margin: 14px 0;
-      font-size: 0.65rem; color: #64748b; font-weight: 700;
-    }
+    .divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; font-size: 0.65rem; color: #64748b; font-weight: 700; letter-spacing: 1px; }
     .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
 
-    #phoneForm {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 12px;
-      text-align: left;
-    }
+    #phoneForm { display: none; flex-direction: column; gap: 10px; margin-bottom: 12px; text-align: left; }
+    .gate-input { width: 100%; background: #030712; border: 1.5px solid #00f2fe; border-radius: 8px; padding: 12px; color: #fff; font-size: 16px; outline: none; }
+    .btn-submit { width: 100%; background: #00f2fe; color: #030712; font-weight: 800; border: none; border-radius: 8px; padding: 12px; cursor: pointer; font-size: 15px; }
 
-    /* Fixed 16px font to prevent mobile auto-zoom/keyboard lag */
-    .gate-input {
-      width: 100%;
-      background: #030712;
-      border: 1.5px solid #00f2fe;
-      border-radius: 10px;
-      padding: 12px 14px;
-      color: #fff;
-      font-size: 16px !important;
-      outline: none;
-      -webkit-appearance: none;
-    }
-
-    .btn-submit {
-      width: 100%;
-      background: #00f2fe;
-      color: #030712;
-      font-weight: 800;
-      border: none;
-      border-radius: 10px;
-      padding: 12px;
-      cursor: pointer;
-      font-size: 15px;
-    }
-
-    .strip-icons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
+    .strip-icons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
     .strip-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .strip-col i { font-size: 1.1rem; color: #00f2fe; }
-    .strip-col span { font-size: 0.6rem; color: #94a3b8; text-align: center; }
+    .strip-col span { font-size: 0.58rem; color: #94a3b8; text-align: center; }
 
-    /* DASHBOARD */
+    /* --- ORIGINAL EXACT CYBER DASHBOARD --- */
     #dashScreen { display: none; width: 100%; min-height: 100vh; }
-    .nav-top {
-      display: flex; justify-content: space-between; align-items: center; padding: 14px 20px;
-      background: #0b1120; border-bottom: 1px solid rgba(255, 255, 255, 0.08); position: sticky; top: 0; z-index: 10;
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(7, 11, 20, 0.95); position: sticky; top: 0; z-index: 50;
     }
-    .brand-title { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.05rem; color: #00f2fe; }
-    .user-pill {
-      display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
-      border-radius: 20px; background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.3);
-      color: #00f2fe; font-size: 0.8rem; font-weight: 700;
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; color: #00f2fe; }
+    .brand-icon { background: #0284c7; width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; color: #fff; }
+    .user-bar { display: flex; align-items: center; gap: 10px; }
+    .user-badge {
+      display: flex; align-items: center; gap: 6px; padding: 6px 14px;
+      background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 20px; font-size: 0.82rem; font-weight: 700; color: #00f2fe;
     }
-    .btn-exit {
+    .btn-logout {
       background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #ef4444;
-      padding: 6px 14px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; margin-left: 10px;
+      padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
     }
 
-    .main-body { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
-    .hero-box {
-      background: #0b1120; border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 16px;
-      padding: 22px 16px; text-align: center; margin-bottom: 20px;
+    .dash-container { max-width: 900px; margin: 0 auto; padding: 22px 16px; }
+    .hero-banner {
+      background: rgba(13, 21, 39, 0.6); border: 1px solid rgba(0, 242, 254, 0.2);
+      border-radius: 18px; padding: 24px 16px; text-align: center; margin-bottom: 24px;
     }
-    .hero-box h1 { font-size: 1.4rem; font-weight: 900; margin-bottom: 6px; }
-    .hero-box p { font-size: 0.8rem; color: #94a3b8; margin-bottom: 16px; }
-    .search-row { display: flex; gap: 8px; max-width: 500px; margin: 0 auto; }
-    .search-row input { flex: 1; background: #030712; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 16px; outline: none; }
-    .search-row button { background: #0284c7; color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-weight: 700; cursor: pointer; }
-
-    .stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 22px; }
-    .stat-item { background: #0b1120; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 12px; }
-    .stat-val { font-size: 1.25rem; font-weight: 800; color: #00f2fe; }
-    .stat-sub { font-size: 0.72rem; color: #94a3b8; }
-
-    .card-list { display: flex; flex-direction: column; gap: 10px; }
-    .api-entry {
-      background: #0b1120; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;
-      padding: 14px; display: flex; justify-content: space-between; align-items: center;
+    .hero-title { font-size: 1.45rem; font-weight: 900; margin-bottom: 6px; }
+    .hero-desc { font-size: 0.82rem; color: #94a3b8; margin-bottom: 18px; }
+    .search-box {
+      display: flex; gap: 8px; max-width: 550px; margin: 0 auto;
+      background: #030712; padding: 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
     }
-    .api-entry h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 3px; }
-    .api-entry p { font-size: 0.75rem; color: #94a3b8; }
-    .badge-cat { font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 6px; }
+    .search-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; padding-left: 12px; font-size: 16px; }
+    .search-btn { background: #0284c7; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: rgba(13, 21, 39, 0.7); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 14px; }
+    .stat-num { font-size: 1.3rem; font-weight: 800; color: #00f2fe; }
+    .stat-label { font-size: 0.75rem; color: #94a3b8; }
+
+    .sec-head { font-size: 1.05rem; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .api-list { display: flex; flex-direction: column; gap: 12px; }
+    .api-item {
+      background: rgba(13, 21, 39, 0.8); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 16px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .api-meta h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+    .api-meta p { font-size: 0.78rem; color: #94a3b8; }
+    .tag-category { font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
   </style>
 </head>
 <body>
 
-  <!-- VIEW 1: GATE -->
+  <!-- VIEW 1: LOGIN GATE -->
   <div id="gateScreen">
     <div class="ambient-header">
       <div>DREAM &bull; BUILD &bull; ACHIEVE</div>
@@ -201,7 +148,7 @@
       </div>
 
       <div id="phoneForm">
-        <input type="tel" id="telNum" class="gate-input" placeholder="+91 9876543210" autocomplete="tel">
+        <input type="tel" id="telNum" class="gate-input" placeholder="+91 9876543210" autocomplete="off">
         <div id="reBox"></div>
         <button class="btn-submit" id="btnReq" onclick="triggerOtp()">Send OTP</button>
 
@@ -242,59 +189,58 @@
     <div style="height:10px;"></div>
   </div>
 
-  <!-- VIEW 2: DASHBOARD -->
+  <!-- VIEW 2: EXACT ORIGINAL DASHBOARD -->
   <div id="dashScreen">
-    <nav class="nav-top">
-      <div class="brand-title">
-        <i class="fa-solid fa-code"></i>
-        <span>FREE API WEB</span>
+    <header class="navbar">
+      <div class="brand">
+        <div class="brand-icon"><i class="fa-solid fa-code"></i></div>
+        FREE API WEB
       </div>
-      <div>
-        <span class="user-pill" id="badgeUser"><i class="fa-solid fa-circle-check"></i> Jitendra</span>
-        <button class="btn-exit" onclick="userLogout()">Logout</button>
+      <div class="user-bar">
+        <div class="user-badge" id="badgeUser"><i class="fa-solid fa-circle-check"></i> Jitendra</div>
+        <button class="btn-logout" onclick="userLogout()">Logout</button>
       </div>
-    </nav>
+    </header>
 
-    <main class="main-body">
-      <div class="hero-box">
-        <h1>WELCOME TO THIS FREE API WEB ✨</h1>
-        <p>Discover thousands of public APIs. Explore, test and build something amazing. 🚀</p>
-        <div class="search-row">
-          <input type="text" placeholder="Search APIs by name, category, description...">
-          <button>Search →</button>
+    <main class="dash-container">
+      <div class="hero-banner">
+        <h1 class="hero-title">WELCOME TO THIS FREE API WEB ✨</h1>
+        <p class="hero-desc">Discover thousands of public APIs. Explore, test and build something amazing. 🚀</p>
+        <div class="search-box">
+          <input type="text" class="search-input" placeholder="Search APIs by name, category, description..." autocomplete="off">
+          <button class="search-btn">Search →</button>
         </div>
       </div>
 
-      <div class="stats-row">
-        <div class="stat-item"><div class="stat-val">1,953</div><div class="stat-sub">APIs Available</div></div>
-        <div class="stat-item"><div class="stat-val">50+</div><div class="stat-sub">Categories</div></div>
-        <div class="stat-item"><div class="stat-val">10K+</div><div class="stat-sub">Developers</div></div>
-        <div class="stat-item"><div class="stat-val">99.9%</div><div class="stat-sub">Uptime Status</div></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num">1,953</div><div class="stat-label">APIs Available</div></div>
+        <div class="stat-card"><div class="stat-num">50+</div><div class="stat-label">Categories</div></div>
+        <div class="stat-card"><div class="stat-num">10K+</div><div class="stat-label">Developers</div></div>
+        <div class="stat-card"><div class="stat-num">99.9%</div><div class="stat-label">Uptime Status</div></div>
       </div>
 
-      <div style="font-size:1rem; font-weight:800; margin-bottom:12px;"><i class="fa-solid fa-fire" style="color:#f97316;"></i> Popular APIs</div>
-
-      <div class="card-list">
-        <div class="api-entry">
-          <div>
+      <div class="sec-head"><i class="fa-solid fa-fire" style="color:#f97316;"></i> Popular APIs</div>
+      <div class="api-list">
+        <div class="api-item">
+          <div class="api-meta">
             <h4>Spotify API</h4>
             <p>Access millions of songs, albums, and artists metadata directly.</p>
           </div>
-          <span class="badge-cat" style="background:rgba(34,197,94,0.15); color:#22c55e;">MUSIC</span>
+          <span class="tag-category" style="background:rgba(34,197,94,0.12); color:#22c55e;">MUSIC</span>
         </div>
-        <div class="api-entry">
-          <div>
+        <div class="api-item">
+          <div class="api-meta">
             <h4>OpenWeather</h4>
             <p>Get accurate global weather forecasts and historical climate records.</p>
           </div>
-          <span class="badge-cat" style="background:rgba(59,130,246,0.15); color:#3b82f6;">WEATHER</span>
+          <span class="tag-category" style="background:rgba(59,130,246,0.12); color:#3b82f6;">WEATHER</span>
         </div>
-        <div class="api-entry">
-          <div>
+        <div class="api-item">
+          <div class="api-meta">
             <h4>Jikan API</h4>
             <p>Unofficial MyAnimeList API for anime, manga and characters.</p>
           </div>
-          <span class="badge-cat" style="background:rgba(168,85,247,0.15); color:#a855f7;">ANIME</span>
+          <span class="tag-category" style="background:rgba(168,85,247,0.12); color:#a855f7;">ANIME</span>
         </div>
       </div>
     </main>
@@ -315,7 +261,7 @@
       firebase.initializeApp(firebaseConfig);
     }
 
-    function switchView(user) {
+    function renderScreen(user) {
       const g = document.getElementById("gateScreen");
       const d = document.getElementById("dashScreen");
       if (user) {
@@ -330,21 +276,17 @@
     }
 
     firebase.auth().onAuthStateChanged((user) => {
-      switchView(user);
+      renderScreen(user);
     });
 
     function togglePhone() {
       const el = document.getElementById("phoneForm");
-      const isVisible = el.style.display === "flex";
-      el.style.display = isVisible ? "none" : "flex";
-      if (!isVisible) {
-        setTimeout(() => document.getElementById("telNum").focus(), 150);
-      }
+      el.style.display = el.style.display === "flex" ? "none" : "flex";
     }
 
     function getQuota() {
       const today = new Date().toISOString().slice(0, 10);
-      let q = JSON.parse(localStorage.getItem("otp_quota_akhil") || "{}");
+      let q = JSON.parse(localStorage.getItem("otp_quota_akhil_v3") || "{}");
       if (q.date !== today) q = { date: today, count: 0 };
       return q;
     }
@@ -373,7 +315,7 @@
         .then(conf => {
           window.confirmation = conf;
           q.count += 1;
-          localStorage.setItem("otp_quota_akhil", JSON.stringify(q));
+          localStorage.setItem("otp_quota_akhil_v3", JSON.stringify(q));
           document.getElementById("btnReq").style.display = "none";
           document.getElementById("otpInputWrap").style.display = "flex";
           document.getElementById("quotaTxt").innerText = "Attempts left today: " + (5 - q.count);
@@ -385,39 +327,27 @@
       const code = document.getElementById("telOtp").value.trim();
       if (!code || !window.confirmation) return;
       window.confirmation.confirm(code)
-        .then(res => switchView(res.user))
+        .then(res => renderScreen(res.user))
         .catch(e => { document.getElementById("errTxt").innerText = "Invalid OTP: " + e.message; });
     }
 
     function runGoogle() {
       const p = new firebase.auth.GoogleAuthProvider();
       firebase.auth().signInWithPopup(p)
-        .then(res => switchView(res.user))
-        .catch(e => {
-          if (e.code === "auth/popup-blocked" || e.code === "auth/popup-closed-by-user") {
-            firebase.auth().signInWithRedirect(p);
-          } else {
-            alert(e.message);
-          }
-        });
+        .then(res => renderScreen(res.user))
+        .catch(() => firebase.auth().signInWithRedirect(p));
     }
 
     function runGithub() {
       const p = new firebase.auth.GithubAuthProvider();
       firebase.auth().signInWithPopup(p)
-        .then(res => switchView(res.user))
-        .catch(e => {
-          if (e.code === "auth/popup-blocked" || e.code === "auth/popup-closed-by-user") {
-            firebase.auth().signInWithRedirect(p);
-          } else {
-            alert(e.message);
-          }
-        });
+        .then(res => renderScreen(res.user))
+        .catch(() => firebase.auth().signInWithRedirect(p));
     }
 
     function userLogout() {
       firebase.auth().signOut().then(() => {
-        switchView(null);
+        location.reload();
       });
     }
   </script>
