@@ -325,6 +325,97 @@
       overflow-y: auto;
     }
 
+
+    /* --- LIVE API TESTER MODAL --- */
+    #testerModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(3,7,18,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100001;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .tester-box {
+      background: #0a1120;
+      border: 1.5px solid #00f2fe;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 580px;
+      padding: 20px;
+      box-shadow: 0 0 40px rgba(0,242,254,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .tester-url-bar {
+      display: flex;
+      gap: 8px;
+      background: #030712;
+      border: 1px solid rgba(0,242,254,0.3);
+      border-radius: 8px;
+      padding: 6px;
+    }
+    .tester-method {
+      background: #10b981;
+      color: #030712;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+    }
+    .tester-url-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 0.82rem;
+      outline: none;
+      font-family: monospace;
+    }
+    .tester-send-btn {
+      background: #00f2fe;
+      color: #030712;
+      border: none;
+      font-weight: bold;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .tester-res-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+    .tester-res-box {
+      background: #030712;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px;
+      color: #a7f3d0;
+      font-family: monospace;
+      font-size: 0.8rem;
+      max-height: 240px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    .test-trigger-btn {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 8px;
+      color: #10b981;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .test-trigger-btn:hover { background: #10b981; color: #030712; }
+
 </style>
 
 </head>
@@ -793,6 +884,93 @@
         btn.innerText = "Copied!";
         setTimeout(() => btn.innerText = "Copy Code", 1500);
       });
+    }
+</script>
+
+  <!-- LIVE TESTER MODAL -->
+  <div id="testerModal" onclick="if(event.target===this) closeTesterModal()">
+    <div class="tester-box">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 id="testerTitle" style="color:#00f2fe; margin:0; font-size:1rem;">⚡ Live API Sandbox</h3>
+        <span onclick="closeTesterModal()" style="color:#94a3b8; font-size:1.4rem; cursor:pointer;">&times;</span>
+      </div>
+      <div class="tester-url-bar">
+        <span class="tester-method">GET</span>
+        <input type="text" id="testerInputUrl" class="tester-url-input" placeholder="https://api.example.com/data">
+        <button class="tester-send-btn" id="testerSendBtn" onclick="executeApiTest()">Send ▶</button>
+      </div>
+      <div class="tester-res-meta">
+        <span id="testerStatus">Status: Ready</span>
+        <span id="testerTime">Latency: -- ms</span>
+      </div>
+      <pre class="tester-res-box" id="testerResult">Click "Send" to fire live request...</pre>
+    </div>
+  </div>
+
+  <script>
+    function openTesterModal(apiName, link) {
+      document.getElementById("testerTitle").innerText = "⚡ Test: " + apiName;
+      document.getElementById("testerInputUrl").value = link;
+      document.getElementById("testerStatus").innerText = "Status: Ready";
+      document.getElementById("testerTime").innerText = "Latency: -- ms";
+      document.getElementById("testerResult").innerText = "Click Send to test live connection...";
+      document.getElementById("testerModal").style.display = "flex";
+    }
+
+    function closeTesterModal() {
+      document.getElementById("testerModal").style.display = "none";
+    }
+
+    async function executeApiTest() {
+      const url = document.getElementById("testerInputUrl").value.trim();
+      const statusEl = document.getElementById("testerStatus");
+      const timeEl = document.getElementById("testerTime");
+      const resBox = document.getElementById("testerResult");
+      const btn = document.getElementById("testerSendBtn");
+
+      if (!url) return;
+      btn.innerText = "Calling...";
+      statusEl.innerText = "Status: Connecting...";
+      resBox.innerText = "Awaiting response payload...";
+
+      const start = performance.now();
+      try {
+        const res = await fetch(url, { headers: { "Accept": "application/json" } });
+        const latency = Math.round(performance.now() - start);
+        timeEl.innerText = `Latency: ${latency} ms`;
+        statusEl.innerText = `Status: ${res.status} ${res.statusText || "OK"}`;
+
+        const contentType = res.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          const json = await res.json();
+          resBox.innerText = JSON.stringify(json, null, 2);
+        } else {
+          const text = await res.text();
+          resBox.innerText = text.slice(0, 1500) + (text.length > 1500 ? "
+...[truncated]" : "");
+        }
+      } catch (err) {
+        const latency = Math.round(performance.now() - start);
+        timeEl.innerText = `Latency: ${latency} ms`;
+        statusEl.innerText = "Status: Network Error / CORS Block";
+        resBox.innerText = "Error: " + err.message + "
+
+(Note: Kuch external APIs browser me CORS header nahi bhejti, unhe aap direct curl ya backend me access kar sakte hain.)";
+      } finally {
+        btn.innerText = "Send ▶";
+      }
+    }
+
+    function filterSavedFavorites() {
+      const saved = getBookmarks();
+      if (!saved.length) {
+        alert("Aapne abhi koi API save nahi ki hai! Kisi bhi card par ❤️ dabayein.");
+        return;
+      }
+      filteredApis = ALL_APIS.filter(a => saved.includes(a.API));
+      currentDisplayLimit = 30;
+      renderCards();
+      document.getElementById("statApiCount").innerText = filteredApis.length.toLocaleString();
     }
 </script>
 </body>
