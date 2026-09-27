@@ -1,6 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+<style id="gatekeeper-lock-style">
+  body > *:not(#cyberSecurityGate) {
+    display: none !important;
+  }
+  #cyberSecurityGate {
+    position: fixed; inset: 0; width: 100vw; height: 100vh;
+    background: #030712; z-index: 2147483647; display: flex !important;
+    align-items: center; justify-content: center; padding: 16px;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  .gate-card {
+    width: 100%; max-width: 380px; background: #0b1120;
+    border: 1px solid #38bdf8; border-radius: 20px; padding: 24px;
+    box-shadow: 0 0 35px rgba(56, 189, 248, 0.35); text-align: center;
+  }
+  .gate-title { font-size: 1.4rem; font-weight: 800; color: #fff; margin: 0 0 6px; }
+  .gate-desc { font-size: 0.78rem; color: #94a3b8; margin-bottom: 20px; }
+  .btn-oauth {
+    width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05);
+    color: #fff; font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  }
+  .gate-sep { color: #64748b; font-size: 0.75rem; margin: 14px 0; text-transform: uppercase; }
+  .gate-input {
+    width: 100%; padding: 10px 12px; background: #030712; border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px; color: #fff; font-size: 0.85rem; margin-bottom: 10px; box-sizing: border-box;
+  }
+  .btn-submit {
+    width: 100%; padding: 11px; background: #2563eb; color: #fff; border: none;
+    border-radius: 8px; font-weight: bold; font-size: 0.85rem; cursor: pointer;
+  }
+  .quota-tag { color: #38bdf8; font-size: 0.72rem; margin-top: 8px; }
+  .err-tag { color: #f43f5e; font-size: 0.72rem; margin-top: 8px; }
+</style>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FREE API WEB // AKHIL</title>
@@ -120,6 +156,135 @@
   </style>
 </head>
 <body>
+
+<div id="cyberSecurityGate">
+  <div class="gate-card">
+    <div class="gate-title">CYBER SECURITY GATE</div>
+    <div class="gate-desc">Z+ Protection: Identity Verification Required</div>
+
+    <button class="btn-oauth" onclick="runGoogle()"><i class="fa-brands fa-google" style="color:#ea4335;"></i> Sign in with Google</button>
+    <button class="btn-oauth" onclick="runGithub()"><i class="fa-brands fa-github"></i> Sign in with GitHub</button>
+
+    <div class="gate-sep">OR SMS OTP</div>
+
+    <div id="otpSection">
+      <input type="tel" id="gatePhone" class="gate-input" placeholder="+91 9876543210">
+      <div id="gateRecaptcha"></div>
+      <button class="btn-submit" id="btnSendOtp" onclick="sendOtp()">Send OTP</button>
+
+      <div id="verifyWrap" style="display:none; margin-top:10px;">
+        <input type="text" id="gateOtp" class="gate-input" placeholder="Enter 6-digit OTP">
+        <button class="btn-submit" onclick="verifyOtp()">Verify Code</button>
+      </div>
+      <div class="quota-tag" id="quotaNote">Rate Limit: 5 OTPs / day</div>
+      <div class="err-tag" id="gateErr"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBt_zPZndgJh82AK8tXWvOyN8ec3dY31KQ",
+    authDomain: "free-api-web-2a7bc.firebaseapp.com",
+    projectId: "free-api-web-2a7bc",
+    storageBucket: "free-api-web-2a7bc.firebasestorage.app",
+    messagingSenderId: "118488816924",
+    appId: "1:118488816924:web:f4a86246ed76778f00eed9",
+    measurementId: "G-2PG8X0PK0R"
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  // Check login status
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      unlockSite(user);
+    }
+  });
+
+  function unlockSite(user) {
+    const lockStyle = document.getElementById("gatekeeper-lock-style");
+    if (lockStyle) lockStyle.remove();
+    const gate = document.getElementById("cyberSecurityGate");
+    if (gate) gate.remove();
+
+    const name = (user.displayName || user.phoneNumber || user.email || "User").split(" ")[0];
+    document.querySelectorAll(".btn-login").forEach(btn => {
+      btn.innerText = name;
+      btn.style.background = "#10b981";
+      btn.onclick = () => {
+        if(confirm("Logout from dashboard?")) {
+          firebase.auth().signOut().then(() => location.reload());
+        }
+      };
+    });
+  }
+
+  function getQuota() {
+    const today = new Date().toISOString().slice(0, 10);
+    let q = JSON.parse(localStorage.getItem("otp_limit_track") || "{}");
+    if (q.date !== today) q = { date: today, count: 0 };
+    return q;
+  }
+
+  function sendOtp() {
+    const q = getQuota();
+    const err = document.getElementById("gateErr");
+    err.innerText = "";
+
+    if (q.count >= 5) {
+      err.innerText = "Daily Quota Reached: Maximum 5 OTPs allowed per day.";
+      return;
+    }
+
+    const phone = document.getElementById("gatePhone").value.trim();
+    if (!phone) {
+      err.innerText = "Please enter phone number with +country_code";
+      return;
+    }
+
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("gateRecaptcha", { size: "invisible" });
+    }
+
+    firebase.auth().signInWithPhoneNumber(phone, window.recaptchaVerifier)
+      .then(res => {
+        window.conf = res;
+        q.count += 1;
+        localStorage.setItem("otp_limit_track", JSON.stringify(q));
+        document.getElementById("btnSendOtp").style.display = "none";
+        document.getElementById("verifyWrap").style.display = "block";
+        document.getElementById("quotaNote").innerText = "Attempts left today: " + (5 - q.count);
+        alert("OTP sent successfully!");
+      }).catch(e => { err.innerText = e.message; });
+  }
+
+  function verifyOtp() {
+    const code = document.getElementById("gateOtp").value.trim();
+    if (!code || !window.conf) return;
+    window.conf.confirm(code)
+      .then(r => unlockSite(r.user))
+      .catch(e => { document.getElementById("gateErr").innerText = "Invalid OTP: " + e.message; });
+  }
+
+  function runGoogle() {
+    firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then(r => unlockSite(r.user))
+      .catch(e => alert(e.message));
+  }
+
+  function runGithub() {
+    firebase.auth().signInWithPopup(new firebase.auth.GithubAuthProvider())
+      .then(r => unlockSite(r.user))
+      .catch(e => alert(e.message));
+  }
+</script>
+
 
   <header class="header">
     <div class="brand">
@@ -316,256 +481,5 @@
     });
   </script>
 
-<!-- Z+ CYBER SECURITY GATEKEEPER SCREEN -->
-<style>
-  #cyberSecurityGate {
-    position: fixed; inset: 0; background: radial-gradient(circle at 50% 20%, #0d1527 0%, #030712 100%);
-    z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  }
-  .gate-card {
-    width: 100%; max-width: 420px; background: rgba(13, 21, 39, 0.85);
-    border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 24px; padding: 32px 24px;
-    box-shadow: 0 0 50px rgba(56, 189, 248, 0.25), 0 20px 40px rgba(0,0,0,0.8);
-    backdrop-filter: blur(20px); text-align: center; animation: gateEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  @keyframes gateEntrance {
-    from { opacity: 0; transform: scale(0.92) translateY(20px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-  .gate-badge {
-    display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
-    background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3);
-    border-radius: 20px; color: #38bdf8; font-size: 0.72rem; font-weight: 700;
-    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px;
-  }
-  .gate-title { font-size: 1.6rem; font-weight: 900; color: #fff; margin: 0 0 6px 0; letter-spacing: -0.5px; }
-  .gate-subtitle { font-size: 0.82rem; color: #94a3b8; margin: 0 0 24px 0; line-height: 1.4; }
-  
-  .oauth-row { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-  .gate-btn-oauth {
-    width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px;
-    padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.04); color: #fff; font-size: 0.88rem; font-weight: 600;
-    cursor: pointer; transition: all 0.2s ease;
-  }
-  .gate-btn-oauth:hover { background: rgba(255,255,255,0.08); border-color: #38bdf8; transform: translateY(-2px); }
-  
-  .gate-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: #64748b; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-  .gate-divider::before, .gate-divider::after { content: ""; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
-  
-  .gate-tabs { display: flex; gap: 8px; margin-bottom: 16px; background: rgba(0,0,0,0.4); padding: 4px; border-radius: 10px; }
-  .gate-tab-item {
-    flex: 1; padding: 8px; font-size: 0.8rem; font-weight: 700; color: #94a3b8;
-    cursor: pointer; border-radius: 8px; transition: 0.2s;
-  }
-  .gate-tab-item.active { background: #2563eb; color: #fff; box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
-  
-  .gate-input-box { display: flex; flex-direction: column; gap: 12px; text-align: left; }
-  .gate-field {
-    width: 100%; background: #030712; border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 10px; padding: 12px 14px; color: #fff; font-size: 0.9rem; outline: none; box-sizing: border-box;
-  }
-  .gate-field:focus { border-color: #38bdf8; box-shadow: 0 0 12px rgba(56, 189, 248, 0.25); }
-  
-  .btn-gate-submit {
-    width: 100%; background: linear-gradient(135deg, #2563eb, #7c3aed);
-    color: #fff; border: none; border-radius: 10px; padding: 12px; font-size: 0.9rem;
-    font-weight: 700; cursor: pointer; transition: all 0.2s ease;
-  }
-  .btn-gate-submit:hover { opacity: 0.95; box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
-  .gate-alert { color: #f43f5e; font-size: 0.75rem; text-align: center; margin-top: 10px; font-weight: 600; }
-  .rate-info { color: #38bdf8; font-size: 0.72rem; text-align: center; margin-top: 6px; }
-</style>
-
-<div id="cyberSecurityGate">
-  <div class="gate-card">
-    <div class="gate-badge"><i class="fa-solid fa-shield-halved"></i> Z+ Security Protocol</div>
-    <h2 class="gate-title">FREE API WEB</h2>
-    <p class="gate-subtitle">Access is restricted. Please authenticate your identity to enter the developer environment.</p>
-
-    <!-- Social Providers -->
-    <div class="oauth-row">
-      <button class="gate-btn-oauth" onclick="gateGoogleLogin()">
-        <i class="fa-brands fa-google" style="color:#ea4335; font-size:1.1rem;"></i> Continue with Google
-      </button>
-      <button class="gate-btn-oauth" onclick="gateGithubLogin()">
-        <i class="fa-brands fa-github" style="font-size:1.1rem;"></i> Continue with GitHub
-      </button>
-    </div>
-
-    <div class="gate-divider">Secure Methods</div>
-
-    <div class="gate-tabs">
-      <div class="gate-tab-item active" id="tabGateOtp" onclick="switchGateTab('otp')">Phone OTP</div>
-      <div class="gate-tab-item" id="tabGateEmail" onclick="switchGateTab('email')">Email Access</div>
-    </div>
-
-    <!-- OTP Form -->
-    <div id="gateOtpBlock" class="gate-input-box">
-      <input type="tel" id="gatePhoneInput" class="gate-field" placeholder="+91 9876543210">
-      <div id="gate-recaptcha"></div>
-      <button class="btn-gate-submit" id="btnRequestOtp" onclick="sendGateOtp()">Send Verification OTP</button>
-
-      <div id="gateOtpConfirmBlock" style="display:none; flex-direction:column; gap:10px;">
-        <input type="text" id="gateOtpCode" class="gate-field" placeholder="Enter 6-digit OTP">
-        <button class="btn-gate-submit" onclick="verifyGateOtp()">Verify & Enter Hub</button>
-      </div>
-      <div class="gate-alert" id="otpErrorAlert"></div>
-      <div class="rate-info" id="otpQuotaInfo">Protection: Maximum 5 OTP requests per 24 hours</div>
-    </div>
-
-    <!-- Email Form -->
-    <div id="gateEmailBlock" class="gate-input-box" style="display:none;">
-      <input type="email" id="gateEmailInput" class="gate-field" placeholder="developer@domain.com">
-      <input type="password" id="gatePassInput" class="gate-field" placeholder="Secret Key / Password">
-      <button class="btn-gate-submit" onclick="gateEmailAuth()">Sign In / Register</button>
-      <div class="gate-alert" id="emailErrorAlert"></div>
-    </div>
-  </div>
-</div>
-
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyBt_zPZndgJh82AK8tXWvOyN8ec3dY31KQ",
-    authDomain: "free-api-web-2a7bc.firebaseapp.com",
-    projectId: "free-api-web-2a7bc",
-    storageBucket: "free-api-web-2a7bc.firebasestorage.app",
-    messagingSenderId: "118488816924",
-    appId: "1:118488816924:web:f4a86246ed76778f00eed9",
-    measurementId: "G-2PG8X0PK0R"
-  };
-
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-
-  // Session monitor: Automatically unlock if user is already logged in
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      grantEntry(user);
-    } else {
-      document.getElementById("cyberSecurityGate").style.display = "flex";
-    }
-  });
-
-  function grantEntry(user) {
-    const gate = document.getElementById("cyberSecurityGate");
-    if (gate) {
-      gate.style.transition = "opacity 0.4s ease";
-      gate.style.opacity = "0";
-      setTimeout(() => gate.style.display = "none", 400);
-    }
-    const name = (user.displayName || user.email || user.phoneNumber || "Member").split(" ")[0];
-    document.querySelectorAll(".btn-login").forEach(btn => {
-      btn.innerText = name;
-      btn.style.background = "#10b981";
-      btn.onclick = () => {
-        if(confirm("Do you want to Logout?")) {
-          firebase.auth().signOut().then(() => location.reload());
-        }
-      };
-    });
-  }
-
-  function switchGateTab(tab) {
-    document.getElementById("tabGateOtp").classList.toggle("active", tab === "otp");
-    document.getElementById("tabGateEmail").classList.toggle("active", tab === "email");
-    document.getElementById("gateOtpBlock").style.display = tab === "otp" ? "flex" : "none";
-    document.getElementById("gateEmailBlock").style.display = tab === "email" ? "flex" : "none";
-  }
-
-  // --- Strict 5 OTPs Per Day Enforcement ---
-  function getOtpTracking() {
-    const today = new Date().toISOString().slice(0, 10);
-    let record = JSON.parse(localStorage.getItem("gate_otp_tracker") || "{}");
-    if (record.date !== today) {
-      record = { date: today, count: 0 };
-    }
-    return record;
-  }
-
-  function sendGateOtp() {
-    const tracking = getOtpTracking();
-    const errBox = document.getElementById("otpErrorAlert");
-    errBox.innerText = "";
-
-    if (tracking.count >= 5) {
-      errBox.innerText = "Daily Quota Exceeded: Only 5 OTP requests allowed per day for security.";
-      return;
-    }
-
-    const phone = document.getElementById("gatePhoneInput").value.trim();
-    if (!phone || phone.length < 10) {
-      errBox.innerText = "Enter phone number with country code (e.g. +91XXXXXXXXXX)";
-      return;
-    }
-
-    if (!window.gateRecaptcha) {
-      window.gateRecaptcha = new firebase.auth.RecaptchaVerifier("gate-recaptcha", { size: "invisible" });
-    }
-
-    firebase.auth().signInWithPhoneNumber(phone, window.gateRecaptcha)
-      .then(res => {
-        window.confirmationGate = res;
-        tracking.count += 1;
-        localStorage.setItem("gate_otp_tracker", JSON.stringify(tracking));
-        document.getElementById("btnRequestOtp").style.display = "none";
-        document.getElementById("gateOtpConfirmBlock").style.display = "flex";
-        document.getElementById("otpQuotaInfo").innerText = `Remaining OTP requests today: ${5 - tracking.count}`;
-        alert("OTP sent successfully!");
-      }).catch(err => {
-        errBox.innerText = err.message;
-      });
-  }
-
-  function verifyGateOtp() {
-    const code = document.getElementById("gateOtpCode").value.trim();
-    if (!code || !window.confirmationGate) return;
-    window.confirmationGate.confirm(code)
-      .then(result => grantEntry(result.user))
-      .catch(err => {
-        document.getElementById("otpErrorAlert").innerText = "Invalid OTP: " + err.message;
-      });
-  }
-
-  function gateGoogleLogin() {
-    const p = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(p)
-      .then(r => grantEntry(r.user))
-      .catch(err => alert("Google Login Error: " + err.message));
-  }
-
-  function gateGithubLogin() {
-    const p = new firebase.auth.GithubAuthProvider();
-    firebase.auth().signInWithPopup(p)
-      .then(r => grantEntry(r.user))
-      .catch(err => alert("GitHub Login Error: " + err.message));
-  }
-
-  function gateEmailAuth() {
-    const em = document.getElementById("gateEmailInput").value.trim();
-    const pw = document.getElementById("gatePassInput").value.trim();
-    const errBox = document.getElementById("emailErrorAlert");
-    errBox.innerText = "";
-
-    if (!em || !pw) {
-      errBox.innerText = "Email & password required";
-      return;
-    }
-
-    firebase.auth().signInWithEmailAndPassword(em, pw)
-      .then(r => grantEntry(r.user))
-      .catch(() => {
-        firebase.auth().createUserWithEmailAndPassword(em, pw)
-          .then(r => grantEntry(r.user))
-          .catch(e => errBox.innerText = e.message);
-      });
-  }
-</script>
 </body>
 </html>
