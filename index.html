@@ -267,17 +267,16 @@
 
     // Fetch the complete public-apis database
     
-    async function loadFullDatabase() {
-      try {
-        const res = await fetch("apis.json");
-        if (res.ok) {
-          ALL_APIS = await res.json();
-          document.getElementById("statApiCount").innerText = ALL_APIS.length.toLocaleString();
-          applyFilters();
-        }
-      } catch (err) {
-        console.error("Failed to load apis.json", err);
+    
+    function loadFullDatabase() {
+      if (window.PUBLIC_APIS_DATABASE && window.PUBLIC_APIS_DATABASE.length) {
+        ALL_APIS = window.PUBLIC_APIS_DATABASE;
+      } else {
+        ALL_APIS = typeof SEED_APIS !== "undefined" ? SEED_APIS : [];
       }
+      const countEl = document.getElementById("statApiCount");
+      if (countEl) countEl.innerText = ALL_APIS.length.toLocaleString();
+      applyFilters();
     }
 
     function renderCards() {
