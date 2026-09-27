@@ -585,11 +585,14 @@
               ${(api.Category || 'API').toUpperCase()}
             </span>
           </div>
-          <div class="api-footer-row">
+          <div class="api-footer-row" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-top:12px;">
             <span class="api-auth-pill"><i class="fa-solid fa-lock"></i> ${api.Auth || 'No Auth'}</span>
-            <a href="${api.Link}" target="_blank" rel="noopener" class="api-link-btn">
-              Get Endpoints <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <button class="fav-btn ${getBookmarks().includes(api.API) ? 'active' : ''}" onclick="toggleBookmark('${api.API.replace(/'/g, "\\'")}')" title="Bookmark">❤️</button>
+              <button class="test-trigger-btn" onclick="openTesterModal('${api.API.replace(/'/g, "\\'")}', '${api.Link.replace(/'/g, "\\'")}')">▶ Test</button>
+              <button class="code-btn" onclick="openCodeModal('${api.API.replace(/'/g, "\\'")}', '${api.Link.replace(/'/g, "\\'")}')">{ } Code</button>
+              <a href="${api.Link}" target="_blank" rel="noopener" class="api-link-btn">Docs ↗</a>
+            </div>
           </div>
         </div>
       `).join("");
