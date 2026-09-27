@@ -5,18 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AKHIL - API DEVELOPER HUB</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body {
-      background: #030712;
-      color: #f8fafc;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    body { background: #030712; color: #fff; min-height: 100vh; }
 
-    /* GATE VIEW */
-    #viewGate {
+    /* --- LOGIN GATE --- */
+    #gateScreen {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -26,53 +22,27 @@
       background: radial-gradient(circle at 50% 20%, #0d1527 0%, #030712 100%);
     }
     .ambient-header {
-      width: 100%;
-      max-width: 420px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.65rem;
-      letter-spacing: 2px;
-      color: #64748b;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 8px 0;
+      width: 100%; max-width: 420px; display: flex; justify-content: space-between;
+      font-size: 0.65rem; letter-spacing: 2px; color: #64748b; font-weight: 700; text-transform: uppercase; padding: 8px 0;
     }
     .neon-card {
-      width: 100%;
-      max-width: 380px;
-      background: rgba(11, 17, 32, 0.95);
-      border: 1.5px solid #00f2fe;
-      border-radius: 24px;
-      padding: 26px 20px;
-      box-shadow: 0 0 30px rgba(0, 242, 254, 0.25);
-      text-align: center;
-      margin: auto 0;
+      width: 100%; max-width: 380px; background: rgba(11, 17, 32, 0.95);
+      border: 1.5px solid #00f2fe; border-radius: 24px; padding: 26px 20px;
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.25); text-align: center; margin: auto 0;
     }
-    .logo-icon { font-size: 2.2rem; color: #00f2fe; margin-bottom: 4px; }
+    .logo-icon { font-size: 2.2rem; color: #00f2fe; margin-bottom: 4px; filter: drop-shadow(0 0 12px rgba(0,242,254,0.6)); }
     .title-main { font-size: 1.6rem; font-weight: 900; letter-spacing: 4px; color: #fff; }
     .title-sub { font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; color: #00f2fe; margin-bottom: 18px; text-transform: uppercase; }
     .lead-head { font-size: 1.25rem; font-weight: 800; margin-bottom: 4px; }
     .lead-desc { font-size: 0.75rem; color: #94a3b8; margin-bottom: 18px; }
 
     .btn-row {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 10px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #fff;
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; margin-bottom: 10px; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1); color: #fff;
     }
-    .btn-row.accent {
-      border: 1.5px solid #00f2fe;
-      background: rgba(0, 242, 254, 0.08);
-    }
+    .btn-row.accent { border: 1.5px solid #00f2fe; background: rgba(0, 242, 254, 0.08); }
     .btn-left { display: flex; align-items: center; gap: 10px; }
     .divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; font-size: 0.65rem; color: #64748b; font-weight: 700; }
     .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
@@ -86,52 +56,27 @@
     .strip-col i { font-size: 1rem; color: #00f2fe; }
     .strip-col span { font-size: 0.58rem; color: #94a3b8; text-align: center; }
 
-    /* DASHBOARD VIEW */
-    #viewDashboard { display: none; width: 100%; min-height: 100vh; }
+    /* --- DASHBOARD SCREEN --- */
+    #dashScreen { display: none; width: 100%; min-height: 100vh; }
     .nav-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 20px;
-      background: #0b1120;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      display: flex; justify-content: space-between; align-items: center; padding: 14px 20px;
+      background: #0b1120; border-bottom: 1px solid rgba(255, 255, 255, 0.08); position: sticky; top: 0; z-index: 10;
     }
     .brand-title { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.05rem; color: #00f2fe; }
     .user-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      background: rgba(0, 242, 254, 0.1);
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      color: #00f2fe;
-      font-size: 0.8rem;
-      font-weight: 700;
+      display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+      border-radius: 20px; background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.3);
+      color: #00f2fe; font-size: 0.8rem; font-weight: 700;
     }
     .btn-exit {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid #ef4444;
-      color: #ef4444;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-left: 10px;
+      background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #ef4444;
+      padding: 6px 14px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; margin-left: 10px;
     }
 
     .main-body { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
     .hero-box {
-      background: #0b1120;
-      border: 1px solid rgba(0, 242, 254, 0.2);
-      border-radius: 16px;
-      padding: 22px 16px;
-      text-align: center;
-      margin-bottom: 20px;
+      background: #0b1120; border: 1px solid rgba(0, 242, 254, 0.2); border-radius: 16px;
+      padding: 22px 16px; text-align: center; margin-bottom: 20px;
     }
     .hero-box h1 { font-size: 1.4rem; font-weight: 900; margin-bottom: 6px; }
     .hero-box p { font-size: 0.8rem; color: #94a3b8; margin-bottom: 16px; }
@@ -146,13 +91,8 @@
 
     .card-list { display: flex; flex-direction: column; gap: 10px; }
     .api-entry {
-      background: #0b1120;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: #0b1120; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;
+      padding: 14px; display: flex; justify-content: space-between; align-items: center;
     }
     .api-entry h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 3px; }
     .api-entry p { font-size: 0.75rem; color: #94a3b8; }
@@ -161,8 +101,8 @@
 </head>
 <body>
 
-  <!-- 1. LOGIN GATE -->
-  <div id="viewGate">
+  <!-- VIEW 1: GATE -->
+  <div id="gateScreen">
     <div class="ambient-header">
       <div>DREAM &bull; BUILD &bull; ACHIEVE</div>
       <div style="color:#10b981;">"Small steps build big dreams."</div>
@@ -226,8 +166,8 @@
     <div style="height:10px;"></div>
   </div>
 
-  <!-- 2. DASHBOARD -->
-  <div id="viewDashboard">
+  <!-- VIEW 2: DASHBOARD -->
+  <div id="dashScreen">
     <nav class="nav-top">
       <div class="brand-title">
         <i class="fa-solid fa-code"></i>
@@ -284,9 +224,6 @@
     </main>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBt_zPZndgJh82AK8tXWvOyN8ec3dY31KQ",
@@ -298,24 +235,26 @@
       measurementId: "G-2PG8X0PK0R"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
 
-    function renderScreen(user) {
-      const gate = document.getElementById("viewGate");
-      const dash = document.getElementById("viewDashboard");
+    function switchView(user) {
+      const g = document.getElementById("gateScreen");
+      const d = document.getElementById("dashScreen");
       if (user) {
-        gate.style.display = "none";
-        dash.style.display = "block";
-        const short = (user.displayName || user.phoneNumber || user.email || "Member").split(" ")[0];
-        document.getElementById("badgeUser").innerHTML = `<i class="fa-solid fa-circle-check"></i> ${short}`;
+        g.style.display = "none";
+        d.style.display = "block";
+        const n = (user.displayName || user.phoneNumber || user.email || "Member").split(" ")[0];
+        document.getElementById("badgeUser").innerHTML = `<i class="fa-solid fa-circle-check"></i> ${n}`;
       } else {
-        gate.style.display = "flex";
-        dash.style.display = "none";
+        g.style.display = "flex";
+        d.style.display = "none";
       }
     }
 
     firebase.auth().onAuthStateChanged((user) => {
-      renderScreen(user);
+      switchView(user);
     });
 
     function togglePhone() {
@@ -325,7 +264,7 @@
 
     function getQuota() {
       const today = new Date().toISOString().slice(0, 10);
-      let q = JSON.parse(localStorage.getItem("otp_akhil_quota") || "{}");
+      let q = JSON.parse(localStorage.getItem("otp_quota_akhil") || "{}");
       if (q.date !== today) q = { date: today, count: 0 };
       return q;
     }
@@ -354,7 +293,7 @@
         .then(conf => {
           window.confirmation = conf;
           q.count += 1;
-          localStorage.setItem("otp_akhil_quota", JSON.stringify(q));
+          localStorage.setItem("otp_quota_akhil", JSON.stringify(q));
           document.getElementById("btnReq").style.display = "none";
           document.getElementById("otpInputWrap").style.display = "flex";
           document.getElementById("quotaTxt").innerText = "Attempts left today: " + (5 - q.count);
@@ -366,31 +305,39 @@
       const code = document.getElementById("telOtp").value.trim();
       if (!code || !window.confirmation) return;
       window.confirmation.confirm(code)
-        .then(res => renderScreen(res.user))
+        .then(res => switchView(res.user))
         .catch(e => { document.getElementById("errTxt").innerText = "Invalid OTP: " + e.message; });
     }
 
     function runGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithPopup(provider)
-        .then(res => renderScreen(res.user))
-        .catch(() => {
-          firebase.auth().signInWithRedirect(provider);
+      const p = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(p)
+        .then(res => switchView(res.user))
+        .catch(e => {
+          if (e.code === "auth/popup-blocked" || e.code === "auth/popup-closed-by-user") {
+            firebase.auth().signInWithRedirect(p);
+          } else {
+            alert(e.message);
+          }
         });
     }
 
     function runGithub() {
-      const provider = new firebase.auth.GithubAuthProvider();
-      firebase.auth().signInWithPopup(provider)
-        .then(res => renderScreen(res.user))
-        .catch(() => {
-          firebase.auth().signInWithRedirect(provider);
+      const p = new firebase.auth.GithubAuthProvider();
+      firebase.auth().signInWithPopup(p)
+        .then(res => switchView(res.user))
+        .catch(e => {
+          if (e.code === "auth/popup-blocked" || e.code === "auth/popup-closed-by-user") {
+            firebase.auth().signInWithRedirect(p);
+          } else {
+            alert(e.message);
+          }
         });
     }
 
     function userLogout() {
       firebase.auth().signOut().then(() => {
-        window.location.reload();
+        switchView(null);
       });
     }
   </script>
