@@ -3,399 +3,434 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber API Hub | Production Gateway</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <title>Cyber API Hub | Developer Architecture Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #06080d;
-            --bg-card: rgba(13, 17, 26, 0.92);
-            --border-dim: rgba(255, 255, 255, 0.08);
-            --border-active: #0284c7;
-            --accent-cyan: #38bdf8;
-            --accent-emerald: #10b981;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --border-subtle: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --text-heading: #0f172a;
+            --text-body: #475569;
+            --text-dim: #94a3b8;
+            --primary: #0284c7;
+            --primary-soft: #f0f9ff;
+            --emerald: #059669;
             --font-mono: 'JetBrains Mono', monospace;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+            --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+            --shadow-hover: 0 20px 35px -10px rgba(15, 23, 42, 0.08);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background-color: var(--bg-base);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            color: var(--text-body);
+            font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
             line-height: 1.5;
-            overflow-x: hidden;
-        }
-        .orbit-grid {
-            position: fixed;
-            inset: 0;
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 60%),
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
-            pointer-events: none;
-            z-index: 0;
+                radial-gradient(at 50% 0%, #ffffff 0%, transparent 75%),
+                linear-gradient(rgba(226, 232, 240, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(226, 232, 240, 0.3) 1px, transparent 1px);
+            background-size: 100% 100%, 36px 36px, 36px 36px;
         }
         nav {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(6, 8, 13, 0.88);
-            backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border-dim);
-            padding: 14px 24px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .brand {
-            font-weight: 700;
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
-            color: #fff;
+            font-weight: 800;
+            font-size: 1.05rem;
+            letter-spacing: -0.5px;
+            color: var(--text-heading);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .brand-dot {
-            width: 8px;
-            height: 8px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
-            background: var(--accent-cyan);
-            box-shadow: 0 0 10px var(--accent-cyan);
+            background: var(--primary);
+            box-shadow: 0 0 8px rgba(2, 132, 199, 0.6);
         }
-        .nav-actions { display: flex; align-items: center; gap: 12px; }
+        .nav-actions { display: flex; align-items: center; gap: 14px; }
         .node-status {
             font-family: var(--font-mono);
             font-size: 11px;
-            color: var(--accent-emerald);
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            padding: 4px 10px;
-            border-radius: 6px;
+            font-weight: 600;
+            color: var(--emerald);
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            padding: 5px 12px;
+            border-radius: 20px;
         }
         .admin-link {
             font-family: var(--font-mono);
             font-size: 12px;
             font-weight: 600;
-            color: #fff;
+            color: var(--text-heading);
             text-decoration: none;
-            background: #1e293b;
-            border: 1px solid var(--border-dim);
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
             padding: 6px 14px;
-            border-radius: 6px;
-            transition: all 0.2s;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
         }
-        .admin-link:hover { border-color: var(--accent-cyan); }
+        .admin-link:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
         .main-container {
-            max-width: 1180px;
+            max-width: 1160px;
             margin: 0 auto;
-            padding: 40px 20px 80px;
-            position: relative;
-            z-index: 1;
+            padding: 45px 24px 90px;
         }
-        .hero-section {
+        .hero {
             text-align: center;
-            max-width: 720px;
+            max-width: 740px;
             margin: 0 auto 36px;
         }
         .hero-tag {
             font-family: var(--font-mono);
             font-size: 11px;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent-cyan);
-            background: rgba(56, 189, 248, 0.08);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            padding: 4px 12px;
-            border-radius: 4px;
+            letter-spacing: 0.8px;
+            color: var(--primary);
+            background: var(--primary-soft);
+            border: 1px solid #bae6fd;
+            padding: 5px 14px;
+            border-radius: 20px;
             display: inline-block;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
         .hero-title {
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(2.2rem, 4.5vw, 3.4rem);
             font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 10px;
+            letter-spacing: -1.5px;
+            color: var(--text-heading);
+            line-height: 1.15;
+            margin-bottom: 12px;
         }
         .hero-sub {
-            color: var(--text-muted);
-            font-size: 0.95rem;
+            color: var(--text-body);
+            font-size: 1.05rem;
+            line-height: 1.6;
         }
-        .search-container {
+        .search-wrap {
+            max-width: 640px;
+            margin: 32px auto 20px;
             display: flex;
-            gap: 8px;
-            max-width: 620px;
-            margin: 28px auto 20px;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            padding: 6px;
+            transition: all 0.2s;
         }
-        .search-bar {
+        .search-wrap:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12);
+        }
+        .search-input {
             flex: 1;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid var(--border-dim);
-            color: #fff;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .search-bar:focus { border-color: var(--accent-cyan); }
-        .search-btn {
-            background: var(--accent-cyan);
-            color: #04101e;
-            font-weight: 700;
-            font-size: 13px;
-            padding: 0 20px;
+            background: transparent;
             border: none;
+            padding: 10px 16px;
+            font-size: 14.5px;
+            font-family: inherit;
+            color: var(--text-heading);
+            outline: none;
+        }
+        .search-btn {
+            background: var(--text-heading);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px;
+            border: none;
+            padding: 0 22px;
             border-radius: 8px;
             cursor: pointer;
+            transition: background 0.2s;
         }
+        .search-btn:hover { background: #1e293b; }
+
         .filter-row {
             display: flex;
             gap: 8px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 35px;
-        }
-        .filter-pill {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--border-dim);
-            color: var(--text-muted);
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .filter-pill.active, .filter-pill:hover {
-            color: #fff;
-            border-color: var(--accent-cyan);
-            background: rgba(56, 189, 248, 0.12);
-        }
-        .metrics-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 14px;
             margin-bottom: 40px;
         }
-        .metric-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-dim);
-            padding: 16px 20px;
-            border-radius: 10px;
+        .filter-pill {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-body);
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        .filter-pill.active, .filter-pill:hover {
+            color: #ffffff;
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 45px;
+        }
+        .metric-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
         }
         .metric-val {
-            font-size: 1.6rem;
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 800;
             font-family: var(--font-mono);
-            color: #fff;
+            color: var(--text-heading);
+            letter-spacing: -0.5px;
         }
-        .metric-label {
-            font-size: 11px;
+        .metric-lbl {
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-top: 2px;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-top: 4px;
         }
-        .grid-header {
+
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--border-dim);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
         }
-        .grid-header h2 { font-size: 1rem; font-weight: 600; }
-        .api-catalog {
+        .section-header h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-heading);
+        }
+
+        .api-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            gap: 22px;
         }
-        .api-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border-dim);
-            border-radius: 12px;
-            padding: 20px;
+        .api-card {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.2s, border-color 0.2s;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .api-panel:hover {
-            transform: translateY(-2px);
-            border-color: rgba(56, 189, 248, 0.4);
+        .api-card:hover {
+            transform: translateY(-4px);
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow-hover);
         }
-        .card-meta {
+        .card-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .tag-cat {
             font-family: var(--font-mono);
-            font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            background: #1e293b;
-            color: var(--accent-cyan);
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            font-size: 10.5px;
+            font-weight: 600;
             text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            border: 1px solid #bae6fd;
         }
         .tag-auth {
             font-family: var(--font-mono);
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-        .api-name {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 6px;
-        }
-        .api-desc {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 14px;
-            line-height: 1.4;
-        }
-        .url-box {
-            font-family: var(--font-mono);
             font-size: 11px;
-            background: #020408;
-            border: 1px solid var(--border-dim);
-            padding: 8px 10px;
-            border-radius: 6px;
-            color: var(--accent-cyan);
+            font-weight: 500;
+            color: var(--emerald);
+            background: #ecfdf5;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 8px;
+        }
+        .card-desc {
+            font-size: 0.9rem;
+            color: var(--text-body);
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+        .card-url {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            background: #f1f5f9;
+            border: 1px solid var(--border-subtle);
+            color: #334155;
+            padding: 9px 12px;
+            border-radius: 8px;
             word-break: break-all;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .btn-test {
             width: 100%;
             background: #0f172a;
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            color: #fff;
-            padding: 9px;
-            border-radius: 6px;
-            font-size: 12px;
+            color: #ffffff;
+            border: none;
+            padding: 11px;
+            border-radius: 10px;
             font-weight: 600;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-test:hover {
-            background: var(--accent-cyan);
-            color: #04101e;
-        }
-        #testModal {
+        .btn-test:hover { background: #0284c7; }
+
+        /* TESTER MODAL */
+        #testerModal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.82);
+            background: rgba(15, 23, 42, 0.45);
             backdrop-filter: blur(8px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-        .modal-body {
-            background: #0b0f19;
-            border: 1px solid var(--border-active);
+        .modal-box {
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
             width: 100%;
-            max-width: 650px;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            max-width: 660px;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
         }
         .modal-head {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
-            border-bottom: 1px solid var(--border-dim);
-            padding-bottom: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
         }
-        .modal-title { font-size: 0.95rem; font-weight: 700; }
+        .modal-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-heading);
+        }
         .modal-close {
             background: transparent;
             border: none;
-            color: var(--text-muted);
-            font-size: 20px;
+            color: var(--text-dim);
+            font-size: 22px;
             cursor: pointer;
         }
-        .input-bar {
+        .bar-input {
             display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 14px;
         }
-        .input-bar select {
-            background: #1e293b;
-            border: 1px solid var(--border-dim);
-            color: var(--accent-cyan);
-            padding: 8px 10px;
-            border-radius: 6px;
+        .bar-input select {
+            background: #f8fafc;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-heading);
+            padding: 10px 12px;
+            border-radius: 8px;
             font-family: var(--font-mono);
-            font-size: 12px;
+            font-weight: 600;
             outline: none;
         }
-        .input-bar input {
+        .bar-input input {
             flex: 1;
-            background: #020408;
-            border: 1px solid var(--border-dim);
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 6px;
+            background: #f8fafc;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-heading);
+            padding: 10px 14px;
+            border-radius: 8px;
             font-family: var(--font-mono);
-            font-size: 12px;
+            font-size: 12.5px;
             outline: none;
         }
-        .execute-btn {
-            background: var(--accent-emerald);
-            color: #032117;
+        .btn-dispatch {
+            background: var(--emerald);
+            color: #ffffff;
             font-weight: 700;
             border: none;
-            padding: 0 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .res-display {
-            background: #020408;
-            border: 1px solid var(--border-dim);
+            padding: 0 20px;
             border-radius: 8px;
-            padding: 12px;
-            height: 220px;
-            overflow-y: auto;
-            font-family: var(--font-mono);
-            font-size: 11.5px;
+            cursor: pointer;
+        }
+        .res-view {
+            background: #090d16;
             color: #38bdf8;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            height: 230px;
+            overflow-y: auto;
             white-space: pre-wrap;
         }
     </style>
 </head>
 <body>
-    <div class="orbit-grid"></div>
     <nav>
         <a href="index.html" class="brand">
             <span class="brand-dot"></span>
-            CYBER API DIRECTORY
+            CYBER API HUB
         </a>
         <div class="nav-actions">
-            <span class="node-status">NODE SYNC ACTIVE</span>
-            <a href="admin.html" class="admin-link">CONTROL PANEL</a>
+            <span class="node-status">PROTOCOL SYNCHRONIZED</span>
+            <a href="admin.html" class="admin-link">ROOT CONTROLLER</a>
         </div>
     </nav>
+
     <div class="main-container">
-        <div class="hero-section">
-            <div class="hero-tag">System Architecture v3.1</div>
-            <h1 class="hero-title">High-Performance API Protocol</h1>
-            <p class="hero-sub">Decentralized endpoint discovery, live telemetry and sandbox verification.</p>
-            <div class="search-container">
-                <input type="text" id="searchInput" class="search-bar" placeholder="Filter endpoints (e.g. nvidia, rpc, auth)...">
-                <button class="search-btn" onclick="filterApis()">Filter</button>
+        <div class="hero">
+            <div class="hero-tag">Enterprise Gateway Core</div>
+            <h1 class="hero-title">Developer API Infrastructure</h1>
+            <p class="hero-sub">Explore production endpoints, real-time telemetry, and run live socket requests directly in the sandbox.</p>
+
+            <div class="search-wrap">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search endpoints by title, Nvidia, Solana, Cloud...">
+                <button class="search-btn" onclick="filterCatalog()">Search</button>
             </div>
+
             <div class="filter-row">
                 <div class="filter-pill active" onclick="setCategory('all', this)">All Nodes</div>
                 <div class="filter-pill" onclick="setCategory('AI / Machine Learning', this)">AI Compute</div>
@@ -404,126 +439,136 @@
                 <div class="filter-pill" onclick="setCategory('Data / Analytics', this)">Telemetry</div>
             </div>
         </div>
-        <div class="metrics-row">
-            <div class="metric-box">
-                <div class="metric-val" id="totalCount">0</div>
-                <div class="metric-label">Managed Endpoints</div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-val" id="totalMetrics">0</div>
+                <div class="metric-lbl">Registered Nodes</div>
             </div>
-            <div class="metric-box">
+            <div class="metric-card">
                 <div class="metric-val">SHA-256</div>
-                <div class="metric-label">Verification Standard</div>
+                <div class="metric-lbl">Security Architecture</div>
             </div>
-            <div class="metric-box">
-                <div class="metric-val" style="color: var(--accent-emerald);">99.98%</div>
-                <div class="metric-label">Node Reliability</div>
+            <div class="metric-card">
+                <div class="metric-val" style="color: var(--emerald);">99.98%</div>
+                <div class="metric-lbl">Uptime Standard</div>
             </div>
         </div>
-        <div class="grid-header">
-            <h2>Registered API Endpoints</h2>
-            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);">Showing: <span id="showingCount">0</span></span>
+
+        <div class="section-header">
+            <h2>Active Production Endpoints</h2>
+            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);">Visible: <span id="visibleMetrics">0</span></span>
         </div>
-        <div class="api-catalog" id="apiGrid"></div>
+
+        <div class="api-grid" id="catalogGrid"></div>
     </div>
 
-    <div id="testModal">
-        <div class="modal-body">
+    <!-- MODAL -->
+    <div id="testerModal">
+        <div class="modal-box">
             <div class="modal-head">
-                <span class="modal-title">API Sandbox Verification</span>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <div class="modal-title">Live Endpoint Sandbox</div>
+                <button class="modal-close" onclick="closeSandbox()">&times;</button>
             </div>
-            <div class="input-bar">
+            <div class="bar-input">
                 <select id="modalMethod">
                     <option value="GET">GET</option>
                     <option value="POST">POST</option>
                 </select>
                 <input type="text" id="modalUrl">
-                <button class="execute-btn" onclick="runSandboxTest()">Execute</button>
+                <button class="btn-dispatch" onclick="fireRequest()">Execute</button>
             </div>
-            <div style="font-family: var(--font-mono); font-size: 11px; margin-bottom: 6px; color: var(--text-muted);">
-                HTTP STATUS: <span id="modalStatus" style="color: var(--accent-cyan);">AWAITING DISPATCH</span>
+            <div style="font-family: var(--font-mono); font-size: 11px; margin-bottom: 8px; color: var(--text-dim);">
+                HTTP STATUS: <span id="statusFlag" style="color: var(--primary); font-weight: 600;">AWAITING DISPATCH</span>
             </div>
-            <div class="res-display" id="modalResult">// Ready for request execution...</div>
+            <div class="res-view" id="responseBox">// Ready for test payload execution...</div>
         </div>
     </div>
 
     <script>
-    const DEFAULT_CATALOG = [
+    const SEED_APIS = [
         {
             title: "Nvidia Cloud Omniverse AI",
             url: "https://api.nvidia.com/v1/generative",
             category: "AI / Machine Learning",
             auth: "Bearer Token",
-            desc: "Neural tensor execution and computer vision pipelines."
+            desc: "Neural processing pipelines and generative vision inference on GPU clusters."
         },
         {
             title: "Solana RPC Mainnet Gateway",
             url: "https://api.mainnet-beta.solana.com",
             category: "Crypto / Web3",
             auth: "Open Access",
-            desc: "Ledger transaction verification and real-time block streaming."
+            desc: "Ledger transaction verification and real-time block telemetry streaming."
         },
         {
             title: "Akhil Core Database Engine",
             url: "https://akhil-private-backend.onrender.com/api/db/all",
             category: "Cloud & Systems",
             auth: "x-api-key",
-            desc: "Persistent SQLite relational table engine with automated CRUD operations."
+            desc: "ACID-compliant SQLite relational storage engine with REST CRUD capabilities."
         }
     ];
 
-    let registry = [];
-    let currentCat = 'all';
+    let store = [];
+    let activeCategory = 'all';
 
-    async function initializeSystem() {
-        let stored = localStorage.getItem("cyber_hub_apis");
-        if (stored) {
-            try { registry = JSON.parse(stored); } catch(e) { registry = [...DEFAULT_CATALOG]; }
+    async function loadCatalog() {
+        let saved = localStorage.getItem("cyber_hub_apis");
+        if (saved) {
+            try { store = JSON.parse(saved); } catch(e) { store = [...SEED_APIS]; }
         } else {
-            registry = [...DEFAULT_CATALOG];
-            localStorage.setItem("cyber_hub_apis", JSON.stringify(registry));
+            store = [...SEED_APIS];
+            localStorage.setItem("cyber_hub_apis", JSON.stringify(store));
         }
 
         try {
             let res = await fetch("https://akhil-private-backend.onrender.com/api/db/all?collection=cyber_apis&api_key=akhil_8630_secure");
-            let data = await res.json();
-            if (data.status === "success" && data.records && data.records.length > 0) {
-                data.records.forEach(item => {
-                    if (item.data && item.data.title && !registry.some(r => r.title === item.data.title)) {
-                        registry.unshift(item.data);
+            let d = await res.json();
+            if (d.status === "success" && d.records && d.records.length > 0) {
+                d.records.forEach(item => {
+                    if (item.data && item.data.title && !store.some(x => x.title === item.data.title)) {
+                        store.unshift(item.data);
                     }
                 });
             }
-        } catch(err) {}
+        } catch(e) {}
 
-        renderCatalog(registry);
+        render(store);
     }
 
-    function renderCatalog(list) {
-        const grid = document.getElementById("apiGrid");
+    function render(list) {
+        const grid = document.getElementById("catalogGrid");
         grid.innerHTML = "";
-        document.getElementById("totalCount").innerText = registry.length;
-        document.getElementById("showingCount").innerText = list.length;
+
+        document.getElementById("totalMetrics").innerText = store.length;
+        document.getElementById("visibleMetrics").innerText = list.length;
 
         if (list.length === 0) {
-            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; background: rgba(13,17,26,0.6); border-radius: 8px; border: 1px dashed var(--border-dim);"><div style="font-size: 14px; color: var(--text-muted);">No endpoints match the specified search parameters.</div></div>`;
+            grid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 50px 20px; background: #ffffff; border-radius: 16px; border: 1px dashed var(--border-subtle);">
+                    <div style="font-size: 15px; font-weight: 600; color: var(--text-heading); margin-bottom: 4px;">No matching endpoints found</div>
+                    <div style="font-size: 13px; color: var(--text-dim);">Try searching with another keyword or deploy a new endpoint from the admin console.</div>
+                </div>
+            `;
             return;
         }
 
         list.forEach(item => {
             const card = document.createElement("div");
-            card.className = "api-panel";
+            card.className = "api-card";
             card.innerHTML = `
                 <div>
-                    <div class="card-meta">
+                    <div class="card-top">
                         <span class="tag-cat">${clean(item.category || 'Service')}</span>
                         <span class="tag-auth">${clean(item.auth || 'Open')}</span>
                     </div>
-                    <div class="api-name">${clean(item.title)}</div>
-                    <div class="api-desc">${clean(item.desc || 'Active production microservice endpoint.')}</div>
+                    <div class="card-title">${clean(item.title)}</div>
+                    <div class="card-desc">${clean(item.desc || 'High throughput API service endpoint.')}</div>
                 </div>
                 <div>
-                    <div class="url-box">${clean(item.url)}</div>
-                    <button class="btn-test" onclick="openTester('${encodeURIComponent(item.url)}')">Test Endpoint</button>
+                    <div class="card-url">${clean(item.url)}</div>
+                    <button class="btn-test" onclick="openSandbox('${encodeURIComponent(item.url)}')">Test Endpoint</button>
                 </div>
             `;
             grid.appendChild(card);
@@ -535,69 +580,69 @@
         return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
 
-    function filterApis() {
+    function filterCatalog() {
         const q = document.getElementById("searchInput").value.toLowerCase().trim();
-        let matched = registry.filter(item => {
-            let matchCategory = (currentCat === 'all') || (item.category === currentCat);
-            let matchText = item.title.toLowerCase().includes(q) || 
+        let matched = store.filter(item => {
+            let catMatch = (activeCategory === 'all') || (item.category === activeCategory);
+            let textMatch = item.title.toLowerCase().includes(q) || 
                             (item.desc && item.desc.toLowerCase().includes(q)) || 
                             item.url.toLowerCase().includes(q);
-            return matchCategory && matchText;
+            return catMatch && textMatch;
         });
-        renderCatalog(matched);
+        render(matched);
     }
 
-    document.getElementById("searchInput").addEventListener("input", filterApis);
+    document.getElementById("searchInput").addEventListener("input", filterCatalog);
 
     function setCategory(cat, el) {
-        currentCat = cat;
+        activeCategory = cat;
         document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
         el.classList.add("active");
-        filterApis();
+        filterCatalog();
     }
 
-    function openTester(encoded) {
+    function openSandbox(encoded) {
         document.getElementById("modalUrl").value = decodeURIComponent(encoded);
-        document.getElementById("modalStatus").innerText = "IDLE";
-        document.getElementById("modalResult").innerText = "// Click Execute to dispatch network frame...";
-        document.getElementById("testModal").style.display = "flex";
+        document.getElementById("statusFlag").innerText = "IDLE";
+        document.getElementById("responseBox").innerText = "// Click Execute to dispatch network socket request...";
+        document.getElementById("testerModal").style.display = "flex";
     }
 
-    function closeModal() {
-        document.getElementById("testModal").style.display = "none";
+    function closeSandbox() {
+        document.getElementById("testerModal").style.display = "none";
     }
 
-    async function runSandboxTest() {
+    async function fireRequest() {
         const url = document.getElementById("modalUrl").value.trim();
         const method = document.getElementById("modalMethod").value;
-        const resBox = document.getElementById("modalResult");
-        const statusBox = document.getElementById("modalStatus");
+        const resBox = document.getElementById("responseBox");
+        const statusFlag = document.getElementById("statusFlag");
 
         if (!url) return;
-        statusBox.innerText = "TRANSMITTING...";
-        resBox.innerText = "Opening TCP socket to target URL...";
+        statusFlag.innerText = "TRANSMITTING...";
+        resBox.innerText = "Sending HTTP network request...";
 
         try {
             const start = performance.now();
-            const response = await fetch(url, { method });
-            const duration = Math.round(performance.now() - start);
-            statusBox.innerText = `HTTP ${response.status} (${duration}ms)`;
+            const res = await fetch(url, { method });
+            const ms = Math.round(performance.now() - start);
+            statusFlag.innerText = `HTTP ${res.status} (${ms}ms)`;
 
-            const isJson = response.headers.get("content-type")?.includes("application/json");
+            const isJson = res.headers.get("content-type")?.includes("application/json");
             if (isJson) {
-                const json = await response.json();
+                const json = await res.json();
                 resBox.innerText = JSON.stringify(json, null, 2);
             } else {
-                const txt = await response.text();
-                resBox.innerText = txt.slice(0, 1500) + (txt.length > 1500 ? "\n\n...[Payload Truncated]" : "");
+                const txt = await res.text();
+                resBox.innerText = txt.slice(0, 1600) + (txt.length > 1600 ? "\n\n...[Truncated]" : "");
             }
-        } catch(e) {
-            statusBox.innerText = "CORS RESTRICTED / NETWORK TIMEOUT";
-            resBox.innerText = `Error: ${e.message}\nNote: External servers without Access-Control-Allow-Origin require backend routing.`;
+        } catch(err) {
+            statusFlag.innerText = "CORS RESTRICTED / NETWORK TIMEOUT";
+            resBox.innerText = `Error: ${err.message}\nNote: External servers without Access-Control-Allow-Origin headers require backend routing.`;
         }
     }
 
-    initializeSystem();
+    loadCatalog();
     </script>
 </body>
 </html>
