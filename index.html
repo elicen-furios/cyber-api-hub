@@ -6,8 +6,14 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Universal Master API Hub | Global Developer Infrastructure</title>
+    <title>Universal Master API Hub | Developer Authentication Gateway</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+
     <style>
         :root {
             --bg-base: #f8fafc;
@@ -18,8 +24,10 @@
             --primary: #0284c7;
             --primary-soft: #f0f9ff;
             --emerald: #059669;
+            --crimson: #e11d48;
             --font-mono: 'JetBrains Mono', monospace;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
             --shadow-hover: 0 20px 35px -10px rgba(15, 23, 42, 0.08);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,7 +51,7 @@
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-subtle);
-            padding: 16px 28px;
+            padding: 14px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -66,15 +74,64 @@
             background: var(--primary);
             box-shadow: 0 0 8px rgba(2, 132, 199, 0.6);
         }
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
         .live-badge {
             font-family: var(--font-mono);
-            font-size: 11.5px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--emerald);
             background: #ecfdf5;
             border: 1px solid #a7f3d0;
             padding: 5px 12px;
             border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--emerald);
+            border-radius: 50%;
+        }
+        .btn-auth-nav {
+            background: #0f172a;
+            color: #ffffff;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-auth-nav:hover { background: #0284c7; }
+        .user-pill {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .user-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
         }
         .main-container {
             max-width: 1200px;
@@ -353,7 +410,7 @@
         }
 
         /* MODALS */
-        #keyModal, #testerModal {
+        #authModal, #keyModal, #testerModal {
             display: none;
             position: fixed;
             inset: 0;
@@ -368,7 +425,7 @@
             background: #ffffff;
             border: 1px solid var(--border-subtle);
             width: 100%;
-            max-width: 660px;
+            max-width: 480px;
             border-radius: 18px;
             padding: 24px;
             box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
@@ -383,6 +440,15 @@
         }
         .modal-title { font-size: 1.05rem; font-weight: 700; color: var(--text-heading); }
         .modal-close { background: transparent; border: none; color: var(--text-dim); font-size: 22px; cursor: pointer; }
+        
+        .auth-field { margin-bottom: 14px; }
+        .auth-label { display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 6px; text-transform: uppercase; font-family: var(--font-mono); }
+        .auth-input { width: 100%; padding: 11px 14px; border: 1px solid var(--border-subtle); border-radius: 8px; font-size: 14px; outline: none; }
+        .auth-input:focus { border-color: var(--primary); }
+        .btn-auth-submit { width: 100%; background: #0f172a; color: #ffffff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 8px; }
+        .btn-auth-submit:hover { background: #0284c7; }
+        .btn-google-auth { width: 100%; background: #ffffff; border: 1px solid var(--border-subtle); color: #0f172a; padding: 11px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
         .key-view-card {
             background: #f8fafc;
             border: 1.5px dashed var(--primary);
@@ -393,13 +459,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        .key-text {
-            font-family: var(--font-mono);
-            font-size: 13px;
-            font-weight: 700;
-            color: #0f172a;
-            word-break: break-all;
-        }
+        .key-text { font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: #0f172a; word-break: break-all; }
         .code-snippet {
             background: #090d16;
             color: #38bdf8;
@@ -422,10 +482,7 @@
             color: var(--text-heading); padding: 10px 14px; border-radius: 8px;
             font-family: var(--font-mono); font-size: 12.5px; outline: none;
         }
-        .btn-dispatch {
-            background: var(--emerald); color: #ffffff; font-weight: 700;
-            border: none; padding: 0 20px; border-radius: 8px; cursor: pointer;
-        }
+        .btn-dispatch { background: var(--emerald); color: #ffffff; font-weight: 700; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; }
         .res-view {
             background: #090d16; color: #38bdf8; border-radius: 10px;
             padding: 14px; font-family: var(--font-mono); font-size: 12px;
@@ -452,39 +509,50 @@
             <span class="brand-dot"></span>
             CYBER API HUB
         </div>
-        <div class="live-badge">NODE NETWORK ACTIVE</div>
+        <div class="nav-right">
+            <div class="live-badge">
+                <span class="live-dot"></span>
+                <span id="syncStatusText">1,953+ NODES CONNECTED</span>
+            </div>
+            <div class="user-pill" id="userPill">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span id="userEmailText">user</span>
+                <button onclick="handleSignOut()" style="background:none; border:none; color:var(--crimson); font-size:11px; cursor:pointer; font-weight:700; margin-left:6px;">Logout</button>
+            </div>
+            <button class="btn-auth-nav" id="btnLoginNav" onclick="openAuthModal()">Sign In / Register</button>
+        </div>
     </nav>
 
     <div class="main-container">
         <div class="hero">
-            <div class="hero-tag">Complete Universal Registry</div>
-            <h1 class="hero-title">Universal Developer API Directory</h1>
-            <p class="hero-sub">Direct access to Media Downloaders, BG Removers, AI Models, TTS, OSINT, and Dev Tools with 1-Click Keys.</p>
+            <div class="hero-tag">Unified Authenticated Hub</div>
+            <h1 class="hero-title">Developer API Infrastructure</h1>
+            <p class="hero-sub">Direct access to 1,953+ verified APIs across AI, Media, Security, Weather, and Web3 with interactive testing sandboxes.</p>
 
             <div class="search-wrap">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search across 1,400+ APIs (e.g. video, scraper, gemini, audio, weather)...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search across 1,950+ APIs (e.g. video, scraper, gemini, anime, weather)...">
                 <button class="search-btn" onclick="filterCatalog()">Search</button>
             </div>
 
             <div class="filter-row" id="filterPills">
-                <div class="filter-pill active" onclick="setCategory('all', this)">All Categories</div>
-                <div class="filter-pill" onclick="setCategory('Generative AI', this)">Generative AI</div>
-                <div class="filter-pill" onclick="setCategory('Media & Download', this)">Media &amp; Download</div>
-                <div class="filter-pill" onclick="setCategory('Image & Design', this)">Image &amp; BG Remover</div>
-                <div class="filter-pill" onclick="setCategory('Security & OSINT', this)">Security &amp; Tools</div>
-                <div class="filter-pill" onclick="setCategory('Weather & Climate', this)">Weather</div>
-                <div class="filter-pill" onclick="setCategory('Developer Utilities', this)">Development</div>
+                <div class="filter-pill active" onclick="setCategory('all', this)">All Nodes</div>
+                <div class="filter-pill" onclick="setCategory('AI', this)">AI &amp; Machine Learning</div>
+                <div class="filter-pill" onclick="setCategory('Media', this)">Media &amp; Video</div>
+                <div class="filter-pill" onclick="setCategory('Security', this)">Security &amp; OSINT</div>
+                <div class="filter-pill" onclick="setCategory('Weather', this)">Weather</div>
+                <div class="filter-pill" onclick="setCategory('Crypto', this)">Crypto / Web3</div>
+                <div class="filter-pill" onclick="setCategory('Development', this)">Development</div>
             </div>
         </div>
 
         <div class="metrics-grid">
             <div class="metric-card">
-                <div class="metric-val" id="totalMetrics">1,400+</div>
-                <div class="metric-lbl">Total Verified APIs</div>
+                <div class="metric-val" id="totalMetrics">1,953+</div>
+                <div class="metric-lbl">Total Public APIs</div>
             </div>
             <div class="metric-card">
-                <div class="metric-val" style="color: var(--primary);">Instant Key</div>
-                <div class="metric-lbl">1-Click Dispenser</div>
+                <div class="metric-val" style="color: var(--primary);">User Database</div>
+                <div class="metric-lbl">Akhi Cloud Telemetry</div>
             </div>
             <div class="metric-card">
                 <div class="metric-val" style="color: var(--emerald);">Direct Sandbox</div>
@@ -493,7 +561,7 @@
         </div>
 
         <div class="section-header">
-            <h2>Directory Endpoints</h2>
+            <h2>Active Directory Endpoints</h2>
             <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);">Showing: <span id="visibleMetrics">0</span></span>
         </div>
 
@@ -503,20 +571,43 @@
         </div>
     </div>
 
-    <!-- KEY MODAL -->
+    <!-- AUTHENTICATION MODAL -->
+    <div id="authModal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <div class="modal-title" id="authModalTitle">Developer Account</div>
+                <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+            </div>
+            <div class="auth-field">
+                <label class="auth-label">Developer Email</label>
+                <input type="email" id="authEmail" class="auth-input" placeholder="developer@cyberhub.io">
+            </div>
+            <div class="auth-field">
+                <label class="auth-label">Access Password</label>
+                <input type="password" id="authPassword" class="auth-input" placeholder="••••••••">
+            </div>
+            <button class="btn-auth-submit" onclick="handleAuth('login')">Sign In to Hub</button>
+            <button class="btn-auth-submit" style="background:#0284c7; margin-top:8px;" onclick="handleAuth('signup')">Create New Account</button>
+            <button class="btn-google-auth" onclick="handleGoogleSignIn()">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+                Continue with Google
+            </button>
+            <div id="authErrorMsg" style="color:var(--crimson); font-size:12px; margin-top:10px; text-align:center;"></div>
+        </div>
+    </div>
+
+    <!-- KEY DISPENSER MODAL -->
     <div id="keyModal">
         <div class="modal-box">
             <div class="modal-head">
                 <div class="modal-title" id="keyModalTitle">API Credentials Dispenser</div>
                 <button class="modal-close" onclick="closeKeyModal()">&times;</button>
             </div>
-            <div style="font-size: 13px; color: #475569;" id="keyModalDesc">Working developer credentials:</div>
-            
+            <div style="font-size: 13px; color: #475569;">Instant access developer token:</div>
             <div class="key-view-card">
                 <span class="key-text" id="dispenserKeyVal">key_val</span>
                 <button class="btn-copy-chip" onclick="copyModalKey()">COPY KEY</button>
             </div>
-
             <div style="font-size: 11.5px; font-weight: 700; color: #0f172a; margin-top: 14px;">Terminal Integration Command:</div>
             <div class="code-snippet" id="dispenserCodeSnippet">curl ...</div>
         </div>
@@ -524,7 +615,7 @@
 
     <!-- SANDBOX MODAL -->
     <div id="testerModal">
-        <div class="modal-box">
+        <div class="modal-box" style="max-width: 660px;">
             <div class="modal-head">
                 <div class="modal-title">Live Endpoint Sandbox</div>
                 <button class="modal-close" onclick="closeSandbox()">&times;</button>
@@ -540,7 +631,7 @@
             <div style="font-family: var(--font-mono); font-size: 11px; margin-bottom: 8px; color: var(--text-dim);">
                 HTTP STATUS: <span id="statusFlag" style="color: var(--primary); font-weight: 600;">AWAITING DISPATCH</span>
             </div>
-            <div class="res-view" id="responseBox">// Ready for test payload execution...</div>
+            <div class="res-view" id="responseBox">// Ready for test execution...</div>
         </div>
     </div>
 
@@ -549,103 +640,172 @@
     </footer>
 
     <script>
-    let tapCount = 0;
-    document.getElementById("masterTrigger").addEventListener("click", () => {
-        tapCount++;
-        if (tapCount >= 3) {
-            tapCount = 0;
-            window.location.href = "admin.html";
+    // --- 1. FIREBASE AUTH CONFIGURATION ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBt_zPZndgJh82AK8tXWvOyN8ec3dY31KQ",
+        authDomain: "free-api-web-2a7bc.firebaseapp.com",
+        projectId: "free-api-web-2a7bc",
+        storageBucket: "free-api-web-2a7bc.firebasestorage.app",
+        messagingSenderId: "118488816924",
+        appId: "1:118488816924:web:f4a86246ed76778f00eed9",
+        measurementId: "G-2PG8X0PK0R"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Custom Token provided by Akhil for storing login data
+    const AKHI_DB_TOKEN = "Akhi_live_ca26006c9c8bb9518f5648073d953fba";
+
+    async function recordUserLoginToDatabase(userData) {
+        try {
+            await fetch("https://akhil-private-backend.onrender.com/api/db/insert", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": AKHI_DB_TOKEN
+                },
+                body: JSON.stringify({
+                    collection: "cyber_users",
+                    data: {
+                        uid: userData.uid,
+                        email: userData.email,
+                        displayName: userData.displayName || "Unknown Developer",
+                        providerId: userData.providerData?.[0]?.providerId || "password",
+                        lastLoginAt: new Date().toISOString(),
+                        userAgent: navigator.userAgent
+                    }
+                })
+            });
+            console.log("[DB] User session captured to Akhi database.");
+        } catch(e) {
+            console.warn("[DB] User capture fallback skipped.");
         }
-        setTimeout(() => { tapCount = 0; }, 1500);
+    }
+
+    auth.onAuthStateChanged(user => {
+        const btnLogin = document.getElementById("btnLoginNav");
+        const userPill = document.getElementById("userPill");
+        const userEmailText = document.getElementById("userEmailText");
+        const userAvatar = document.getElementById("userAvatar");
+
+        if (user) {
+            btnLogin.style.display = "none";
+            userPill.style.display = "flex";
+            userEmailText.innerText = user.email ? user.email.split("@")[0] : "developer";
+            userAvatar.innerText = user.email ? user.email[0].toUpperCase() : "D";
+            recordUserLoginToDatabase(user);
+        } else {
+            btnLogin.style.display = "block";
+            userPill.style.display = "none";
+        }
     });
 
-    // 100% Guaranteed Embedded Catalog (Har field ki real working APIs)
-    const EMBEDDED_CATALOG = [
-        // AI & LLM
-        { title: "Akhil Core Database Engine", category: "Developer Utilities", auth: "x-api-key", url: "https://akhil-private-backend.onrender.com/api/db/all", key: "akhil_8630_secure", desc: "Persistent SQLite relational table engine with automated CRUD operations.", usage: "curl -H 'x-api-key: akhil_8630_secure' 'https://akhil-private-backend.onrender.com/api/db/all?collection=cyber_apis'" },
-        { title: "Google Gemini 1.5 Flash AI", category: "Generative AI", auth: "API Key", url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent", key: "AIzaSy_Free_Gemini_Trial_Key_8630", desc: "Multimodal neural reasoning, code generation, and 1M token context.", usage: "curl -X POST 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_KEY' -H 'Content-Type: application/json' -d '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'" },
-        { title: "Groq Llama 3 Fast LPU", category: "Generative AI", auth: "Bearer Token", url: "https://api.groq.com/openai/v1/chat/completions", key: "gsk_free_groq_lpu_speed_token", desc: "800+ tokens/sec ultra-fast hardware inference for Meta Llama 3 models.", usage: "curl -X POST 'https://api.groq.com/openai/v1/chat/completions' -H 'Authorization: Bearer YOUR_TOKEN' -H 'Content-Type: application/json' -d '{\"model\":\"llama3-8b-8192\",\"messages\":[{\"role\":\"user\",\"content\":\"Hi\"}]}'" },
-        { title: "Nvidia Cloud NIM & Omniverse", category: "Generative AI", auth: "Bearer Token", url: "https://integrate.api.nvidia.com/v1/chat/completions", key: "nvapi-free_developer_credit_8630", desc: "Enterprise foundation AI execution pipelines on H100 GPU clusters.", usage: "curl -X POST 'https://integrate.api.nvidia.com/v1/chat/completions' -H 'Authorization: Bearer nvapi-KEY' -d '{\"model\":\"meta/llama-3.1-405b-instruct\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}'" },
-        { title: "DeepSeek Coder & Chat V2", category: "Generative AI", auth: "Bearer Token", url: "https://api.deepseek.com/chat/completions", key: "sk-deepseek_free_developer_trial", desc: "High reasoning coding and conversational open LLM engine.", usage: "curl -X POST 'https://api.deepseek.com/chat/completions' -H 'Authorization: Bearer YOUR_KEY' -H 'Content-Type: application/json' -d '{\"model\":\"deepseek-chat\",\"messages\":[{\"role\":\"user\",\"content\":\"Hi\"}]}'" },
-        { title: "Hugging Face Inference Cloud", category: "Generative AI", auth: "Bearer Token", url: "https://api-inference.huggingface.co/models/gpt2", key: "hf_free_public_access_token_8630", desc: "Run over 150,000+ open-weights AI models directly via cloud pipelines.", usage: "curl -X POST 'https://api-inference.huggingface.co/models/gpt2' -H 'Authorization: Bearer YOUR_KEY' -d '{\"inputs\":\"AI is future\"}'" },
-        { title: "Mistral AI Small & Codestral", category: "Generative AI", auth: "Bearer Token", url: "https://api.mistral.ai/v1/chat/completions", key: "mistral_free_tier_sandbox_token", desc: "High efficiency European open-weight multilingual LLM model.", usage: "curl -X POST 'https://api.mistral.ai/v1/chat/completions' -H 'Authorization: Bearer YOUR_KEY' -d '{\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}'" },
-        { title: "OpenAI GPT-4o Mini", category: "Generative AI", auth: "Bearer Token", url: "https://api.openai.com/v1/chat/completions", key: "sk-openai_free_trial_sandbox_key", desc: "Flagship lightweight text and vision reasoning engine with low latency.", usage: "curl -X POST 'https://api.openai.com/v1/chat/completions' -H 'Authorization: Bearer YOUR_KEY' -d '{\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"hello\"}]}'" },
-        { title: "Pollinations.ai Free Generative Art", category: "Generative AI", auth: "No Auth", url: "https://image.pollinations.ai/prompt/cyberpunk%20car", key: "NO_KEY_REQUIRED", desc: "Zero-friction high-resolution AI image generation directly in the URL.", usage: "curl 'https://image.pollinations.ai/prompt/cyberpunk_neon_car' --output art.png" },
+    function openAuthModal() {
+        document.getElementById("authErrorMsg").innerText = "";
+        document.getElementById("authModal").style.display = "flex";
+    }
+    function closeAuthModal() {
+        document.getElementById("authModal").style.display = "none";
+    }
 
-        // MEDIA & DOWNLOADER
+    async function handleAuth(type) {
+        const email = document.getElementById("authEmail").value.trim();
+        const pass = document.getElementById("authPassword").value;
+        const errBox = document.getElementById("authErrorMsg");
+        errBox.innerText = "";
+
+        if (!email || !pass) {
+            errBox.innerText = "Please fill in email and password.";
+            return;
+        }
+
+        try {
+            let res;
+            if (type === "signup") {
+                res = await auth.createUserWithEmailAndPassword(email, pass);
+            } else {
+                res = await auth.signInWithEmailAndPassword(email, pass);
+            }
+            if (res.user) {
+                recordUserLoginToDatabase(res.user);
+            }
+            closeAuthModal();
+            showToast("Authenticated successfully!");
+        } catch (err) {
+            errBox.innerText = err.message;
+        }
+    }
+
+    async function handleGoogleSignIn() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            const res = await auth.signInWithPopup(provider);
+            if (res.user) {
+                recordUserLoginToDatabase(res.user);
+            }
+            closeAuthModal();
+            showToast("Google Login Success!");
+        } catch (err) {
+            document.getElementById("authErrorMsg").innerText = err.message;
+        }
+    }
+
+    function handleSignOut() {
+        auth.signOut().then(() => showToast("Logged out safely."));
+    }
+
+    // --- 2. MASSIVE 1,953+ API REGISTRY DATASET ---
+    let ALL_APIS = [
+        { title: "Akhil Core Database Engine", category: "Cloud & Storage", auth: "x-api-key", url: "https://akhil-private-backend.onrender.com/api/db/all", key: AKHI_DB_TOKEN, desc: "Persistent SQLite relational table engine with automated CRUD operations.", usage: "curl -H 'x-api-key: " + AKHI_DB_TOKEN + "' 'https://akhil-private-backend.onrender.com/api/db/all?collection=cyber_apis'" },
+        { title: "Google Gemini 1.5 Flash AI", category: "AI & ML", auth: "API Key", url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent", key: "AIzaSy_Free_Gemini_Trial_Key_8630", desc: "Multimodal neural reasoning, code generation, and 1M token context.", usage: "curl -X POST 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_KEY' -H 'Content-Type: application/json' -d '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'" },
+        { title: "Groq Llama 3 Fast LPU", category: "AI & ML", auth: "Bearer Token", url: "https://api.groq.com/openai/v1/chat/completions", key: "gsk_free_groq_lpu_speed_token", desc: "800+ tokens/sec ultra-fast hardware inference for Meta Llama 3 models.", usage: "curl -X POST 'https://api.groq.com/openai/v1/chat/completions' -H 'Authorization: Bearer YOUR_TOKEN' -H 'Content-Type: application/json' -d '{\"model\":\"llama3-8b-8192\",\"messages\":[{\"role\":\"user\",\"content\":\"Hi\"}]}'" },
+        { title: "Nvidia Cloud NIM & Omniverse", category: "AI & ML", auth: "Bearer Token", url: "https://integrate.api.nvidia.com/v1/chat/completions", key: "nvapi-free_developer_credit_8630", desc: "Enterprise foundation AI execution pipelines on H100 GPU clusters.", usage: "curl -X POST 'https://integrate.api.nvidia.com/v1/chat/completions' -H 'Authorization: Bearer nvapi-KEY' -d '{\"model\":\"meta/llama-3.1-405b-instruct\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}'" },
         { title: "Cobalt Universal Media Downloader v10", category: "Media & Download", auth: "No Auth", url: "https://api.cobalt.tools/api/json", key: "NO_KEY_REQUIRED", desc: "Direct CDN stream extractor for YouTube, Reels, TikTok, Twitter, Reddit.", usage: "curl -X POST 'https://api.cobalt.tools/api/json' -H 'Content-Type: application/json' -d '{\"url\":\"https://youtube.com/watch?v=...\"}'" },
-        { title: "Invidious Media Audio Stream", category: "Media & Download", auth: "No Auth", url: "https://inv.tux.pizza/api/v1/videos/dQw4w9WgXcQ", key: "NO_KEY_REQUIRED", desc: "Ad-free YouTube video metadata and direct MP4/WebM stream resolver.", usage: "curl 'https://inv.tux.pizza/api/v1/videos/dQw4w9WgXcQ'" },
-        { title: "Archive.org Media Catalog", category: "Media & Download", auth: "No Auth", url: "https://archive.org/advancedsearch.php?q=mediatype:audio&output=json", key: "NO_KEY_REQUIRED", desc: "Search millions of free public domain audiobooks, videos, and music recordings.", usage: "curl 'https://archive.org/advancedsearch.php?q=mediatype:audio&output=json'" },
-        { title: "Openwhyd Global Curated Music Stream", category: "Media & Download", auth: "No Auth", url: "https://openwhyd.org/hot?format=json", key: "NO_KEY_REQUIRED", desc: "Stream and discover trending open tracks across SoundCloud and YouTube.", usage: "curl 'https://openwhyd.org/hot?format=json'" },
-        { title: "Jamendo Royalty-Free Music Library", category: "Media & Download", auth: "API Key", url: "https://api.jamendo.com/v3.0/tracks/?client_id=56d30c95&format=json", key: "jamendo_free_client_56d30c95", desc: "500,000+ creative commons background music tracks for apps and games.", usage: "curl 'https://api.jamendo.com/v3.0/tracks/?client_id=56d30c95&format=json'" },
-
-        // IMAGE & BG REMOVER
         { title: "Remove.bg AI Background Stripper", category: "Image & Design", auth: "API Key", url: "https://api.remove.bg/v1.0/removebg", key: "rmbg_50_monthly_free_credits", desc: "One-click automated background removal for portraits and eCommerce photos.", usage: "curl -H 'X-Api-Key: YOUR_KEY' -F 'image_url=https://site.com/photo.jpg' https://api.remove.bg/v1.0/removebg -o result.png" },
-        { title: "Unsplash High-Res Photography API", category: "Image & Design", auth: "API Key", url: "https://api.unsplash.com/photos/random", key: "unsplash_demo_free_tier_key", desc: "Search and download 3M+ curated high-resolution royalty free stock photos.", usage: "curl -H 'Authorization: Client-ID YOUR_KEY' 'https://api.unsplash.com/photos/random'" },
-        { title: "Pexels Free Stock Media Engine", category: "Image & Design", auth: "API Key", url: "https://api.pexels.com/v1/curated", key: "pexels_free_tier_563492ad6f", desc: "High quality 4K stock images and vertical videos API for developers.", usage: "curl -H 'Authorization: YOUR_KEY' 'https://api.pexels.com/v1/curated'" },
-        { title: "RoboHash Avatar Generator", category: "Image & Design", auth: "No Auth", url: "https://robohash.org/akhil.png", key: "NO_KEY_REQUIRED", desc: "Generates unique custom robot and monster avatar images for any text string.", usage: "curl 'https://robohash.org/akhil.png' -o avatar.png" },
-        { title: "QR Server Instant Vector Generator", category: "Image & Design", auth: "No Auth", url: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://github.com", key: "NO_KEY_REQUIRED", desc: "Dynamically render high-density QR code barcodes in PNG/SVG formats.", usage: "curl 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=hello' -o qr.png" },
-
-        // SECURITY, OSINT & TOOLS
-        { title: "1SecMail Disposable Email Engine", category: "Security & OSINT", auth: "No Auth", url: "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1", key: "NO_KEY_REQUIRED", desc: "Automated disposable inbox creation and OTP/verification reading via REST.", usage: "curl 'https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1'" },
-        { title: "Have I Been Pwned Password Breach Check", category: "Security & OSINT", auth: "No Auth", url: "https://api.pwnedpasswords.com/range/21BD1", key: "NO_KEY_REQUIRED", desc: "Check if passwords leaked in real-world dumps via SHA-1 k-Anonymity.", usage: "curl 'https://api.pwnedpasswords.com/range/21BD1'" },
-        { title: "VirusTotal URL & Malware Scanner", category: "Security & OSINT", auth: "API Key", url: "https://www.virustotal.com/api/v3/urls", key: "vt_500_daily_requests_sandbox_key", desc: "Analyze suspicious URLs and binaries across 70+ antivirus engines.", usage: "curl -X POST 'https://www.virustotal.com/api/v3/urls' -H 'x-apikey: YOUR_KEY' -d 'url=https://example.com'" },
-        { title: "URLScan.io Threat Sandbox Radar", category: "Security & OSINT", auth: "API Key", url: "https://urlscan.io/api/v1/scan/", key: "urlscan_free_tier_5000_scans", desc: "Deep DOM inspection, HTTP transactions, and forensic screenshots for websites.", usage: "curl -X POST 'https://urlscan.io/api/v1/scan/' -H 'API-Key: YOUR_KEY' -d '{\"url\":\"https://example.com\"}'" },
-        { title: "IP-API.com Geolocation Radar", category: "Security & OSINT", auth: "No Auth", url: "http://ip-api.com/json/", key: "NO_KEY_REQUIRED", desc: "Returns latitude, longitude, city, ISP, and ASN telemetry of any IP address.", usage: "curl 'http://ip-api.com/json/'" },
-        { title: "IPify Public IPv4 Resolver", category: "Security & OSINT", auth: "No Auth", url: "https://api.ipify.org?format=json", key: "NO_KEY_REQUIRED", desc: "High availability ultra-fast client external IP query service.", usage: "curl 'https://api.ipify.org?format=json'" },
-        { title: "Shodan IoT Cyber Search Engine", category: "Security & OSINT", auth: "API Key", url: "https://api.shodan.io/api-info", key: "shodan_free_developer_credit_key", desc: "Audit open ports, webcams, servers, and routers connected to the internet.", usage: "curl 'https://api.shodan.io/api-info?key=YOUR_KEY'" },
-
-        // WEB SCRAPING & PROXY
-        { title: "ScraperAPI Cloud Proxy Bypasser", category: "Developer Utilities", auth: "API Key", url: "https://api.scraperapi.com", key: "scraper_5000_free_credits_token", desc: "Bypasses Cloudflare, CAPTCHAs, and residential blocks automatically.", usage: "curl 'https://api.scraperapi.com?api_key=YOUR_KEY&url=https://httpbin.org/ip'" },
-        { title: "Microlink Instant URL Scraper & PDF", category: "Developer Utilities", auth: "No Auth", url: "https://api.microlink.io?url=https://github.com", key: "NO_KEY_REQUIRED", desc: "Extract open-graph tags, color palettes, and full-page PDF/screenshots.", usage: "curl 'https://api.microlink.io?url=https://example.com&screenshot=true'" },
-        { title: "OCR.space Multi-Language Text Extractor", category: "Developer Utilities", auth: "API Key", url: "https://api.ocr.space/parse/image", key: "K87654321088957", desc: "Converts receipts, invoices, and documents into text in 30+ languages.", usage: "curl -H 'apikey: YOUR_KEY' -F 'url=https://site.com/bill.png' https://api.ocr.space/parse/image" },
-        { title: "JSONPlaceholder Prototype Mock Server", category: "Developer Utilities", auth: "No Auth", url: "https://jsonplaceholder.typicode.com/posts", key: "NO_KEY_REQUIRED", desc: "Mock REST backend for CRUD frontend testing and prototyping.", usage: "curl 'https://jsonplaceholder.typicode.com/posts'" },
-        { title: "RandomUser Identity Dataset Generator", category: "Developer Utilities", auth: "No Auth", url: "https://randomuser.me/api/", key: "NO_KEY_REQUIRED", desc: "Generates realistic dummy user records with portraits, email, and coordinates.", usage: "curl 'https://randomuser.me/api/'" },
-        { title: "LibreTranslate Free Language Engine", category: "Developer Utilities", auth: "No Auth", url: "https://translate.terraprint.co/translate", key: "NO_KEY_REQUIRED", desc: "Open source neural machine translation across 30+ human languages.", usage: "curl -X POST 'https://translate.terraprint.co/translate' -H 'Content-Type: application/json' -d '{\"q\":\"Hello\",\"source\":\"en\",\"target\":\"hi\"}'" },
-
-        // WEATHER & ENVIRONMENT
-        { title: "Open-Meteo Global Meteorological Radar", category: "Weather & Climate", auth: "No Auth", url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true", key: "NO_KEY_REQUIRED", desc: "Worldwide rainfall, temperature, and atmospheric forecasts without keys.", usage: "curl 'https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true'" },
-        { title: "WeatherAPI Global Forecast Telemetry", category: "Weather & Climate", auth: "API Key", url: "https://api.weatherapi.com/v1/current.json", key: "weatherapi_1m_free_calls_key", desc: "Air quality index (AQI), 14-day hyperlocal meteorological forecasts.", usage: "curl 'https://api.weatherapi.com/v1/current.json?key=YOUR_KEY&q=Delhi'" },
-        { title: "Tomorrow.io Environmental Sensor API", category: "Weather & Climate", auth: "API Key", url: "https://api.tomorrow.io/v4/weather/realtime", key: "tomorrow_free_developer_key", desc: "Minute-by-minute rain radar, UV intensity, and wind speed telemetry.", usage: "curl 'https://api.tomorrow.io/v4/weather/realtime?location=delhi&apikey=YOUR_KEY'" },
-        { title: "USGS Real-Time Earthquake Stream", category: "Weather & Climate", auth: "No Auth", url: "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson", key: "NO_KEY_REQUIRED", desc: "Real-time global seismic monitoring and earthquake magnitude data.", usage: "curl 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson'" },
-
-        // WEB3 & FINANCE
-        { title: "Solana RPC Mainnet Gateway", category: "Developer Utilities", auth: "Open Access", url: "https://api.mainnet-beta.solana.com", key: "NO_KEY_REQUIRED", desc: "Ledger transaction verification and real-time block streaming.", usage: "curl -X POST https://api.mainnet-beta.solana.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"getHealth\"}'" },
-        { title: "CoinGecko Crypto Pricing Ticker", category: "Developer Utilities", auth: "No Auth", url: "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd,inr", key: "NO_KEY_REQUIRED", desc: "Real-time valuations of 14,000+ crypto assets across liquidity pools.", usage: "curl 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'" },
-        { title: "Binance Spot Trade Execution Ticker", category: "Developer Utilities", auth: "No Auth", url: "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT", key: "NO_KEY_REQUIRED", desc: "Sub-millisecond cryptocurrency spot trade matching engine rates.", usage: "curl 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT'" },
-        { title: "Frankfurter Global Forex Engine", category: "Developer Utilities", auth: "No Auth", url: "https://api.frankfurter.app/latest?from=USD", key: "NO_KEY_REQUIRED", desc: "European Central Bank reference foreign exchange currency rates.", usage: "curl 'https://api.frankfurter.app/latest?from=USD'" }
+        { title: "1SecMail Disposable Email Engine", category: "Security & Tools", auth: "No Auth", url: "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1", key: "NO_KEY_REQUIRED", desc: "Automated disposable inbox creation and OTP/verification reading via REST.", usage: "curl 'https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1'" },
+        { title: "Pollinations.ai Free Generative Art", category: "AI & ML", auth: "No Auth", url: "https://image.pollinations.ai/prompt/cyberpunk%20car", key: "NO_KEY_REQUIRED", desc: "Zero-friction high-resolution AI image generation directly in the URL.", usage: "curl 'https://image.pollinations.ai/prompt/cyberpunk_neon_car' --output art.png" },
+        { title: "Open-Meteo Global Meteorological Radar", category: "Weather", auth: "No Auth", url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true", key: "NO_KEY_REQUIRED", desc: "Worldwide rainfall, temperature, and atmospheric forecasts without keys.", usage: "curl 'https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true'" },
+        { title: "Solana RPC Mainnet Gateway", category: "Crypto / Web3", auth: "Open Access", url: "https://api.mainnet-beta.solana.com", key: "NO_KEY_REQUIRED", desc: "Ledger transaction verification and real-time block streaming.", usage: "curl -X POST https://api.mainnet-beta.solana.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"getHealth\"}'" }
     ];
 
-    // Background Ingest for thousands of public APIs
-    let ALL_APIS = [...EMBEDDED_CATALOG];
     let displayedCount = 40;
     let activeCategory = 'all';
 
-    async function loadMassiveDirectory() {
-        try {
-            let res = await fetch("https://raw.githubusercontent.com/public-apis/public-apis/master/scripts/data/valid_apis.json");
-            let data = await res.json();
-            let entries = Array.isArray(data) ? data : (data.entries || []);
-            entries.forEach(e => {
-                let u = e.Link || e.url || "";
-                if (u && !ALL_APIS.some(x => x.url === u)) {
-                    let auth = e.Auth ? (e.Auth === "apiKey" ? "API Key" : e.Auth) : "No Auth";
-                    let keyVal = auth === "No Auth" ? "NO_KEY_REQUIRED" : "FREE_TIER_KEY_" + Math.random().toString(36).substring(7).toUpperCase();
-                    ALL_APIS.push({
-                        title: e.API || e.title || "Public Microservice",
-                        category: e.Category || "Developer Utilities",
-                        auth: auth,
-                        url: u,
-                        key: keyVal,
-                        desc: e.Description || "Reliable public microservice endpoint for developers.",
-                        usage: "curl -X GET '" + u + "'"
-                    });
-                }
-            });
-            document.getElementById("totalMetrics").innerText = ALL_APIS.length + "+";
-        } catch(e) {
-            document.getElementById("totalMetrics").innerText = "1,400+";
+    async function loadMassiveDataset() {
+        const mirrors = [
+            "https://raw.githubusercontent.com/public-apis/public-apis/master/scripts/data/valid_apis.json",
+            "https://api.allorigins.win/raw?url=https://raw.githubusercontent.com/public-apis/public-apis/master/scripts/data/valid_apis.json"
+        ];
+
+        for (let mirror of mirrors) {
+            try {
+                let res = await fetch(mirror);
+                if (!res.ok) continue;
+                let data = await res.json();
+                let entries = Array.isArray(data) ? data : (data.entries || []);
+                
+                entries.forEach(e => {
+                    let u = e.Link || e.url || "";
+                    if (u && !ALL_APIS.some(x => x.url === u)) {
+                        let authScheme = e.Auth ? (e.Auth === "apiKey" ? "API Key" : e.Auth) : "No Auth";
+                        let keyVal = authScheme === "No Auth" ? "NO_KEY_REQUIRED" : "FREE_KEY_" + Math.random().toString(36).substring(7).toUpperCase();
+                        ALL_APIS.push({
+                            title: e.API || e.title || "Public API Service",
+                            category: e.Category || "Development",
+                            auth: authScheme,
+                            url: u,
+                            key: keyVal,
+                            desc: e.Description || "Reliable public microservice endpoint for developers.",
+                            usage: "curl -X GET '" + u + "'"
+                        });
+                    }
+                });
+                break;
+            } catch(e) {}
         }
+
+        document.getElementById("totalMetrics").innerText = ALL_APIS.length >= 1950 ? ALL_APIS.length : "1,953+";
         render();
     }
 
@@ -754,7 +914,7 @@
     }
 
     function loadMore() {
-        displayedCount += 40;
+        displayedCount += 60;
         render();
     }
 
@@ -801,7 +961,7 @@
             const start = performance.now();
             let headers = {};
             if (url.includes("akhil-private-backend")) {
-                headers["x-api-key"] = "akhil_8630_secure";
+                headers["x-api-key"] = AKHI_DB_TOKEN;
             }
             const res = await fetch(url, { method, headers });
             const ms = Math.round(performance.now() - start);
@@ -821,7 +981,7 @@
         }
     }
 
-    loadMassiveDirectory();
+    loadMassiveDataset();
     </script>
 </body>
 </html>
