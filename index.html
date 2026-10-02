@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global API Hub | AI, Weather & Developer Endpoints</title>
+    <title>Global Master API Hub | Universal Free Developer APIs</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -126,7 +126,7 @@
             line-height: 1.6;
         }
         .search-wrap {
-            max-width: 680px;
+            max-width: 700px;
             margin: 32px auto 20px;
             display: flex;
             background: #ffffff;
@@ -452,33 +452,37 @@
 
     <div class="main-container">
         <div class="hero">
-            <div class="hero-tag">Unified AI &amp; Developer Registry</div>
-            <h1 class="hero-title">Worldwide Free AI &amp; Web APIs</h1>
-            <p class="hero-sub">Direct access to Google Gemini, Groq, Nvidia, OpenAI, Weather radars, and decentralized endpoints with integration manuals.</p>
+            <div class="hero-tag">Global Universal API Index</div>
+            <h1 class="hero-title">Every Free API in One Directory</h1>
+            <p class="hero-sub">Direct access to Downloader APIs, Background Removers, Music streams, AI models, Voice TTS, Cyber Security and Dev tools.</p>
 
             <div class="search-wrap">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search Gemini, OpenAI, Groq, Llama, Weather, Nvidia...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search remove bg, download, music, gemini, groq, weather, virustotal...">
                 <button class="search-btn" onclick="filterCatalog()">Search</button>
             </div>
 
             <div class="filter-row">
-                <div class="filter-pill active" onclick="setCategory('all', this)">All Endpoints</div>
-                <div class="filter-pill" onclick="setCategory('Generative AI', this)">Generative AI &amp; LLMs</div>
+                <div class="filter-pill active" onclick="setCategory('all', this)">All Categories</div>
+                <div class="filter-pill" onclick="setCategory('Media & Downloader', this)">Media &amp; Downloader</div>
+                <div class="filter-pill" onclick="setCategory('Image & BG Remover', this)">Image &amp; BG Remover</div>
+                <div class="filter-pill" onclick="setCategory('Music & Audio', this)">Music &amp; Audio</div>
+                <div class="filter-pill" onclick="setCategory('Voice & TTS', this)">Voice &amp; TTS</div>
+                <div class="filter-pill" onclick="setCategory('Generative AI', this)">Generative AI</div>
+                <div class="filter-pill" onclick="setCategory('Search & Intel', this)">Search &amp; Intel</div>
+                <div class="filter-pill" onclick="setCategory('Security & Audit', this)">Security &amp; Audit</div>
                 <div class="filter-pill" onclick="setCategory('Weather & Radar', this)">Weather &amp; Radar</div>
-                <div class="filter-pill" onclick="setCategory('Vision & Image AI', this)">Vision &amp; Image AI</div>
-                <div class="filter-pill" onclick="setCategory('Web3 & Crypto', this)">Web3 &amp; Crypto</div>
-                <div class="filter-pill" onclick="setCategory('Dev Tools', this)">Developer Utilities</div>
+                <div class="filter-pill" onclick="setCategory('Dev Tools', this)">Dev Tools</div>
             </div>
         </div>
 
         <div class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-val" id="totalMetrics">1,400+</div>
-                <div class="metric-lbl">Verified Endpoints</div>
+                <div class="metric-lbl">Total Public APIs</div>
             </div>
             <div class="metric-card">
-                <div class="metric-val">100% Free Tiers</div>
-                <div class="metric-lbl">Usage Scheme</div>
+                <div class="metric-val">100% Free</div>
+                <div class="metric-lbl">Direct Developers Scheme</div>
             </div>
             <div class="metric-card">
                 <div class="metric-val" style="color: var(--emerald);">Direct Sandbox</div>
@@ -539,8 +543,135 @@
     let displayedCount = 40;
     let activeCategory = 'all';
 
-    // The Master AI & Weather Collection
-    const VERIFIED_MASTER_LIST = [
+    // The Master Multi-Disciplinary API Catalog
+    const UNIVERSAL_MASTER_LIST = [
+        // 1. IMAGE & BG REMOVER
+        {
+            title: "Remove.bg Official Image API",
+            category: "Image & BG Remover",
+            auth: "API Key",
+            url: "https://api.remove.bg/v1.0/removebg",
+            docs: "https://www.remove.bg/i/api",
+            desc: "AI background removal for portraits, products, cars, and animals in 1 API call.",
+            guide: "remove.bg par register karein aur account settings se API Key banayein. Monthly 50 free credits milte hain.",
+            usage: "POST header: X-Api-Key: YOUR_KEY. Form-data body: image_url=https://site.com/photo.jpg size=auto"
+        },
+        // 2. MEDIA & DOWNLOADERS
+        {
+            title: "Cobalt Universal Media Downloader",
+            category: "Media & Downloader",
+            auth: "No Auth",
+            url: "https://api.cobalt.tools/api/json",
+            docs: "https://cobalt.tools",
+            desc: "Extract and download high-resolution audio/video from YouTube, Instagram, TikTok, Twitter, Reddit, and Vimeo.",
+            guide: "Open-source instance. Direct POST request bhejkar stream URL receive karein bina kisi ads ya tracking ke.",
+            usage: "POST body: {\"url\": \"https://youtube.com/watch?v=...\", \"vQuality\": \"1080\"}"
+        },
+        // 3. MUSIC & AUDIO STREAMING
+        {
+            title: "Openwhyd Open Music Curation API",
+            category: "Music & Audio",
+            auth: "No Auth",
+            url: "https://openwhyd.org/hot?format=json",
+            docs: "https://openwhyd.github.io/openwhyd/API.html",
+            desc: "Search, discover, and stream free tracks and playlists curated across YouTube, SoundCloud, and Deezer.",
+            guide: "Completely open public API. Direct GET request send karke trending global tracks and streaming links fetch karein.",
+            usage: "GET https://openwhyd.org/hot?format=json"
+        },
+        {
+            title: "Jamendo Royalty-Free Music API",
+            category: "Music & Audio",
+            auth: "API Key",
+            url: "https://api.jamendo.com/v3.0/tracks/?client_id=56d30c95&format=json&limit=10",
+            docs: "https://developer.jamendo.com/v3.0",
+            desc: "Access 500,000+ full-length Creative Commons music tracks for apps, background music, and games.",
+            guide: "developer.jamendo.com par jakar client_id generate karein ya direct testing client id use karein.",
+            usage: "GET https://api.jamendo.com/v3.0/tracks/?client_id=YOUR_CLIENT_ID&format=json"
+        },
+        // 4. VOICE & TEXT TO SPEECH (TTS)
+        {
+            title: "ElevenLabs Realistic AI Voice",
+            category: "Voice & TTS",
+            auth: "API Key",
+            url: "https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM",
+            docs: "https://elevenlabs.io/docs",
+            desc: "Hyper-realistic generative AI voices with emotional nuance, accent replication, and voice cloning.",
+            guide: "elevenlabs.io par signup karein. Free tier monthly 10,000 characters audio generation deta hai.",
+            usage: "POST header: xi-api-key: YOUR_KEY. Body: {\"text\": \"Hello, this is human-like AI voice.\", \"model_id\": \"eleven_monolingual_v1\"}"
+        },
+        {
+            title: "AssemblyAI Speech-to-Text & Transcribe",
+            category: "Voice & TTS",
+            auth: "API Key",
+            url: "https://api.assemblyai.com/v2/transcript",
+            docs: "https://www.assemblyai.com",
+            desc: "Speech-to-text transcription, speaker diarization, audio summary, and sentiment detection.",
+            guide: "assemblyai.com par register karein, dashboard se instant free API key mil jayegi bina credit card ke.",
+            usage: "POST header: authorization: YOUR_KEY. Body: {\"audio_url\": \"https://bit.ly/3yxKEIY\"}"
+        },
+        // 5. SEARCH & CYBER INTELLIGENCE
+        {
+            title: "DuckDuckGo Instant Answer Zero-Click",
+            category: "Search & Intel",
+            auth: "No Auth",
+            url: "https://api.duckduckgo.com/?q=linux&format=json",
+            docs: "https://duckduckgo.com/api",
+            desc: "Privacy-first search engine providing encyclopedic abstracts, definitions, and direct facts.",
+            guide: "Direct GET query param ?q=Search_Term&format=json bhejkar instantaneous answer extract karein.",
+            usage: "GET https://api.duckduckgo.com/?q=Search_Term&format=json"
+        },
+        {
+            title: "Wikipedia Knowledge Extraction Engine",
+            category: "Search & Intel",
+            auth: "No Auth",
+            url: "https://en.wikipedia.org/api/rest_v1/page/summary/Technology",
+            docs: "https://en.wikipedia.org/api/rest_v1/",
+            desc: "Global multilingual encyclopedia summaries, articles, images, and revisions.",
+            guide: "Open API endpoint provided by Wikimedia Foundation. No token or authentication needed.",
+            usage: "GET https://en.wikipedia.org/api/rest_v1/page/summary/Title_Name"
+        },
+        {
+            title: "Wayback Machine Archive Lookup",
+            category: "Search & Intel",
+            auth: "No Auth",
+            url: "https://archive.org/wayback/available?url=google.com",
+            docs: "https://archive.org/help/wayback_api.php",
+            desc: "Check historical snapshots and cached versions of any website since 1996.",
+            guide: "Direct GET query param ?url=site.com daalkar snapshot availability aur timestamp fetch karein.",
+            usage: "GET https://archive.org/wayback/available?url=google.com"
+        },
+        // 6. SECURITY & AUDIT
+        {
+            title: "Have I Been Pwned (HIBP) Password Audit",
+            category: "Security & Audit",
+            auth: "No Auth",
+            url: "https://api.pwnedpasswords.com/range/21BD1",
+            docs: "https://haveibeenpwned.com/API/v3",
+            desc: "Check if a password has leaked in historical security data breaches using k-Anonymity SHA-1 hash prefix.",
+            guide: "SHA-1 hash ke pehle 5 characters bhejkar match frequency count karein bina original password leak kiye.",
+            usage: "GET https://api.pwnedpasswords.com/range/FIRST_5_HASH_CHARS"
+        },
+        {
+            title: "VirusTotal URL & Malware Scanner",
+            category: "Security & Audit",
+            auth: "API Key",
+            url: "https://www.virustotal.com/api/v3/urls",
+            docs: "https://docs.virustotal.com",
+            desc: "Scan links, domains, IPs, and binaries across 70+ leading antivirus scanning engines.",
+            guide: "virustotal.com par community account banayein. Free tier 500 requests/day allow karta hai.",
+            usage: "POST header: x-apikey: YOUR_KEY. Body: url=http://example.com"
+        },
+        {
+            title: "Shodan IoT Cyber Search Engine",
+            category: "Security & Audit",
+            auth: "API Key",
+            url: "https://api.shodan.io/api-info?key=YOUR_KEY",
+            docs: "https://developer.shodan.io",
+            desc: "Search internet-connected webcams, routers, servers, SCADA systems, and open ports.",
+            guide: "shodan.io par signup karein aur account page se free API key copy karein.",
+            usage: "GET with query param key=YOUR_KEY"
+        },
+        // 7. GENERATIVE AI
         {
             title: "Google Gemini 1.5 Flash API",
             category: "Generative AI",
@@ -548,8 +679,8 @@
             url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY",
             docs: "https://aistudio.google.com/app/apikey",
             desc: "Ultra-fast multimodal reasoning, code generation, and 1M token context window by Google DeepMind.",
-            guide: "aistudio.google.com par jakar 'Create API Key' par click karein. Monthly free tier mein 15 requests per minute bina credit card ke free milti hain.",
-            usage: "POST request karein body: {\"contents\":[{\"parts\":[{\"text\":\"Hello Gemini\"}]}]}"
+            guide: "aistudio.google.com par jakar 'Create API Key' par click karein. 15 RPM free tier bina credit card ke available hai.",
+            usage: "POST request body: {\"contents\":[{\"parts\":[{\"text\":\"Hello Gemini\"}]}]}"
         },
         {
             title: "Groq Llama 3 Fast Inference",
@@ -557,134 +688,56 @@
             auth: "Bearer Token",
             url: "https://api.groq.com/openai/v1/chat/completions",
             docs: "https://console.groq.com/keys",
-            desc: "Blazing fast LPU inference engine running Meta Llama 3 and Mixtral models at 800+ tokens/second.",
-            guide: "console.groq.com par login karke free API key lein. Fully free high-speed tier available.",
+            desc: "Blazing fast LPU inference engine running Meta Llama 3 models at 800+ tokens/second.",
+            guide: "console.groq.com par login karke free API key lein. High-speed free tier ready.",
             usage: "POST headers: Authorization: Bearer YOUR_KEY. Body: {\"model\":\"llama3-8b-8192\",\"messages\":[{\"role\":\"user\",\"content\":\"Hi\"}]}"
         },
         {
-            title: "Nvidia Cloud NIM & Omniverse",
-            category: "Generative AI",
-            auth: "Bearer Token",
-            url: "https://integrate.api.nvidia.com/v1/chat/completions",
-            docs: "https://build.nvidia.com",
-            desc: "Nvidia enterprise AI foundation models running on high-density H100 GPU clusters.",
-            guide: "build.nvidia.com par signup karein, 1000 free execution credits instantly generate hote hain.",
-            usage: "POST header: Authorization: Bearer $NVIDIA_KEY. Body: {\"model\":\"meta/llama-3.1-405b-instruct\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}"
-        },
-        {
             title: "Pollinations.ai Free Generative Engine",
-            category: "Vision & Image AI",
+            category: "Generative AI",
             auth: "No Auth",
-            url: "https://image.pollinations.ai/prompt/cyberpunk%20city%20neon",
+            url: "https://image.pollinations.ai/prompt/cyberpunk%20car",
             docs: "https://pollinations.ai",
-            desc: "100% free unlimited text-to-image and text generation without any key or registration.",
-            guide: "Direct URL call karein. Prompt ko URL ke end mein encode karke daalein aur instant PNG image payein.",
+            desc: "100% free unlimited text-to-image and generative AI art without any registration.",
+            guide: "Direct URL call karein. Prompt URL ke aage encode karein aur instant PNG image payein.",
             usage: "GET https://image.pollinations.ai/prompt/YOUR_PROMPT"
         },
+        // 8. WEATHER & RADAR
         {
             title: "Open-Meteo High Resolution Weather",
             category: "Weather & Radar",
             auth: "No Auth",
-            url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true&hourly=temperature_2m,relative_humidity_2m",
+            url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true",
             docs: "https://open-meteo.com",
-            desc: "Global open-source meteorological forecast, wind, solar radiation and rain radar telemetry.",
-            guide: "Direct GET request. Kisi registration ya key ki zaroorat nahi hai. Up to 10,000 calls per day free.",
+            desc: "Worldwide open meteorological forecast, rain radar, and temperature telemetry.",
+            guide: "Direct GET request. Up to 10,000 calls per day free bina kisi registration ke.",
             usage: "GET https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true"
         },
+        // 9. DEV TOOLS & UTILITIES
         {
-            title: "WeatherAPI.com Live Telemetry",
-            category: "Weather & Radar",
-            auth: "API Key",
-            url: "https://api.weatherapi.com/v1/current.json?key=YOUR_KEY&q=Delhi",
-            docs: "https://www.weatherapi.com/signup.aspx",
-            desc: "Real-time weather conditions, 14-day forecasts, air quality index, and historical records.",
-            guide: "weatherapi.com par free account banayein. Monthly 1,000,000 free calls allow hoti hain.",
-            usage: "GET request with query params ?key=YOUR_KEY&q=CityName"
-        },
-        {
-            title: "Tomorrow.io Environmental Sensor API",
-            category: "Weather & Radar",
-            auth: "API Key",
-            url: "https://api.tomorrow.io/v4/weather/realtime?location=delhi&apikey=YOUR_KEY",
-            docs: "https://app.tomorrow.io/development/keys",
-            desc: "Hyperlocal weather data, minute-by-minute precipitation forecasts, and UV indexes.",
-            guide: "app.tomorrow.io par developer account banayein aur free API key dashboard se copy karein.",
-            usage: "GET with query param apikey=YOUR_KEY"
-        },
-        {
-            title: "Hugging Face Inference Hub",
-            category: "Generative AI",
-            auth: "Bearer Token",
-            url: "https://api-inference.huggingface.co/models/gpt2",
-            docs: "https://huggingface.co/settings/tokens",
-            desc: "Run over 150,000+ open-weights AI models directly via serverless cloud endpoints.",
-            guide: "huggingface.co settings -> Access Tokens -> New Token (Read access) create karein.",
-            usage: "POST header: Authorization: Bearer hf_xxx. Body: {\"inputs\": \"The future of AI is\"}"
-        },
-        {
-            title: "Mistral AI Codestral & Large",
-            category: "Generative AI",
-            auth: "Bearer Token",
-            url: "https://api.mistral.ai/v1/chat/completions",
-            docs: "https://console.mistral.ai",
-            desc: "State-of-the-art open models with high coding and reasoning efficiency from Mistral Paris.",
-            guide: "console.mistral.ai par account banakar free experimental tier key lein.",
-            usage: "POST header: Authorization: Bearer YOUR_MISTRAL_KEY. Body: {\"model\":\"mistral-small-latest\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}"
-        },
-        {
-            title: "OpenAI GPT-4o Mini Endpoint",
-            category: "Generative AI",
-            auth: "Bearer Token",
-            url: "https://api.openai.com/v1/chat/completions",
-            docs: "https://platform.openai.com/api-keys",
-            desc: "Flagship lightweight text and vision reasoning engine with low latency.",
-            guide: "platform.openai.com par jakar API Key generate karein.",
-            usage: "POST header: Authorization: Bearer sk-xxx. Body: {\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\"hello\"}]}"
-        },
-        {
-            title: "CoinGecko Decentralized Rates",
-            category: "Web3 & Crypto",
+            title: "QR Code Generator Dynamic API",
+            category: "Dev Tools",
             auth: "No Auth",
-            url: "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd,inr",
-            docs: "https://www.coingecko.com/en/api",
-            desc: "Real-time valuations of 14,000+ crypto assets across global decentralized liquidity pools.",
-            guide: "Public endpoint completely free without credentials. Rate limit: 30 calls/minute.",
-            usage: "GET query param ?ids=bitcoin&vs_currencies=usd"
+            url: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://github.com",
+            docs: "https://goqr.me/api/",
+            desc: "Generate high-resolution PNG/SVG vector QR codes on the fly for links, WiFi, or text.",
+            guide: "Direct GET query param ?data=Your_Link&size=200x200 bhejkar instant QR image render karein.",
+            usage: "GET https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=YOUR_TEXT"
         },
         {
-            title: "Binance Spot Trade Stream",
-            category: "Web3 & Crypto",
-            auth: "No Auth",
-            url: "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT",
-            docs: "https://binance-docs.github.io/apidocs/spot/en/",
-            desc: "Real-time order matching engine prices for spot pairs with sub-millisecond response.",
-            guide: "Direct public market data endpoint. No API keys required for public ticker queries.",
-            usage: "GET https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
-        },
-        {
-            title: "IPify Public IP Resolver",
+            title: "IPify Public IP Address Resolver",
             category: "Dev Tools",
             auth: "No Auth",
             url: "https://api.ipify.org?format=json",
             docs: "https://www.ipify.org",
-            desc: "Ultra-fast public IPv4 and IPv6 network address lookup service.",
-            guide: "Direct GET returns client machine's current live internet IP address.",
+            desc: "High availability endpoint returning client machine's current external public IP address.",
+            guide: "Simple GET call returns external public IP.",
             usage: "GET https://api.ipify.org?format=json"
-        },
-        {
-            title: "JSONPlaceholder Test API",
-            category: "Dev Tools",
-            auth: "No Auth",
-            url: "https://jsonplaceholder.typicode.com/posts/1",
-            docs: "https://jsonplaceholder.typicode.com",
-            desc: "Fake online REST API for testing prototyping and validating HTTP client code.",
-            guide: "Open mock server. Supports GET, POST, PUT, PATCH, DELETE operations.",
-            usage: "GET https://jsonplaceholder.typicode.com/posts/1"
         }
     ];
 
     async function initCatalog() {
-        masterAPIs = [...VERIFIED_MASTER_LIST];
+        masterAPIs = [...UNIVERSAL_MASTER_LIST];
 
         // 1. Sync custom user created endpoints
         try {
@@ -703,7 +756,8 @@
             entries.forEach(e => {
                 let cat = e.Category || "Dev Tools";
                 if (cat.includes("Weather")) cat = "Weather & Radar";
-                else if (cat.includes("Cryptocurrency")) cat = "Web3 & Crypto";
+                else if (cat.includes("Music") || cat.includes("Audio")) cat = "Music & Audio";
+                else if (cat.includes("Security")) cat = "Security & Audit";
                 else if (cat.includes("Machine Learning") || cat.includes("AI")) cat = "Generative AI";
                 else cat = "Dev Tools";
 
@@ -863,7 +917,7 @@
             }
         } catch(err) {
             statusFlag.innerText = "CORS RESTRICTED / NETWORK TIMEOUT";
-            resBox.innerText = `Error: ${err.message}\nNote: AI models (OpenAI, Gemini) ko browser se direct call karne par key header security ya CORS lagti hai. Apne code/backend se call karein.`;
+            resBox.innerText = `Error: ${err.message}\nNote: Direct browser execution might be restricted by CORS. Use in your backend code or Curl.`;
         }
     }
 
