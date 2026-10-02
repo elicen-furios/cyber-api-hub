@@ -28,21 +28,22 @@
             color: var(--text-body);
             font-family: 'Plus Jakarta Sans', sans-serif;
             min-height: 100vh;
-            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
             background-image: 
                 radial-gradient(at 50% 0%, #ffffff 0%, transparent 75%),
-                linear-gradient(rgba(226, 232, 240, 0.3) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(226, 232, 240, 0.3) 1px, transparent 1px);
+                linear-gradient(rgba(226, 232, 240, 0.35) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(226, 232, 240, 0.35) 1px, transparent 1px);
             background-size: 100% 100%, 36px 36px, 36px 36px;
         }
         nav {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-subtle);
-            padding: 14px 28px;
+            padding: 16px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -56,6 +57,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
+            user-select: none;
         }
         .brand-dot {
             width: 9px;
@@ -64,42 +67,37 @@
             background: var(--primary);
             box-shadow: 0 0 8px rgba(2, 132, 199, 0.6);
         }
-        .nav-actions { display: flex; align-items: center; gap: 14px; }
-        .node-status {
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .live-badge {
             font-family: var(--font-mono);
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 600;
             color: var(--emerald);
             background: #ecfdf5;
             border: 1px solid #a7f3d0;
             padding: 5px 12px;
             border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .admin-link {
-            font-family: var(--font-mono);
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-heading);
-            text-decoration: none;
-            background: #ffffff;
-            border: 1px solid var(--border-subtle);
-            padding: 6px 14px;
-            border-radius: 8px;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.2s ease;
-        }
-        .admin-link:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--emerald);
+            border-radius: 50%;
+            display: inline-block;
         }
         .main-container {
             max-width: 1160px;
+            width: 100%;
             margin: 0 auto;
-            padding: 45px 24px 90px;
+            padding: 40px 20px 80px;
+            flex: 1;
         }
         .hero {
             text-align: center;
-            max-width: 740px;
+            max-width: 760px;
             margin: 0 auto 36px;
         }
         .hero-tag {
@@ -249,7 +247,7 @@
             flex-direction: column;
             justify-content: space-between;
             box-shadow: var(--shadow-sm);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s ease;
         }
         .api-card:hover {
             transform: translateY(-4px);
@@ -406,23 +404,33 @@
             overflow-y: auto;
             white-space: pre-wrap;
         }
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 12px;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border-subtle);
+            background: #ffffff;
+        }
     </style>
 </head>
 <body>
     <nav>
-        <a href="index.html" class="brand">
+        <div class="brand" id="masterTrigger">
             <span class="brand-dot"></span>
             CYBER API HUB
-        </a>
-        <div class="nav-actions">
-            <span class="node-status">PROTOCOL SYNCHRONIZED</span>
-            <a href="admin.html" class="admin-link">ROOT CONTROLLER</a>
+        </div>
+        <div class="nav-right">
+            <div class="live-badge">
+                <span class="live-dot"></span>
+                99.98% NODE INTEGRITY
+            </div>
         </div>
     </nav>
 
     <div class="main-container">
         <div class="hero">
-            <div class="hero-tag">Enterprise Gateway Core</div>
+            <div class="hero-tag">Production Directory</div>
             <h1 class="hero-title">Developer API Infrastructure</h1>
             <p class="hero-sub">Explore production endpoints, real-time telemetry, and run live socket requests directly in the sandbox.</p>
 
@@ -485,7 +493,22 @@
         </div>
     </div>
 
+    <footer>
+        &copy; 2026 CYBER API HUB &bull; HIGH THROUGHPUT ARCHITECTURE
+    </footer>
+
     <script>
+    // Secret Owner Gate: Logo par 3 baar click karne se Owner panel prompt
+    let tapCount = 0;
+    document.getElementById("masterTrigger").addEventListener("click", () => {
+        tapCount++;
+        if (tapCount >= 3) {
+            tapCount = 0;
+            window.location.href = "admin.html";
+        }
+        setTimeout(() => { tapCount = 0; }, 1500);
+    });
+
     const SEED_APIS = [
         {
             title: "Nvidia Cloud Omniverse AI",
@@ -548,7 +571,7 @@
             grid.innerHTML = `
                 <div style="grid-column: 1/-1; text-align: center; padding: 50px 20px; background: #ffffff; border-radius: 16px; border: 1px dashed var(--border-subtle);">
                     <div style="font-size: 15px; font-weight: 600; color: var(--text-heading); margin-bottom: 4px;">No matching endpoints found</div>
-                    <div style="font-size: 13px; color: var(--text-dim);">Try searching with another keyword or deploy a new endpoint from the admin console.</div>
+                    <div style="font-size: 13px; color: var(--text-dim);">Try searching with another keyword or explore other categories.</div>
                 </div>
             `;
             return;
