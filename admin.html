@@ -1,552 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AKHIL // PROTOCOL - ROOT CONSOLE</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    :root {
-      --bg: #030712;
-      --card-bg: rgba(15, 23, 42, 0.85);
-      --red-neon: #ff1a40;
-      --green-neon: #00ff88;
-      --cyan-neon: #00f0ff;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: rgba(255, 26, 64, 0.25);
-      --font-code: 'Courier New', Courier, monospace;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background-color: var(--bg);
-      color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(255, 26, 64, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(0, 240, 255, 0.06) 0%, transparent 40%);
-    }
-
-    /* TOPBAR */
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 24px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(3, 7, 18, 0.95);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-family: var(--font-code);
-      font-weight: 900;
-      letter-spacing: 2px;
-      color: #fff;
-    }
-    .brand span { color: var(--red-neon); text-shadow: 0 0 10px rgba(255,26,64,0.6); }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .audio-btn {
-      background: rgba(255, 26, 64, 0.1);
-      border: 1px solid var(--red-neon);
-      color: var(--red-neon);
-      font-family: var(--font-code);
-      font-size: 0.75rem;
-      font-weight: bold;
-      padding: 6px 14px;
-      border-radius: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: 0.2s;
-    }
-    .audio-btn.active {
-      border-color: var(--green-neon);
-      color: var(--green-neon);
-      box-shadow: 0 0 12px rgba(0,255,136,0.3);
-    }
-
-    .user-pill {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 4px 12px 4px 4px;
-      background: rgba(255, 26, 64, 0.08);
-      border: 1px solid var(--border);
-      border-radius: 30px;
-    }
-    .user-avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1.5px solid var(--red-neon);
-      box-shadow: 0 0 8px rgba(255,26,64,0.5);
-    }
-    .user-name {
-      font-family: var(--font-code);
-      font-size: 0.8rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    /* CONTAINER LAYOUT */
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    /* STATS ROW */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-    .stat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    }
-    .stat-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      background: rgba(255, 26, 64, 0.1);
-      color: var(--red-neon);
-      border: 1px solid rgba(255, 26, 64, 0.3);
-    }
-    .stat-val { font-size: 1.4rem; font-weight: 800; font-family: var(--font-code); }
-    .stat-lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
-
-    /* WORKSPACE SPLIT */
-    .workspace-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 24px;
-    }
-    @media (max-width: 900px) {
-      .workspace-grid { grid-template-columns: 1fr; }
-    }
-
-    .cyber-panel {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 22px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
-    }
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 14px;
-      margin-bottom: 18px;
-      border-bottom: 1px solid rgba(255,26,64,0.2);
-      font-family: var(--font-code);
-      font-size: 0.95rem;
-      letter-spacing: 1px;
-    }
-
-    /* FORM STYLING */
-    .form-group { margin-bottom: 14px; }
-    .form-group label {
-      display: block;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      font-family: var(--font-code);
-      text-transform: uppercase;
-    }
-    .form-control {
-      width: 100%;
-      background: #020408;
-      border: 1px solid rgba(255, 26, 64, 0.3);
-      padding: 10px 14px;
-      color: #fff;
-      border-radius: 6px;
-      outline: none;
-      font-family: inherit;
-      font-size: 0.85rem;
-      transition: 0.2s;
-    }
-    .form-control:focus {
-      border-color: var(--red-neon);
-      box-shadow: 0 0 10px rgba(255, 26, 64, 0.3);
-    }
-
-    .btn-cyber {
-      background: var(--red-neon);
-      color: #fff;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 6px;
-      font-family: var(--font-code);
-      font-weight: bold;
-      font-size: 0.85rem;
-      cursor: pointer;
-      width: 100%;
-      letter-spacing: 1px;
-      box-shadow: 0 0 15px rgba(255, 26, 64, 0.4);
-      transition: 0.2s;
-    }
-    .btn-cyber:hover {
-      box-shadow: 0 0 25px rgba(255, 26, 64, 0.7);
-      transform: translateY(-1px);
-    }
-
-    /* TERMINAL LOG */
-    .terminal-box {
-      background: #000;
-      border: 1px solid rgba(0, 255, 136, 0.3);
-      border-radius: 8px;
-      padding: 16px;
-      font-family: var(--font-code);
-      font-size: 0.78rem;
-      color: var(--green-neon);
-      height: 320px;
-      overflow-y: auto;
-      line-height: 1.6;
-    }
-    .terminal-line { margin-bottom: 4px; word-break: break-all; }
-    .terminal-line span { color: var(--text-muted); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Control Gate | Root Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #05070c;
+            --panel-bg: rgba(11, 15, 25, 0.94);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent-red: #ef4444;
+            --accent-blue: #38bdf8;
+            --accent-green: #10b981;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg-dark);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        header {
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(8, 11, 19, 0.9);
+        }
+        .sys-identity {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--accent-red);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sys-identity::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .header-link {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: 4px;
+        }
+        .content-area {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 30px 20px 80px;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .metric-title {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+        .metric-digit {
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            margin-top: 4px;
+        }
+        .work-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+        }
+        @media(max-width: 800px) {
+            .work-grid { grid-template-columns: 1fr; }
+        }
+        .section-header {
+            font-size: 12px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        .field { margin-bottom: 14px; }
+        label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        input, select, textarea {
+            width: 100%;
+            background: #020408;
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-blue);
+        }
+        .btn-deploy {
+            width: 100%;
+            background: #be123c;
+            border: 1px solid rgba(244, 63, 94, 0.4);
+            color: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 6px;
+        }
+        .btn-deploy:hover { background: #e11d48; }
+        .terminal-feed {
+            background: #020408;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: #38bdf8;
+            height: 380px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+        .table-area {
+            margin-top: 30px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+        }
+        th {
+            text-align: left;
+            color: var(--text-dim);
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .btn-revoke {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: var(--font-mono);
+        }
+    </style>
 </head>
 <body>
-
-  <!-- BGM AUDIO OBJECT -->
-  <audio id="bgmAudio" src="music.mp3" loop preload="auto"></audio>
-
-  <!-- CYBER ROOT SECURITY GATE -->
-  <div id="securityGate" style="position:fixed; inset:0; background:#020408; z-index:999999; display:flex; align-items:center; justify-content:center; padding:16px;">
-    <div style="background:#090d16; border:1.5px solid #ff1a40; box-shadow:0 0 45px rgba(255,26,64,0.35); border-radius:14px; max-width:420px; width:100%; padding:30px 24px; text-align:center; font-family:monospace;">
-      <div style="color:#ff1a40; font-size:2.4rem; margin-bottom:12px;">🔒</div>
-      <h3 style="color:#fff; margin:0; font-size:1.15rem; letter-spacing:1px; text-transform:uppercase;">AKHIL PROTOCOL GATEWAY</h3>
-      <p style="color:#94a3b8; font-size:0.75rem; margin:6px 0 20px 0;">ENTER ROOT IDENTIFIER & ACCESS KEY</p>
-      
-      <div style="display:flex; flex-direction:column; gap:12px; text-align:left;">
-        <div>
-          <label style="font-size:0.72rem; color:#94a3b8; font-weight:bold; display:block; margin-bottom:4px;">USERNAME</label>
-          <input type="text" id="rootUser" placeholder="ENTER USERNAME" style="background:#000; border:1px solid rgba(255,26,64,0.4); color:#00ff88; font-family:monospace; padding:12px; width:100%; border-radius:8px; outline:none; font-size:0.9rem;" onkeydown="if(event.key==='Enter') verifyRootAccess()">
-        </div>
-
-        <div>
-          <label style="font-size:0.72rem; color:#94a3b8; font-weight:bold; display:block; margin-bottom:4px;">PASSWORD / KEY</label>
-          <input type="password" id="rootPass" placeholder="ENTER ACCESS KEY" style="background:#000; border:1px solid rgba(255,26,64,0.4); color:#00ff88; font-family:monospace; padding:12px; width:100%; border-radius:8px; outline:none; font-size:0.9rem;" onkeydown="if(event.key==='Enter') verifyRootAccess()">
-        </div>
-      </div>
-      
-      <div style="display:flex; gap:10px; margin-top:20px;">
-        <button onclick="window.location.href='index.html'" style="background:#1e293b; color:#94a3b8; border:none; padding:12px; flex:1; border-radius:6px; cursor:pointer; font-weight:bold; font-size:0.8rem;">ABORT</button>
-        <button onclick="verifyRootAccess()" style="background:#ff1a40; color:#fff; border:none; padding:12px; flex:1.5; border-radius:6px; cursor:pointer; font-weight:bold; font-size:0.8rem; box-shadow:0 0 18px rgba(255,26,64,0.4);">AUTHENTICATE ⚡</button>
-      </div>
-      <p id="lockError" style="color:#ff1a40; font-size:0.75rem; margin-top:14px; display:none; font-weight:bold;">ACCESS DENIED: INVALID USERNAME OR KEY</p>
-    </div>
-  </div>
-
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <div class="brand">
-      <i class="fa-solid fa-terminal" style="color:var(--red-neon)"></i>
-      AKHIL <span>// PROTOCOL</span>
-    </div>
-    <div class="nav-actions">
-      <button class="audio-btn" id="audioToggleBtn" onclick="toggleAudio()">
-        <i class="fa-solid fa-volume-high" id="audioIcon"></i>
-        <span id="audioText">BGM: ACTIVE</span>
-      </button>
-      <div class="user-pill">
-        <img class="user-avatar" src="akhil.jpg" alt="Akhil" onerror="this.src='https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=150&auto=format&fit=crop'">
-        <span class="user-name">AKHIL // ROOT</span>
-      </div>
-      <a href="index.html" style="color:var(--text-muted); font-size:0.85rem; text-decoration:none;" title="Exit to Hub"><i class="fa-solid fa-power-off"></i></a>
-    </div>
-  </header>
-
-  <!-- DASHBOARD ROOT CONTENT -->
-  <main class="container">
-    <!-- STATS -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon"><i class="fa-solid fa-cubes"></i></div>
-        <div>
-          <div class="stat-val" id="totalApiCount">1,950+</div>
-          <div class="stat-lbl">Active Endpoints</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="color:var(--green-neon); border-color:rgba(0,255,136,0.3); background:rgba(0,255,136,0.08)"><i class="fa-solid fa-shield-halved"></i></div>
-        <div>
-          <div class="stat-val" style="color:var(--green-neon)">SHA-256</div>
-          <div class="stat-lbl">Security Shield</div>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon" style="color:var(--cyan-neon); border-color:rgba(0,240,255,0.3); background:rgba(0,240,255,0.08)"><i class="fa-solid fa-bolt"></i></div>
-        <div>
-          <div class="stat-val" style="color:var(--cyan-neon)">100% UP</div>
-          <div class="stat-lbl">Engine Health</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MAIN CONSOLE -->
-    <div class="workspace-grid">
-      <!-- DEPLOY FORM -->
-      <section class="cyber-panel">
-        <div class="panel-header">
-          <span><i class="fa-solid fa-plus-circle" style="color:var(--red-neon); margin-right:8px;"></i> DEPLOY NEW ENDPOINT</span>
-          <span style="font-size:0.75rem; color:var(--text-muted)">ROOT MODE</span>
-        </div>
-        <form id="apiDeployForm" onsubmit="handleApiDeploy(event)">
-          <div class="form-group">
-            <label>API NAME / TITLE</label>
-            <input type="text" id="apiName" class="form-control" placeholder="e.g. Neural Vision Pro" required>
-          </div>
-          <div class="form-group">
-            <label>TARGET ENDPOINT URL</label>
-            <input type="url" id="apiUrl" class="form-control" placeholder="https://api.domain.com/v1" required>
-          </div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-            <div class="form-group">
-              <label>CATEGORY</label>
-              <select id="apiCat" class="form-control">
-                <option>AI / Machine Learning</option>
-                <option>Security & Cryptography</option>
-                <option>Finance & Web3</option>
-                <option>Cloud Infrastructure</option>
-              </select>
+    <header>
+        <div class="sys-identity">SYSTEM CONTROLLER // PROTOCOL ENGINE</div>
+        <a href="index.html" class="header-link">&larr; Public Gateway</a>
+    </header>
+    <div class="content-area">
+        <div class="metrics-grid">
+            <div class="card">
+                <div class="metric-title">Active Registry Nodes</div>
+                <div class="metric-digit" id="counterNodes" style="color: var(--accent-red);">0</div>
             </div>
-            <div class="form-group">
-              <label>AUTH SCHEME</label>
-              <select id="apiAuth" class="form-control">
-                <option>Bearer Token</option>
-                <option>API Key Header</option>
-                <option>OAuth 2.0</option>
-                <option>None (Public)</option>
-              </select>
+            <div class="card">
+                <div class="metric-title">Cryptographic Protocol</div>
+                <div class="metric-digit">SHA-256</div>
             </div>
-          </div>
-          <div class="form-group">
-            <label>DESCRIPTION</label>
-            <textarea id="apiDesc" class="form-control" rows="3" placeholder="Brief technical documentation..."></textarea>
-          </div>
-          <button type="submit" class="btn-cyber"><i class="fa-solid fa-rocket" style="margin-right:8px;"></i> INITIALIZE DEPLOYMENT</button>
-        </form>
-      </section>
-
-      <!-- TERMINAL ENGINE -->
-      <section class="cyber-panel">
-        <div class="panel-header">
-          <span><i class="fa-solid fa-code" style="color:var(--green-neon); margin-right:8px;"></i> LIVE SYSTEM AUDIT</span>
-          <span style="font-size:0.75rem; color:var(--green-neon)">ONLINE</span>
+            <div class="card">
+                <div class="metric-title">Cloud Storage Link</div>
+                <div class="metric-digit" style="color: var(--accent-green); font-size: 1.25rem; margin-top: 8px;">ESTABLISHED</div>
+            </div>
         </div>
-        <div class="terminal-box" id="termOutput">
-          <div class="terminal-line"><span>[SYS_INIT]</span> AKHIL Protocol engine started...</div>
-          <div class="terminal-line"><span>[SEC_AUDIT]</span> Dual-layer SHA-256 Gate active.</div>
-          <div class="terminal-line"><span>[AUDIO]</span> Background Music Engine linked to music.mp3.</div>
-          <div class="terminal-line"><span>[READY]</span> Waiting for operator command...</div>
+        <div class="work-grid">
+            <div class="card">
+                <div class="section-header">Register New Endpoint Node</div>
+                <div class="field">
+                    <label>Identifier / System Title</label>
+                    <input type="text" id="nodeTitle" placeholder="e.g. Nvidia Cloud Tensor v1">
+                </div>
+                <div class="field">
+                    <label>Target Execution URL</label>
+                    <input type="text" id="nodeUrl" placeholder="https://api.nvidia.com/v1/infer">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="field">
+                        <label>Architecture Category</label>
+                        <select id="nodeCategory">
+                            <option value="AI / Machine Learning">AI / Machine Learning</option>
+                            <option value="Crypto / Web3">Crypto / Web3</option>
+                            <option value="Cloud & Systems">Cloud & Systems</option>
+                            <option value="Data / Analytics">Data / Analytics</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Authentication Scheme</label>
+                        <select id="nodeAuth">
+                            <option value="Bearer Token">Bearer Token</option>
+                            <option value="x-api-key">x-api-key</option>
+                            <option value="OAuth 2.0">OAuth 2.0</option>
+                            <option value="No Auth">No Auth (Public)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Technical Description</label>
+                    <textarea id="nodeDesc" rows="3" placeholder="Input schema and functional telemetry payload..."></textarea>
+                </div>
+                <button class="btn-deploy" onclick="commitDeployment()">Commit Endpoint</button>
+            </div>
+            <div class="card">
+                <div class="section-header">Live Telemetry &amp; System Stream</div>
+                <div class="terminal-feed" id="streamLog">
+                    <div>[SYS] System controller online.</div>
+                    <div>[AUTH] Dual-layer security active.</div>
+                    <div>[NET] Cloud database pipe synced to Render.</div>
+                    <div>[READY] Awaiting operator input...</div>
+                </div>
+            </div>
         </div>
-      </section>
+        <div class="table-area">
+            <div class="section-header">Deployed Public Registry</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Identifier</th>
+                        <th>Category</th>
+                        <th>Target URL</th>
+                        <th>Auth</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="registryTable"></tbody>
+            </table>
+        </div>
     </div>
-  </main>
-
-  <!-- LOGIC & SECURITY SCRIPT -->
-  <script>
-    const TARGET_USER_HASH = "b588dbda096ee9a4f4cb3df0f2fe359a39ca25e2e85ab89dcfd092e0797f74c7";
-    const TARGET_PASS_HASH = "02f1a60cfb92d6e355609438067332d001614742a0ddfca7412f1ef550fdb0a6";
-
-    const MAX_ATTEMPTS = 15;
-    const LOCKOUT_DURATION_MS = 30 * 1000;
-    const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
-    let inactivityTimer = null;
-
-    async function computeSHA256(str) {
-      const buffer = new TextEncoder().encode(str);
-      const digest = await crypto.subtle.digest("SHA-256", buffer);
-      return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
+    <script>
+    function printLog(msg) {
+        const box = document.getElementById("streamLog");
+        const row = document.createElement("div");
+        row.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        box.appendChild(row);
+        box.scrollTop = box.scrollHeight;
     }
-
-    function checkLockoutStatus() {
-      const lockUntil = parseInt(localStorage.getItem("AKHIL_LOCKOUT_UNTIL") || "0", 10);
-      const now = Date.now();
-      const errEl = document.getElementById("lockError");
-
-      if (now < lockUntil) {
-        const remainingSec = Math.ceil((lockUntil - now) / 1000);
-        if (errEl) {
-          errEl.style.display = "block";
-          errEl.innerText = "[!] SYSTEM LOCKED: RETRY IN " + remainingSec + "s";
+    function fetchLocalRegistry() {
+        try { return JSON.parse(localStorage.getItem("cyber_hub_apis")) || []; } catch(e) { return []; }
+    }
+    function updateTable() {
+        const apis = fetchLocalRegistry();
+        document.getElementById("counterNodes").innerText = apis.length;
+        const tbody = document.getElementById("registryTable");
+        tbody.innerHTML = "";
+        if (apis.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-dim);">No endpoint nodes registered.</td></tr>`;
+            return;
         }
-        document.getElementById("rootUser").disabled = true;
-        document.getElementById("rootPass").disabled = true;
-        setTimeout(checkLockoutStatus, 1000);
-        return true;
-      } else {
-        document.getElementById("rootUser").disabled = false;
-        document.getElementById("rootPass").disabled = false;
-        localStorage.removeItem("AKHIL_LOCKOUT_UNTIL");
-        return false;
-      }
-    }
-
-    function registerFailedAttempt() {
-      let attempts = parseInt(localStorage.getItem("AKHIL_FAIL_ATTEMPTS") || "0", 10) + 1;
-      localStorage.setItem("AKHIL_FAIL_ATTEMPTS", attempts.toString());
-
-      const errEl = document.getElementById("lockError");
-      if (attempts >= MAX_ATTEMPTS) {
-        const lockUntil = Date.now() + LOCKOUT_DURATION_MS;
-        localStorage.setItem("AKHIL_LOCKOUT_UNTIL", lockUntil.toString());
-        localStorage.setItem("AKHIL_FAIL_ATTEMPTS", "0");
-        // bypass
-      } else {
-        if (errEl) {
-          errEl.style.display = "block";
-          errEl.innerText = "ACCESS DENIED: INVALID KEY (" + (MAX_ATTEMPTS - attempts) + " ATTEMPTS REMAINING)";
-        }
-      }
-    }
-
-    function verifyRootAccess() {
-      const u = (document.getElementById("rootUser").value || "").trim();
-      const p = (document.getElementById("rootPass").value || "").trim();
-      const err = document.getElementById("lockError");
-
-      if (u === "AKHIL" && p === "akhilrawat027@gmail.com") {
-        sessionStorage.setItem("AKHIL_ROOT_AUTH", "GRANTED");
-        document.getElementById("securityGate").style.display = "none";
-        startBGM();
-        logToTerminal("[AUTH_SUCCESS] Operator AKHIL Authenticated. Console unlocked.");
-      } else {
-        err.style.display = "block";
-        err.innerText = "ACCESS DENIED: Username must be capital AKHIL & check password";
-        document.getElementById("rootPass").value = "";
-      }
-    }
-
-    function startBGM() {
-      const audio = document.getElementById("bgmAudio");
-      if (audio) {
-        audio.volume = 0.8;
-        audio.play().then(() => {
-          document.getElementById("audioToggleBtn").classList.add("active");
-          document.getElementById("audioText").innerText = "BGM: ACTIVE";
-          document.getElementById("audioIcon").className = "fa-solid fa-volume-high";
-        }).catch(err => {
-          console.log("Audio awaiting user interaction:", err);
+        apis.forEach((api, idx) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td style="font-weight:600; color:#fff;">${sanitize(api.title)}</td>
+                <td><span style="font-family:var(--font-mono); font-size:11px; color:#38bdf8;">${sanitize(api.category)}</span></td>
+                <td style="font-family:var(--font-mono); font-size:11px; color:var(--text-dim);">${sanitize(api.url)}</td>
+                <td><span style="font-family:var(--font-mono); font-size:11px; color:#10b981;">${sanitize(api.auth)}</span></td>
+                <td><button class="btn-revoke" onclick="revokeNode(${idx})">Revoke</button></td>
+            `;
+            tbody.appendChild(tr);
         });
-      }
     }
-
-    function toggleAudio() {
-      const audio = document.getElementById("bgmAudio");
-      const btn = document.getElementById("audioToggleBtn");
-      const icon = document.getElementById("audioIcon");
-      const text = document.getElementById("audioText");
-
-      if (audio.paused) {
-        audio.play();
-        btn.classList.add("active");
-        text.innerText = "BGM: ACTIVE";
-        icon.className = "fa-solid fa-volume-high";
-      } else {
-        audio.pause();
-        btn.classList.remove("active");
-        text.innerText = "BGM: MUTED";
-        icon.className = "fa-solid fa-volume-xmark";
-      }
+    function sanitize(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
+    async function commitDeployment() {
+        const title = document.getElementById("nodeTitle").value.trim();
+        const url = document.getElementById("nodeUrl").value.trim();
+        const category = document.getElementById("nodeCategory").value;
+        const auth = document.getElementById("nodeAuth").value;
+        const desc = document.getElementById("nodeDesc").value.trim();
 
-    function resetInactivityTimer() {
-      if (sessionStorage.getItem("AKHIL_ROOT_AUTH") !== "GRANTED") return;
-      clearTimeout(inactivityTimer);
-      inactivityTimer = setTimeout(() => {
-        sessionStorage.removeItem("AKHIL_ROOT_AUTH");
-        alert("[SECURITY ALERT] Session expired due to inactivity.");
-        location.reload();
-      }, INACTIVITY_LIMIT_MS);
+        if (!title || !url) {
+            alert("Title and Target URL are required fields.");
+            return;
+        }
+        printLog(`Validating node payload: ${title}`);
+        const payload = { title, url, category, auth, desc };
+
+        let registry = fetchLocalRegistry();
+        registry.unshift(payload);
+        localStorage.setItem("cyber_hub_apis", JSON.stringify(registry));
+        printLog(`[LOCAL] Stored to browser gateway.`);
+
+        try {
+            printLog(`Transmitting to Cloud Database...`);
+            await fetch("https://akhil-private-backend.onrender.com/api/db/insert", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "x-api-key": "akhil_8630_secure" },
+                body: JSON.stringify({ collection: "cyber_apis", data: payload })
+            });
+            printLog(`[SUCCESS] Cloud database committed.`);
+        } catch(e) {
+            printLog(`[OFFLINE] Cloud sync skipped, local record preserved.`);
+        }
+
+        document.getElementById("nodeTitle").value = "";
+        document.getElementById("nodeUrl").value = "";
+        document.getElementById("nodeDesc").value = "";
+        updateTable();
     }
-
-    function initInactivityWatchdog() {
-      resetInactivityTimer();
-      ["mousemove", "mousedown", "keydown", "touchstart", "scroll"].forEach(evt => {
-        window.addEventListener(evt, resetInactivityTimer, { passive: true });
-      });
+    function revokeNode(idx) {
+        if (!confirm("Confirm revocation of selected node?")) return;
+        let registry = fetchLocalRegistry();
+        let target = registry.splice(idx, 1);
+        localStorage.setItem("cyber_hub_apis", JSON.stringify(registry));
+        printLog(`[REVOKE] Node ${target[0]?.title} removed.`);
+        updateTable();
     }
-
-    function logToTerminal(msg) {
-      const box = document.getElementById("termOutput");
-      const time = new Date().toTimeString().split(" ")[0];
-      const line = document.createElement("div");
-      line.className = "terminal-line";
-      line.innerHTML = `<span>[${time}]</span> ${msg}`;
-      box.appendChild(line);
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function handleApiDeploy(e) {
-      e.preventDefault();
-      const name = document.getElementById("apiName").value;
-      logToTerminal(`[DEPLOY] Packing and broadcasting endpoint '${name}'...`);
-      setTimeout(() => {
-        logToTerminal(`[SUCCESS] '${name}' deployed to cluster!`);
-        alert("Endpoint successfully added to protocol repository!");
-        document.getElementById("apiDeployForm").reset();
-      }, 700);
-    }
-
-    // ANTI-INSPECT
-    document.addEventListener("contextmenu", (e) => e.preventDefault());
-    document.addEventListener("keydown", (e) => {
-      if (
-        e.key === "F12" ||
-        (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J" || e.key === "C")) ||
-        (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "s" || e.key === "S"))
-      ) {
-        e.preventDefault();
-      }
-    });
-
-    
-    window.addEventListener("DOMContentLoaded", () => {
-      localStorage.removeItem("AKHIL_LOCKOUT_UNTIL");
-      localStorage.removeItem("AKHIL_FAIL_ATTEMPTS");
-
-      // bypass
-      if (sessionStorage.getItem("AKHIL_ROOT_AUTH") === "GRANTED") {
-        const gate = document.getElementById("securityGate");
-        if (gate) gate.style.display = "none";
-        initInactivityWatchdog();
-      }
-    });
-  </script>
+    updateTable();
+    </script>
 </body>
 </html>

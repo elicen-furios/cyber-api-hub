@@ -1,1217 +1,603 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="apis.js?v=build_1950_final"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
-  <title>FREE API WEB - 1900+ Live APIs</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    html, body { background: #070b14; color: #f8fafc; width: 100%; min-height: 100%; -webkit-text-size-adjust: 100%; }
-
-    /* GATE SCREEN */
-    #gateScreen {
-      min-height: 100vh; width: 100%; display: none; flex-direction: column;
-      justify-content: space-between; align-items: center; padding: 16px;
-      background: #000 url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-      background-size: cover; position: relative;
-    }
-    #gateScreen::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(3, 10, 20, 0.82) 0%, rgba(1, 4, 9, 0.95) 100%); z-index: 1; }
-
-    .ambient-header {
-      position: relative; z-index: 2; width: 100%; max-width: 390px;
-      display: flex; justify-content: space-between; font-size: 0.65rem;
-      letter-spacing: 2px; color: #64748b; font-weight: 700; text-transform: uppercase; padding: 6px 0;
-    }
-
-    .neon-card {
-      position: relative; z-index: 2; width: 100%; max-width: 390px;
-      background: rgba(10, 18, 26, 0.9); border: 1.5px solid #00f2fe;
-      border-radius: 26px; padding: 28px 20px; box-shadow: 0 0 35px rgba(0, 242, 254, 0.35);
-      text-align: center; margin: auto 0;
-    }
-    .logo-icon { font-size: 2.3rem; color: #00f2fe; margin-bottom: 2px; filter: drop-shadow(0 0 12px rgba(0,242,254,0.7)); }
-    .title-main { font-size: 1.7rem; font-weight: 900; letter-spacing: 4px; color: #fff; }
-    .title-sub { font-size: 0.7rem; font-weight: 800; letter-spacing: 2px; color: #00f2fe; margin-bottom: 18px; text-transform: uppercase; }
-    .lead-head { font-size: 1.25rem; font-weight: 800; margin-bottom: 4px; }
-    .lead-desc { font-size: 0.78rem; color: #94a3b8; margin-bottom: 18px; }
-
-    .btn-row {
-      width: 100%; display: flex; align-items: center; justify-content: space-between;
-      padding: 13px 16px; border-radius: 12px; font-size: 0.88rem; font-weight: 600;
-      cursor: pointer; margin-bottom: 10px; background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.12); color: #fff;
-    }
-    .btn-row.accent { border: 1.5px solid #00f2fe; background: rgba(0, 242, 254, 0.08); }
-    .btn-left { display: flex; align-items: center; gap: 10px; }
-
-    .divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; font-size: 0.65rem; color: #64748b; font-weight: 700; }
-    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
-
-    #phoneForm { display: none; flex-direction: column; gap: 10px; margin-bottom: 12px; text-align: left; }
-    .gate-input { width: 100%; background: #030712; border: 1.5px solid #00f2fe; border-radius: 8px; padding: 12px; color: #fff; font-size: 16px !important; outline: none; }
-    .btn-submit { width: 100%; background: #00f2fe; color: #030712; font-weight: 800; border: none; border-radius: 8px; padding: 12px; cursor: pointer; font-size: 15px; }
-
-    .strip-icons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
-    .strip-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .strip-col i { font-size: 1.1rem; color: #00f2fe; }
-    .strip-col span { font-size: 0.58rem; color: #94a3b8; text-align: center; }
-
-    /* DASHBOARD */
-    #dashScreen { display: none; width: 100%; min-height: 100vh; padding-bottom: 40px; }
-    .navbar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
-      background: #070b14; position: sticky; top: 0; z-index: 50;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; font-size: 1.1rem; font-weight: 800; color: #00f2fe; }
-    .brand-icon { background: #0284c7; width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; color: #fff; }
-    .user-bar { display: flex; align-items: center; gap: 10px; }
-    .user-badge {
-      display: flex; align-items: center; gap: 6px; padding: 6px 14px;
-      background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.3);
-      border-radius: 20px; font-size: 0.82rem; font-weight: 700; color: #00f2fe;
-    }
-    .btn-logout {
-      background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #ef4444;
-      padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
-    }
-
-    .dash-container { max-width: 900px; margin: 0 auto; padding: 22px 16px; }
-    .hero-banner {
-      background: rgba(13, 21, 39, 0.6); border: 1px solid rgba(0, 242, 254, 0.2);
-      border-radius: 18px; padding: 24px 16px; text-align: center; margin-bottom: 20px;
-    }
-    .hero-title { font-size: 1.45rem; font-weight: 900; margin-bottom: 6px; }
-    .hero-desc { font-size: 0.82rem; color: #94a3b8; margin-bottom: 18px; }
-    .search-box {
-      display: flex; gap: 8px; max-width: 550px; margin: 0 auto;
-      background: #030712; padding: 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
-    }
-    .search-input { flex: 1; background: transparent; border: none; outline: none; color: #fff; padding-left: 12px; font-size: 16px !important; }
-    .search-btn { background: #0284c7; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-
-    /* Category Chips */
-    .chip-container {
-      display: flex; gap: 8px; overflow-x: auto; padding: 10px 0 16px;
-      scrollbar-width: none; -ms-overflow-style: none;
-    }
-    .chip-container::-webkit-scrollbar { display: none; }
-    .filter-chip {
-      padding: 7px 14px; border-radius: 20px; background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.12); font-size: 0.78rem; font-weight: 600;
-      white-space: nowrap; cursor: pointer; color: #94a3b8; transition: 0.2s;
-    }
-    .filter-chip.active { background: #00f2fe; color: #030712; border-color: #00f2fe; font-weight: 800; }
-
-    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
-    .stat-card { background: rgba(13, 21, 39, 0.7); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 14px; }
-    .stat-num { font-size: 1.3rem; font-weight: 800; color: #00f2fe; }
-    .stat-label { font-size: 0.75rem; color: #94a3b8; }
-
-    .sec-head {
-      font-size: 1.05rem; font-weight: 800; margin-bottom: 14px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-
-    /* API Cards */
-    .api-list { display: flex; flex-direction: column; gap: 12px; }
-    .api-item {
-      background: rgba(13, 21, 39, 0.85); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px;
-    }
-    .api-top-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-    .api-meta h4 { font-size: 1rem; font-weight: 800; margin-bottom: 4px; color: #fff; }
-    .api-meta p { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; }
-    .tag-category { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
-
-    .api-footer-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.75rem;
-    }
-    .api-link-btn {
-      color: #00f2fe; text-decoration: none; font-weight: 700;
-      display: inline-flex; align-items: center; gap: 5px;
-    }
-    .api-auth-pill { color: #64748b; font-size: 0.7rem; }
-    .load-more-btn {
-      width: 100%; padding: 12px; background: rgba(0, 242, 254, 0.1); border: 1px solid #00f2fe;
-      color: #00f2fe; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 14px;
-    }
-  
-    /* --- AI ASSISTANT WIDGET --- */
-    #aiToggleBtn {
-      position: fixed;
-      bottom: 24px;
-      right: 20px;
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00f2fe, #2563eb);
-      color: #030712;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-      z-index: 1000;
-      border: 1.5px solid #00f2fe;
-      transition: transform 0.2s;
-    }
-    #aiToggleBtn:active { transform: scale(0.92); }
-
-    #aiChatWindow {
-      position: fixed;
-      bottom: 88px;
-      right: 20px;
-      width: 340px;
-      max-width: calc(100vw - 40px);
-      height: 440px;
-      background: rgba(10, 17, 32, 0.95);
-      border: 1.5px solid #00f2fe;
-      border-radius: 20px;
-      box-shadow: 0 0 35px rgba(0, 242, 254, 0.25);
-      backdrop-filter: blur(20px);
-      display: none;
-      flex-direction: column;
-      z-index: 1001;
-      overflow: hidden;
-    }
-
-    .ai-chat-header {
-      padding: 14px 16px;
-      background: rgba(3, 7, 18, 0.9);
-      border-bottom: 1px solid rgba(0, 242, 254, 0.2);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.88rem;
-      font-weight: 800;
-      color: #00f2fe;
-    }
-    .ai-chat-header span { display: flex; align-items: center; gap: 8px; }
-    .ai-close-btn { color: #94a3b8; font-size: 1.1rem; cursor: pointer; }
-
-    .ai-chat-messages {
-      flex: 1;
-      padding: 14px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      font-size: 0.82rem;
-    }
-
-    .ai-msg {
-      max-width: 82%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      line-height: 1.4;
-    }
-    .ai-msg.bot {
-      background: #111a2e;
-      color: #e2e8f0;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      align-self: flex-start;
-      border-top-left-radius: 2px;
-    }
-    .ai-msg.user {
-      background: #0284c7;
-      color: #fff;
-      align-self: flex-end;
-      border-top-right-radius: 2px;
-    }
-
-    .ai-input-bar {
-      display: flex;
-      padding: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(3, 7, 18, 0.8);
-      gap: 6px;
-    }
-    .ai-input-bar input {
-      flex: 1;
-      background: #030712;
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      border-radius: 8px;
-      padding: 8px 12px;
-      color: #fff;
-      font-size: 14px;
-      outline: none;
-    }
-    .ai-input-bar button {
-      background: #00f2fe;
-      color: #030712;
-      border: none;
-      border-radius: 8px;
-      padding: 0 14px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-  
-    /* --- FAVORITES & CODE MODAL --- */
-    .fav-btn {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
-      color: #94a3b8;
-      padding: 6px 10px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-    }
-    .fav-btn.active {
-      color: #f43f5e;
-      border-color: #f43f5e;
-      background: rgba(244,63,94,0.15);
-    }
-    .code-btn {
-      background: rgba(0,242,254,0.1);
-      border: 1px solid rgba(0,242,254,0.3);
-      border-radius: 8px;
-      color: #00f2fe;
-      padding: 6px 12px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-    .code-btn:hover { background: #00f2fe; color: #030712; }
-
-    #codeModal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(3,7,18,0.85);
-      backdrop-filter: blur(10px);
-      z-index: 100000;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .modal-box {
-      background: #0a1120;
-      border: 1.5px solid #00f2fe;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 520px;
-      padding: 20px;
-      box-shadow: 0 0 40px rgba(0,242,254,0.25);
-    }
-    .snippet-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
-    .tab-btn {
-      background: #111a2e;
-      color: #94a3b8;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 6px;
-      padding: 6px 12px;
-      font-size: 0.8rem;
-      cursor: pointer;
-    }
-    .tab-btn.active { background: #00f2fe; color: #030712; font-weight: 800; border-color: #00f2fe; }
-    .code-view {
-      background: #030712;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 12px;
-      color: #38bdf8;
-      font-family: monospace;
-      font-size: 0.82rem;
-      white-space: pre-wrap;
-      max-height: 220px;
-      overflow-y: auto;
-    }
-
-
-    /* --- LIVE API TESTER MODAL --- */
-    #testerModal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(3,7,18,0.85);
-      backdrop-filter: blur(12px);
-      z-index: 100001;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .tester-box {
-      background: #0a1120;
-      border: 1.5px solid #00f2fe;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 580px;
-      padding: 20px;
-      box-shadow: 0 0 40px rgba(0,242,254,0.3);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .tester-url-bar {
-      display: flex;
-      gap: 8px;
-      background: #030712;
-      border: 1px solid rgba(0,242,254,0.3);
-      border-radius: 8px;
-      padding: 6px;
-    }
-    .tester-method {
-      background: #10b981;
-      color: #030712;
-      font-weight: 800;
-      font-size: 0.75rem;
-      padding: 6px 10px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-    }
-    .tester-url-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 0.82rem;
-      outline: none;
-      font-family: monospace;
-    }
-    .tester-send-btn {
-      background: #00f2fe;
-      color: #030712;
-      border: none;
-      font-weight: bold;
-      padding: 6px 14px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .tester-res-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: #94a3b8;
-    }
-    .tester-res-box {
-      background: #030712;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      padding: 12px;
-      color: #a7f3d0;
-      font-family: monospace;
-      font-size: 0.8rem;
-      max-height: 240px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-    }
-    .test-trigger-btn {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.4);
-      border-radius: 8px;
-      color: #10b981;
-      padding: 6px 10px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-    .test-trigger-btn:hover { background: #10b981; color: #030712; }
-
-
-    /* --- ADMIN PANEL MODAL --- */
-    #adminModal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(3,7,18,0.92);
-      backdrop-filter: blur(15px);
-      z-index: 100005;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      overflow-y: auto;
-    }
-    .admin-box {
-      background: #0b1329;
-      border: 1.5px solid #f43f5e;
-      border-radius: 18px;
-      width: 100%;
-      max-width: 680px;
-      padding: 22px;
-      box-shadow: 0 0 45px rgba(244,63,94,0.3);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .admin-badge {
-      background: #f43f5e;
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 3px 8px;
-      border-radius: 6px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .admin-stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin: 16px 0;
-    }
-    .admin-stat-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 12px;
-      text-align: center;
-    }
-    .admin-stat-card h5 { margin: 0; color: #94a3b8; font-size: 0.75rem; }
-    .admin-stat-card p { margin: 4px 0 0 0; color: #00f2fe; font-size: 1.2rem; font-weight: 800; }
-    .admin-input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-    .admin-input-group label {
-      font-size: 0.78rem;
-      color: #94a3b8;
-      font-weight: 600;
-    }
-    .admin-input-group input, .admin-input-group select, .admin-input-group textarea {
-      background: #030712;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
-      padding: 9px 12px;
-      color: #fff;
-      font-size: 0.85rem;
-      outline: none;
-    }
-    .admin-input-group input:focus { border-color: #00f2fe; }
-    .btn-admin-submit {
-      background: linear-gradient(135deg, #f43f5e, #e11d48);
-      color: #fff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-weight: 800;
-      cursor: pointer;
-      width: 100%;
-      font-size: 0.9rem;
-      margin-top: 8px;
-    }
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber API Hub | Production Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #06080d;
+            --bg-card: rgba(13, 17, 26, 0.92);
+            --border-dim: rgba(255, 255, 255, 0.08);
+            --border-active: #0284c7;
+            --accent-cyan: #38bdf8;
+            --accent-emerald: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+        .orbit-grid {
+            position: fixed;
+            inset: 0;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 60%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(6, 8, 13, 0.88);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-dim);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .brand {
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .brand-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+        .nav-actions { display: flex; align-items: center; gap: 12px; }
+        .node-status {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+        .admin-link {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            text-decoration: none;
+            background: #1e293b;
+            border: 1px solid var(--border-dim);
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .admin-link:hover { border-color: var(--accent-cyan); }
+        .main-container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 40px 20px 80px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-section {
+            text-align: center;
+            max-width: 720px;
+            margin: 0 auto 36px;
+        }
+        .hero-tag {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-cyan);
+            background: rgba(56, 189, 248, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 4px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 14px;
+        }
+        .hero-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+        .hero-sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .search-container {
+            display: flex;
+            gap: 8px;
+            max-width: 620px;
+            margin: 28px auto 20px;
+        }
+        .search-bar {
+            flex: 1;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-dim);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-bar:focus { border-color: var(--accent-cyan); }
+        .search-btn {
+            background: var(--accent-cyan);
+            color: #04101e;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 0 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+        }
+        .filter-pill {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-dim);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-pill.active, .filter-pill:hover {
+            color: #fff;
+            border-color: var(--accent-cyan);
+            background: rgba(56, 189, 248, 0.12);
+        }
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 40px;
+        }
+        .metric-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            padding: 16px 20px;
+            border-radius: 10px;
+        }
+        .metric-val {
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: #fff;
+        }
+        .metric-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-dim);
+        }
+        .grid-header h2 { font-size: 1rem; font-weight: 600; }
+        .api-catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 18px;
+        }
+        .api-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .api-panel:hover {
+            transform: translateY(-2px);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .tag-cat {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #1e293b;
+            color: var(--accent-cyan);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            text-transform: uppercase;
+        }
+        .tag-auth {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+        .api-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+        .api-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+        .url-box {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            background: #020408;
+            border: 1px solid var(--border-dim);
+            padding: 8px 10px;
+            border-radius: 6px;
+            color: var(--accent-cyan);
+            word-break: break-all;
+            margin-bottom: 12px;
+        }
+        .btn-test {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: #fff;
+            padding: 9px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-test:hover {
+            background: var(--accent-cyan);
+            color: #04101e;
+        }
+        #testModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.82);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-body {
+            background: #0b0f19;
+            border: 1px solid var(--border-active);
+            width: 100%;
+            max-width: 650px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-dim);
+            padding-bottom: 10px;
+        }
+        .modal-title { font-size: 0.95rem; font-weight: 700; }
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .input-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .input-bar select {
+            background: #1e293b;
+            border: 1px solid var(--border-dim);
+            color: var(--accent-cyan);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            outline: none;
+        }
+        .input-bar input {
+            flex: 1;
+            background: #020408;
+            border: 1px solid var(--border-dim);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            outline: none;
+        }
+        .execute-btn {
+            background: var(--accent-emerald);
+            color: #032117;
+            font-weight: 700;
+            border: none;
+            padding: 0 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .res-display {
+            background: #020408;
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            padding: 12px;
+            height: 220px;
+            overflow-y: auto;
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            color: #38bdf8;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
-
-  <!-- VIEW 1: GATE -->
-  <div id="gateScreen">
-    <div class="ambient-header">
-      <div>DREAM &bull; BUILD &bull; ACHIEVE</div>
-      <div style="color:#10b981;">"Small steps build big dreams."</div>
-    </div>
-    <div class="neon-card">
-      <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
-      <div class="title-main">AKHIL</div>
-      <div class="title-sub">API DEVELOPER HUB</div>
-      <div class="lead-head">Welcome Back</div>
-      <div class="lead-desc">Sign in to continue to your API world</div>
-      <div class="btn-row accent" onclick="togglePhone()">
-        <div class="btn-left"><i class="fa-solid fa-mobile-screen"></i><span>Login with Phone Number</span></div>
-        <i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i>
-      </div>
-      <div id="phoneForm">
-        <input type="tel" id="telNum" class="gate-input" placeholder="+91 9876543210" autocomplete="off">
-        <div id="reBox"></div>
-        <button class="btn-submit" id="btnReq" onclick="triggerOtp()">Send OTP</button>
-        <div id="otpInputWrap" style="display:none; flex-direction:column; gap:8px;">
-          <input type="text" id="telOtp" class="gate-input" placeholder="Enter 6-digit OTP" inputmode="numeric">
-          <button class="btn-submit" onclick="verifyOtp()">Verify Code</button>
+    <div class="orbit-grid"></div>
+    <nav>
+        <a href="index.html" class="brand">
+            <span class="brand-dot"></span>
+            CYBER API DIRECTORY
+        </a>
+        <div class="nav-actions">
+            <span class="node-status">NODE SYNC ACTIVE</span>
+            <a href="admin.html" class="admin-link">CONTROL PANEL</a>
         </div>
-        <div id="errTxt" style="font-size:0.72rem; color:#f43f5e; text-align:center;"></div>
-        <div id="quotaTxt" style="font-size:0.68rem; color:#00f2fe; text-align:center;">Daily Limit: 5 OTPs / day</div>
-      </div>
-      <div class="divider">OR</div>
-      <div class="btn-row" onclick="runGoogle()">
-        <div class="btn-left"><i class="fa-brands fa-google" style="color:#ea4335;"></i><span>Continue with Google</span></div>
-        <i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i>
-      </div>
-      <div class="btn-row" onclick="runGithub()">
-        <div class="btn-left"><i class="fa-brands fa-github"></i><span>Continue with GitHub</span></div>
-        <i class="fa-solid fa-chevron-right" style="font-size:0.7rem;"></i>
-      </div>
-      <div class="strip-icons">
-        <div class="strip-col"><i class="fa-solid fa-shield-halved"></i><span>Secure<br>Login</span></div>
-        <div class="strip-col"><i class="fa-solid fa-bolt"></i><span>Fast<br>Access</span></div>
-        <div class="strip-col"><i class="fa-solid fa-code"></i><span>API<br>Powered</span></div>
-        <div class="strip-col"><i class="fa-solid fa-infinity"></i><span>Always<br>With You</span></div>
-      </div>
-    </div>
-    <div style="height:10px;"></div>
-  </div>
-
-  <!-- VIEW 2: DASHBOARD -->
-  <div id="dashScreen">
-    <header class="navbar">
-      <div class="brand">
-        <div class="brand-icon"><i class="fa-solid fa-code"></i></div>
-        FREE API WEB
-      </div>
-      <div class="user-bar">
-        <div class="user-badge" id="badgeUser"><i class="fa-solid fa-circle-check"></i> User</div>
-        <button class="btn-logout" onclick="userLogout()">Logout</button>
-      </div>
-    </header>
-
-    <main class="dash-container">
-      <div class="hero-banner">
-        <h1 class="hero-title">WELCOME TO THIS FREE API WEB ✨</h1>
-        <p class="hero-desc">Discover thousands of public APIs. Explore, test and build something amazing. 🚀</p>
-        <div class="search-box">
-          <input type="text" id="dashSearchBox" class="search-input" placeholder="Search across 1,900+ APIs (e.g. animal, weather, crypto)..." oninput="runSearch()">
-          <button class="search-btn" onclick="runSearch()">Search →</button>
+    </nav>
+    <div class="main-container">
+        <div class="hero-section">
+            <div class="hero-tag">System Architecture v3.1</div>
+            <h1 class="hero-title">High-Performance API Protocol</h1>
+            <p class="hero-sub">Decentralized endpoint discovery, live telemetry and sandbox verification.</p>
+            <div class="search-container">
+                <input type="text" id="searchInput" class="search-bar" placeholder="Filter endpoints (e.g. nvidia, rpc, auth)...">
+                <button class="search-btn" onclick="filterApis()">Filter</button>
+            </div>
+            <div class="filter-row">
+                <div class="filter-pill active" onclick="setCategory('all', this)">All Nodes</div>
+                <div class="filter-pill" onclick="setCategory('AI / Machine Learning', this)">AI Compute</div>
+                <div class="filter-pill" onclick="setCategory('Crypto / Web3', this)">Decentralized</div>
+                <div class="filter-pill" onclick="setCategory('Cloud & Systems', this)">Infrastructure</div>
+                <div class="filter-pill" onclick="setCategory('Data / Analytics', this)">Telemetry</div>
+            </div>
         </div>
-      </div>
+        <div class="metrics-row">
+            <div class="metric-box">
+                <div class="metric-val" id="totalCount">0</div>
+                <div class="metric-label">Managed Endpoints</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-val">SHA-256</div>
+                <div class="metric-label">Verification Standard</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-val" style="color: var(--accent-emerald);">99.98%</div>
+                <div class="metric-label">Node Reliability</div>
+            </div>
+        </div>
+        <div class="grid-header">
+            <h2>Registered API Endpoints</h2>
+            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-muted);">Showing: <span id="showingCount">0</span></span>
+        </div>
+        <div class="api-catalog" id="apiGrid"></div>
+    </div>
 
-      <!-- Quick Filter Chips -->
-      <div class="chip-container">
-        <div class="filter-chip active" onclick="setCategory('All', this)">All APIs</div>
-        <div class="filter-chip" onclick="setCategory('Animals', this)">🐾 Animals</div>
-        <div class="filter-chip" onclick="setCategory('Weather', this)">⛅ Weather</div>
-        <div class="filter-chip" onclick="setCategory('Music', this)">🎵 Music</div>
-        <div class="filter-chip" onclick="setCategory('Anime', this)">🍙 Anime</div>
-        <div class="filter-chip" onclick="setCategory('Cryptocurrency', this)">🪙 Cryptocurrency</div>
-        <div class="filter-chip" onclick="setCategory('Games & Comics', this)">🎮 Games</div>
-      </div>
+    <div id="testModal">
+        <div class="modal-body">
+            <div class="modal-head">
+                <span class="modal-title">API Sandbox Verification</span>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="input-bar">
+                <select id="modalMethod">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                </select>
+                <input type="text" id="modalUrl">
+                <button class="execute-btn" onclick="runSandboxTest()">Execute</button>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: 11px; margin-bottom: 6px; color: var(--text-muted);">
+                HTTP STATUS: <span id="modalStatus" style="color: var(--accent-cyan);">AWAITING DISPATCH</span>
+            </div>
+            <div class="res-display" id="modalResult">// Ready for request execution...</div>
+        </div>
+    </div>
 
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num" id="statApiCount">1,953</div><div class="stat-label">APIs Available</div></div>
-        <div class="stat-card"><div class="stat-num" id="statCategoryCount">50+</div><div class="stat-label">Categories</div></div>
-        <div class="stat-card"><div class="stat-num">10K+</div><div class="stat-label">Developers</div></div>
-        <div class="stat-card"><div class="stat-num">99.9%</div><div class="stat-label">Uptime Status</div></div>
-      </div>
-
-      <div class="sec-head">
-        <div><i class="fa-solid fa-fire" style="color:#f97316;"></i> <span id="sectionTitle">Public APIs</span></div>
-        <div style="font-size:0.75rem; color:#00f2fe;" id="resultsCount">Loading database...</div>
-      </div>
-
-      <!-- API CARDS CONTAINER -->
-      <div class="api-list" id="apiCardsContainer"></div>
-      <button class="load-more-btn" id="loadMoreBtn" style="display:none;" onclick="loadMore()">Load More APIs ↓</button>
-    </main>
-  </div>
-
-  <script>
-    let ALL_APIS = [];
-    let filteredApis = [];
-    let activeCategory = 'All';
-    let displayLimit = 25;
-
-    // Fallback seed dataset to guarantee instant rendering
-    const SEED_APIS = [
-      { API: "Dog CEO", Description: "Collection of open source dog pictures sorted by breed.", Category: "Animals", Auth: "No Auth", Link: "https://dog.ceo/dog-api/" },
-      { API: "Cat Facts", Description: "Daily random facts and statistics about cats.", Category: "Animals", Auth: "No Auth", Link: "https://catfact.ninja/" },
-      { API: "RandomFox", Description: "Curated collection of foxes photography with JSON endpoints.", Category: "Animals", Auth: "No Auth", Link: "https://randomfox.ca/floof/" },
-      { API: "Zoo Animals", Description: "Habitat, diet, and scientific names for wild zoo animals.", Category: "Animals", Auth: "No Auth", Link: "https://zoo-animal-api.herokuapp.com/" },
-      { API: "Axolotl API", Description: "REST endpoints providing Axolotl facts and images.", Category: "Animals", Auth: "No Auth", Link: "https://axoltlapi.herokuapp.com/" },
-      { API: "Shibe.Online", Description: "Shiba Inu, birds, and cat pictures directly as URLs.", Category: "Animals", Auth: "No Auth", Link: "https://shibe.online/" },
-      { API: "OpenWeather", Description: "Global live weather forecasts and historical climate records.", Category: "Weather", Auth: "apiKey", Link: "https://openweathermap.org/api" },
-      { API: "WeatherAPI", Description: "Real-time weather, 14-day forecasts and astronomy alerts.", Category: "Weather", Auth: "apiKey", Link: "https://www.weatherapi.com/" },
-      { API: "Spotify", Description: "Access millions of songs, albums, and artists metadata.", Category: "Music", Auth: "OAuth", Link: "https://developer.spotify.com/documentation/web-api" },
-      { API: "Deezer", Description: "Music streaming catalog with top charts and audio previews.", Category: "Music", Auth: "No Auth", Link: "https://developers.deezer.com/api" },
-      { API: "Jikan", Description: "Unofficial MyAnimeList REST API for anime and characters.", Category: "Anime", Auth: "No Auth", Link: "https://jikan.moe/" },
-      { API: "CoinGecko", Description: "Live crypto prices, volumes, and market cap for 10,000+ coins.", Category: "Cryptocurrency", Auth: "No Auth", Link: "https://www.coingecko.com/en/api" },
-      { API: "RAWG Video Games", Description: "Database of 500,000+ video games with ratings and screenshots.", Category: "Games & Comics", Auth: "apiKey", Link: "https://rawg.io/apidocs" }
+    <script>
+    const DEFAULT_CATALOG = [
+        {
+            title: "Nvidia Cloud Omniverse AI",
+            url: "https://api.nvidia.com/v1/generative",
+            category: "AI / Machine Learning",
+            auth: "Bearer Token",
+            desc: "Neural tensor execution and computer vision pipelines."
+        },
+        {
+            title: "Solana RPC Mainnet Gateway",
+            url: "https://api.mainnet-beta.solana.com",
+            category: "Crypto / Web3",
+            auth: "Open Access",
+            desc: "Ledger transaction verification and real-time block streaming."
+        },
+        {
+            title: "Akhil Core Database Engine",
+            url: "https://akhil-private-backend.onrender.com/api/db/all",
+            category: "Cloud & Systems",
+            auth: "x-api-key",
+            desc: "Persistent SQLite relational table engine with automated CRUD operations."
+        }
     ];
 
-    // Fetch the complete public-apis database
-    
-    
-    
-    function loadFullDatabase() {
-      if (window.PUBLIC_APIS_DATABASE && window.PUBLIC_APIS_DATABASE.length) {
-        ALL_APIS = window.PUBLIC_APIS_DATABASE;
-      }
-      const countEl = document.getElementById("statApiCount");
-      if (countEl && ALL_APIS.length) {
-        countEl.innerText = ALL_APIS.length.toLocaleString();
-      }
-      applyFilters();
+    let registry = [];
+    let currentCat = 'all';
+
+    async function initializeSystem() {
+        let stored = localStorage.getItem("cyber_hub_apis");
+        if (stored) {
+            try { registry = JSON.parse(stored); } catch(e) { registry = [...DEFAULT_CATALOG]; }
+        } else {
+            registry = [...DEFAULT_CATALOG];
+            localStorage.setItem("cyber_hub_apis", JSON.stringify(registry));
+        }
+
+        try {
+            let res = await fetch("https://akhil-private-backend.onrender.com/api/db/all?collection=cyber_apis&api_key=akhil_8630_secure");
+            let data = await res.json();
+            if (data.status === "success" && data.records && data.records.length > 0) {
+                data.records.forEach(item => {
+                    if (item.data && item.data.title && !registry.some(r => r.title === item.data.title)) {
+                        registry.unshift(item.data);
+                    }
+                });
+            }
+        } catch(err) {}
+
+        renderCatalog(registry);
     }
 
-    function renderCards() {
-      const container = document.getElementById("apiCardsContainer");
-      const loadBtn = document.getElementById("loadMoreBtn");
-      const slice = filteredApis.slice(0, displayLimit);
+    function renderCatalog(list) {
+        const grid = document.getElementById("apiGrid");
+        grid.innerHTML = "";
+        document.getElementById("totalCount").innerText = registry.length;
+        document.getElementById("showingCount").innerText = list.length;
 
-      if (!slice.length) {
-        container.innerHTML = `
-          <div style="text-align:center; padding:35px 16px; background:rgba(13,21,39,0.5); border-radius:14px; border:1px dashed rgba(255,255,255,0.15);">
-            <h4 style="color:#fff; margin-bottom:6px;">No APIs found for this search</h4>
-            <p style="color:#94a3b8; font-size:0.8rem;">Try searching for "animal", "cat", "dog", "weather", or "crypto".</p>
-          </div>
-        `;
-        loadBtn.style.display = "none";
-        document.getElementById("resultsCount").innerText = "0 APIs";
-        return;
-      }
+        if (list.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; background: rgba(13,17,26,0.6); border-radius: 8px; border: 1px dashed var(--border-dim);"><div style="font-size: 14px; color: var(--text-muted);">No endpoints match the specified search parameters.</div></div>`;
+            return;
+        }
 
-      container.innerHTML = slice.map(api => `
-        <div class="api-item">
-          <div class="api-top-row">
-            <div class="api-meta">
-              <h4>${api.API}</h4>
-              <p>${api.Description}</p>
-            </div>
-            <span class="tag-category" style="background:rgba(0,242,254,0.15); color:#00f2fe; border:1px solid rgba(0,242,254,0.3);">
-              ${(api.Category || 'API').toUpperCase()}
-            </span>
-          </div>
-          <div class="api-footer-row" style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; margin-top:12px;">
-            <span class="api-auth-pill"><i class="fa-solid fa-lock"></i> ${api.Auth || 'No Auth'}</span>
-            <div style="display:flex; gap:6px; align-items:center;">
-              <button class="fav-btn ${getBookmarks().includes(api.API) ? 'active' : ''}" onclick="toggleBookmark('${api.API.replace(/'/g, "\\'")}')" title="Bookmark">❤️</button>
-              <button class="test-trigger-btn" onclick="openTesterModal('${api.API.replace(/'/g, "\\'")}', '${api.Link.replace(/'/g, "\\'")}')">▶ Test</button>
-              <button class="code-btn" onclick="openCodeModal('${api.API.replace(/'/g, "\\'")}', '${api.Link.replace(/'/g, "\\'")}')">{ } Code</button>
-              <a href="${api.Link}" target="_blank" rel="noopener" class="api-link-btn">Docs ↗</a>
-            </div>
-          </div>
-        </div>
-      `).join("");
-
-      document.getElementById("resultsCount").innerText = `Showing ${slice.length} of ${filteredApis.length} APIs`;
-      loadBtn.style.display = filteredApis.length > displayLimit ? "block" : "none";
+        list.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "api-panel";
+            card.innerHTML = `
+                <div>
+                    <div class="card-meta">
+                        <span class="tag-cat">${clean(item.category || 'Service')}</span>
+                        <span class="tag-auth">${clean(item.auth || 'Open')}</span>
+                    </div>
+                    <div class="api-name">${clean(item.title)}</div>
+                    <div class="api-desc">${clean(item.desc || 'Active production microservice endpoint.')}</div>
+                </div>
+                <div>
+                    <div class="url-box">${clean(item.url)}</div>
+                    <button class="btn-test" onclick="openTester('${encodeURIComponent(item.url)}')">Test Endpoint</button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
     }
 
-    function applyFilters() {
-      const q = document.getElementById("dashSearchBox").value.trim().toLowerCase();
-      filteredApis = ALL_APIS.filter(api => {
-        const matchesCategory = (activeCategory === 'All' || (api.Category && api.Category.toLowerCase().includes(activeCategory.toLowerCase())));
-        const matchesSearch = !q || (
-          (api.API && api.API.toLowerCase().includes(q)) ||
-          (api.Description && api.Description.toLowerCase().includes(q)) ||
-          (api.Category && api.Category.toLowerCase().includes(q))
-        );
-        return matchesCategory && matchesSearch;
-      });
-      displayLimit = 25;
-      renderCards();
+    function clean(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
 
-    function runSearch() {
-      applyFilters();
+    function filterApis() {
+        const q = document.getElementById("searchInput").value.toLowerCase().trim();
+        let matched = registry.filter(item => {
+            let matchCategory = (currentCat === 'all') || (item.category === currentCat);
+            let matchText = item.title.toLowerCase().includes(q) || 
+                            (item.desc && item.desc.toLowerCase().includes(q)) || 
+                            item.url.toLowerCase().includes(q);
+            return matchCategory && matchText;
+        });
+        renderCatalog(matched);
     }
+
+    document.getElementById("searchInput").addEventListener("input", filterApis);
 
     function setCategory(cat, el) {
-      activeCategory = cat;
-      document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
-      if (el) el.classList.add("active");
-      document.getElementById("sectionTitle").innerText = cat === 'All' ? 'Public APIs' : `${cat} APIs`;
-      applyFilters();
+        currentCat = cat;
+        document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
+        el.classList.add("active");
+        filterApis();
     }
 
-    function loadMore() {
-      displayLimit += 25;
-      renderCards();
+    function openTester(encoded) {
+        document.getElementById("modalUrl").value = decodeURIComponent(encoded);
+        document.getElementById("modalStatus").innerText = "IDLE";
+        document.getElementById("modalResult").innerText = "// Click Execute to dispatch network frame...";
+        document.getElementById("testModal").style.display = "flex";
     }
 
-    // Firebase Auth config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBt_zPZndgJh82AK8tXWvOyN8ec3dY31KQ",
-      authDomain: "free-api-web-2a7bc.firebaseapp.com",
-      projectId: "free-api-web-2a7bc",
-      storageBucket: "free-api-web-2a7bc.firebasestorage.app",
-      messagingSenderId: "118488816924",
-      appId: "1:118488816924:web:f4a86246ed76778f00eed9",
-      measurementId: "G-2PG8X0PK0R"
-    };
-
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-
-    firebase.auth().onAuthStateChanged((user) => {
-      const g = document.getElementById("gateScreen");
-      const d = document.getElementById("dashScreen");
-      if (user) {
-        g.style.display = "none";
-        d.style.display = "block";
-        const n = (user.displayName || user.phoneNumber || user.email || "Member").split(" ")[0];
-        document.getElementById("badgeUser").innerHTML = `<i class="fa-solid fa-circle-check"></i> ${n}`;
-        loadFullDatabase();
-      } else {
-        g.style.display = "flex";
-        d.style.display = "none";
-      }
-    });
-
-    function togglePhone() {
-      const el = document.getElementById("phoneForm");
-      el.style.display = el.style.display === "flex" ? "none" : "flex";
+    function closeModal() {
+        document.getElementById("testModal").style.display = "none";
     }
 
-    function getQuota() {
-      const today = new Date().toISOString().slice(0, 10);
-      let q = JSON.parse(localStorage.getItem("otp_quota_akhil_full") || "{}");
-      if (q.date !== today) q = { date: today, count: 0 };
-      return q;
-    }
+    async function runSandboxTest() {
+        const url = document.getElementById("modalUrl").value.trim();
+        const method = document.getElementById("modalMethod").value;
+        const resBox = document.getElementById("modalResult");
+        const statusBox = document.getElementById("modalStatus");
 
-    function triggerOtp() {
-      const q = getQuota();
-      const err = document.getElementById("errTxt");
-      err.innerText = "";
-      if (q.count >= 5) {
-        err.innerText = "Daily Limit: 5 OTP requests allowed per day.";
-        return;
-      }
-      const ph = document.getElementById("telNum").value.trim();
-      if (!ph || ph.length < 10) {
-        err.innerText = "Enter phone with country code (+91XXXXXXXXXX)";
-        return;
-      }
-      if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("reBox", { size: "invisible" });
-      }
-      firebase.auth().signInWithPhoneNumber(ph, window.recaptchaVerifier)
-        .then(conf => {
-          window.confirmation = conf;
-          q.count += 1;
-          localStorage.setItem("otp_quota_akhil_full", JSON.stringify(q));
-          document.getElementById("btnReq").style.display = "none";
-          document.getElementById("otpInputWrap").style.display = "flex";
-          document.getElementById("quotaTxt").innerText = "Attempts left today: " + (5 - q.count);
-          alert("OTP sent successfully!");
-        }).catch(e => { err.innerText = e.message; });
-    }
+        if (!url) return;
+        statusBox.innerText = "TRANSMITTING...";
+        resBox.innerText = "Opening TCP socket to target URL...";
 
-    function verifyOtp() {
-      const code = document.getElementById("telOtp").value.trim();
-      if (!code || !window.confirmation) return;
-      window.confirmation.confirm(code)
-        .catch(e => { document.getElementById("errTxt").innerText = "Invalid OTP: " + e.message; });
-    }
+        try {
+            const start = performance.now();
+            const response = await fetch(url, { method });
+            const duration = Math.round(performance.now() - start);
+            statusBox.innerText = `HTTP ${response.status} (${duration}ms)`;
 
-    function runGoogle() {
-      const p = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithPopup(p).catch(() => firebase.auth().signInWithRedirect(p));
-    }
-
-    function runGithub() {
-      const p = new firebase.auth.GithubAuthProvider();
-      firebase.auth().signInWithPopup(p).catch(() => firebase.auth().signInWithRedirect(p));
-    }
-
-    function userLogout() {
-      firebase.auth().signOut().then(() => location.reload());
-    }
-  </script>
-
-  
-    <div class="ai-input-bar">
-      <input type="text" id="aiInputText" placeholder="Ask for any API..." onkeydown="if(event.key==='Enter') sendAiMessage()">
-      <button onclick="sendAiMessage()"><i class="fa-solid fa-paper-plane"></i></button>
-    </div>
-  </div>
-
-  <script>
-    function toggleAiChat() {
-      const w = document.getElementById("aiChatWindow");
-      w.style.display = (w.style.display === "flex") ? "none" : "flex";
-      if (w.style.display === "flex") {
-        setTimeout(() => document.getElementById("aiInputText").focus(), 100);
-      }
-    }
-
-    function sendAiMessage() {
-      const input = document.getElementById("aiInputText");
-      const list = document.getElementById("aiChatList");
-      const userText = input.value.trim();
-      if (!userText) return;
-
-      // Append User Message
-      const userDiv = document.createElement("div");
-      userDiv.className = "ai-msg user";
-      userDiv.innerText = userText;
-      list.appendChild(userDiv);
-      input.value = "";
-      list.scrollTop = list.scrollHeight;
-
-      // Generate AI Response from 1950 database
-      setTimeout(() => {
-        const botDiv = document.createElement("div");
-        botDiv.className = "ai-msg bot";
-
-        const q = userText.toLowerCase();
-        let matches = [];
-
-        if (typeof ALL_APIS !== "undefined" && ALL_APIS.length) {
-          matches = ALL_APIS.filter(a => 
-            (a.API && a.API.toLowerCase().includes(q)) ||
-            (a.Description && a.Description.toLowerCase().includes(q)) ||
-            (a.Category && a.Category.toLowerCase().includes(q))
-          );
+            const isJson = response.headers.get("content-type")?.includes("application/json");
+            if (isJson) {
+                const json = await response.json();
+                resBox.innerText = JSON.stringify(json, null, 2);
+            } else {
+                const txt = await response.text();
+                resBox.innerText = txt.slice(0, 1500) + (txt.length > 1500 ? "\n\n...[Payload Truncated]" : "");
+            }
+        } catch(e) {
+            statusBox.innerText = "CORS RESTRICTED / NETWORK TIMEOUT";
+            resBox.innerText = `Error: ${e.message}\nNote: External servers without Access-Control-Allow-Origin require backend routing.`;
         }
-
-        if (matches.length > 0) {
-          const top = matches.slice(0, 3);
-          let reply = `Mujhe <b>${matches.length}</b> APIs mili! Top suggestions:\n<br>`;
-          top.forEach(api => {
-            reply += `• <b><a href="${api.Link}" target="_blank" style="color:#00f2fe; text-decoration:none;">${api.API}</a></b> (${api.Category}): ${api.Description.slice(0, 65)}...<br>`;
-          });
-          botDiv.innerHTML = reply;
-        } else {
-          botDiv.innerHTML = "Is query ke liye specific API nahi mili. Aap <i>Animals, Weather, AI, Crypto, Music, Books</i> jaise keywords search karke dekh sakte hain!";
-        }
-
-        list.appendChild(botDiv);
-        list.scrollTop = list.scrollHeight;
-      }, 400);
-    }
-</script>
-
-  <!-- AI CHAT ASSISTANT -->
-  <div id="aiToggleBtn" onclick="toggleAiChat()" style="position:fixed; bottom:24px; right:20px; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, #00f2fe, #2563eb); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 0 25px rgba(0,242,254,0.6); z-index:99999; border:2px solid #00f2fe;">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-      <circle cx="12" cy="5" r="2"></circle>
-      <path d="M12 7v4"></path>
-      <line x1="8" y1="16" x2="8" y2="16"></line>
-      <line x1="16" y1="16" x2="16" y2="16"></line>
-    </svg>
-  </div>
-
-  <div id="aiChatWindow" style="display:none; position:fixed; bottom:90px; right:20px; width:340px; max-width:calc(100vw - 36px); height:430px; background:rgba(10,17,32,0.96); border:1.5px solid #00f2fe; border-radius:18px; box-shadow:0 0 30px rgba(0,242,254,0.3); backdrop-filter:blur(15px); flex-direction:column; z-index:99999; overflow:hidden;">
-    <div style="padding:14px 16px; background:rgba(3,7,18,0.95); border-bottom:1px solid rgba(0,242,254,0.2); display:flex; justify-content:space-between; align-items:center; font-weight:bold; color:#00f2fe; font-size:0.9rem;">
-      <span>⚡ Cyber AI Assistant</span>
-      <span onclick="toggleAiChat()" style="color:#94a3b8; font-size:1.3rem; cursor:pointer; line-height:1;">&times;</span>
-    </div>
-    <div id="aiChatList" style="flex:1; padding:14px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; font-size:0.82rem;">
-      <div style="background:#111a2e; color:#e2e8f0; border:1px solid rgba(255,255,255,0.08); padding:10px 12px; border-radius:12px; border-top-left-radius:2px; max-width:85%;">
-        Hello! Main Cyber Hub AI hu. Mujhse kisi bhi category (jaise: <b>crypto, animals, weather, anime</b>) ke baare me poochhiye, main instant live API recommend karunga!
-      </div>
-    </div>
-    <div style="display:flex; padding:10px; border-top:1px solid rgba(255,255,255,0.08); background:rgba(3,7,18,0.9); gap:8px;">
-      <input type="text" id="aiInputText" placeholder="Search API recommendations..." onkeydown="if(event.key==='Enter') sendAiMessage()" style="flex:1; background:#030712; border:1px solid rgba(0,242,254,0.3); border-radius:8px; padding:8px 12px; color:#fff; font-size:14px; outline:none;">
-      <button onclick="sendAiMessage()" style="background:#00f2fe; color:#030712; border:none; border-radius:8px; padding:0 14px; font-weight:800; cursor:pointer;">Send</button>
-    </div>
-  </div>
-
-
-  <!-- CODE SNIPPET MODAL -->
-  <div id="codeModal" onclick="if(event.target===this) closeCodeModal()">
-    <div class="modal-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-        <h3 id="modalApiTitle" style="color:#00f2fe; margin:0; font-size:1.05rem;">API Code Snippet</h3>
-        <span onclick="closeCodeModal()" style="color:#94a3b8; font-size:1.4rem; cursor:pointer;">&times;</span>
-      </div>
-      <div class="snippet-tabs">
-        <button class="tab-btn active" onclick="switchSnippet('curl')">cURL</button>
-        <button class="tab-btn" onclick="switchSnippet('js')">JavaScript</button>
-        <button class="tab-btn" onclick="switchSnippet('python')">Python</button>
-      </div>
-      <pre class="code-view" id="snippetContent"></pre>
-      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
-        <button id="copyCodeBtn" onclick="copySnippetCode()" style="background:#00f2fe; color:#030712; border:none; padding:8px 16px; border-radius:8px; font-weight:bold; cursor:pointer;">Copy Code</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let CURRENT_SNIPPET_URL = "";
-    let CURRENT_SNIPPET_LANG = "curl";
-
-    function getBookmarks() {
-      try { return JSON.parse(localStorage.getItem("CYBER_BOOKMARKS") || "[]"); }
-      catch(e) { return []; }
     }
 
-    function toggleBookmark(apiName) {
-      let b = getBookmarks();
-      if (b.includes(apiName)) {
-        b = b.filter(x => x !== apiName);
-      } else {
-        b.push(apiName);
-      }
-      localStorage.setItem("CYBER_BOOKMARKS", JSON.stringify(b));
-      applyFilters();
-    }
-
-    function openCodeModal(name, url) {
-      CURRENT_SNIPPET_URL = url || "https://api.example.com";
-      document.getElementById("modalApiTitle").innerText = name + " - Integration";
-      switchSnippet("curl");
-      const m = document.getElementById("codeModal");
-      m.style.display = "flex";
-    }
-
-    function closeCodeModal() {
-      document.getElementById("codeModal").style.display = "none";
-    }
-
-    function switchSnippet(lang) {
-      CURRENT_SNIPPET_LANG = lang;
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-      event && event.target && event.target.classList.add("active");
-
-      const box = document.getElementById("snippetContent");
-      if (lang === "curl") {
-        box.innerText = `curl -X GET "${CURRENT_SNIPPET_URL}" \\n  -H "Accept: application/json"`;
-      } else if (lang === "js") {
-        box.innerText = `fetch("${CURRENT_SNIPPET_URL}")\n  .then(response => response.json())\n  .then(data => console.log(data))\n  .catch(error => console.error("Error:", error));`;
-      } else if (lang === "python") {
-        box.innerText = `import requests\n\nurl = "${CURRENT_SNIPPET_URL}"\nresponse = requests.get(url)\n\nif response.status_code == 200:\n    print(response.json())\nelse:\n    print("Error:", response.status_code)`;
-      }
-    }
-
-    function copySnippetCode() {
-      const code = document.getElementById("snippetContent").innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        const btn = document.getElementById("copyCodeBtn");
-        btn.innerText = "Copied!";
-        setTimeout(() => btn.innerText = "Copy Code", 1500);
-      });
-    }
-</script>
-
-  <!-- LIVE TESTER MODAL -->
-  <div id="testerModal" onclick="if(event.target===this) closeTesterModal()">
-    <div class="tester-box">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 id="testerTitle" style="color:#00f2fe; margin:0; font-size:1rem;">⚡ Live API Sandbox</h3>
-        <span onclick="closeTesterModal()" style="color:#94a3b8; font-size:1.4rem; cursor:pointer;">&times;</span>
-      </div>
-      <div class="tester-url-bar">
-        <span class="tester-method">GET</span>
-        <input type="text" id="testerInputUrl" class="tester-url-input" placeholder="https://api.example.com/data">
-        <button class="tester-send-btn" id="testerSendBtn" onclick="executeApiTest()">Send ▶</button>
-      </div>
-      <div class="tester-res-meta">
-        <span id="testerStatus">Status: Ready</span>
-        <span id="testerTime">Latency: -- ms</span>
-      </div>
-      <pre class="tester-res-box" id="testerResult">Click "Send" to fire live request...</pre>
-    </div>
-  </div>
-
-  <script>
-    function openTesterModal(apiName, link) {
-      document.getElementById("testerTitle").innerText = "⚡ Test: " + apiName;
-      document.getElementById("testerInputUrl").value = link;
-      document.getElementById("testerStatus").innerText = "Status: Ready";
-      document.getElementById("testerTime").innerText = "Latency: -- ms";
-      document.getElementById("testerResult").innerText = "Click Send to test live connection...";
-      document.getElementById("testerModal").style.display = "flex";
-    }
-
-    function closeTesterModal() {
-      document.getElementById("testerModal").style.display = "none";
-    }
-
-    async function executeApiTest() {
-      const url = document.getElementById("testerInputUrl").value.trim();
-      const statusEl = document.getElementById("testerStatus");
-      const timeEl = document.getElementById("testerTime");
-      const resBox = document.getElementById("testerResult");
-      const btn = document.getElementById("testerSendBtn");
-
-      if (!url) return;
-      btn.innerText = "Calling...";
-      statusEl.innerText = "Status: Connecting...";
-      resBox.innerText = "Awaiting response payload...";
-
-      const start = performance.now();
-      try {
-        const res = await fetch(url, { headers: { "Accept": "application/json" } });
-        const latency = Math.round(performance.now() - start);
-        timeEl.innerText = `Latency: ${latency} ms`;
-        statusEl.innerText = `Status: ${res.status} ${res.statusText || "OK"}`;
-
-        const contentType = res.headers.get("content-type") || "";
-        if (contentType.includes("application/json")) {
-          const json = await res.json();
-          resBox.innerText = JSON.stringify(json, null, 2);
-        } else {
-          const text = await res.text();
-          resBox.innerText = text.slice(0, 1500) + (text.length > 1500 ? "
-...[truncated]" : "");
-        }
-      } catch (err) {
-        const latency = Math.round(performance.now() - start);
-        timeEl.innerText = `Latency: ${latency} ms`;
-        statusEl.innerText = "Status: Network Error / CORS Block";
-        resBox.innerText = "Error: " + err.message + "
-
-(Note: Kuch external APIs browser me CORS header nahi bhejti, unhe aap direct curl ya backend me access kar sakte hain.)";
-      } finally {
-        btn.innerText = "Send ▶";
-      }
-    }
-
-    function filterSavedFavorites() {
-      const saved = getBookmarks();
-      if (!saved.length) {
-        alert("Aapne abhi koi API save nahi ki hai! Kisi bhi card par ❤️ dabayein.");
-        return;
-      }
-      filteredApis = ALL_APIS.filter(a => saved.includes(a.API));
-      currentDisplayLimit = 30;
-      renderCards();
-      document.getElementById("statApiCount").innerText = filteredApis.length.toLocaleString();
-    }
-</script>
-
-  <!-- ADMIN PANEL MODAL -->
-  <div id="adminModal" onclick="if(event.target===this) toggleAdminModal()">
-    <div class="admin-box">
-      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px;">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <span class="admin-badge">Root Admin</span>
-          <h3 style="color:#fff; margin:0; font-size:1.1rem;">Cyber API Command Center</h3>
-        </div>
-        <span onclick="toggleAdminModal()" style="color:#94a3b8; font-size:1.5rem; cursor:pointer;">&times;</span>
-      </div>
-
-      <!-- Quick Metrics -->
-      <div class="admin-stats-grid">
-        <div class="admin-stat-card">
-          <h5>Total Catalog</h5>
-          <p id="admTotalApis">1,950</p>
-        </div>
-        <div class="admin-stat-card">
-          <h5>Custom Added</h5>
-          <p id="admCustomApis">0</p>
-        </div>
-        <div class="admin-stat-card">
-          <h5>User Bookmarks</h5>
-          <p id="admBookmarks">0</p>
-        </div>
-      </div>
-
-      <!-- Add New API Form -->
-      <div style="background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px;">
-        <h4 style="color:#00f2fe; margin:0 0 14px 0; font-size:0.95rem;">➕ Add New API to Catalog</h4>
-        
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div class="admin-input-group">
-            <label>API Name *</label>
-            <input type="text" id="admApiName" placeholder="e.g. OpenAI GPT-4o">
-          </div>
-          <div class="admin-input-group">
-            <label>Category *</label>
-            <input type="text" id="admApiCat" placeholder="e.g. Machine Learning, Animals">
-          </div>
-        </div>
-
-        <div class="admin-input-group">
-          <label>Endpoint / Documentation URL *</label>
-          <input type="text" id="admApiUrl" placeholder="https://api.example.com/v1">
-        </div>
-
-        <div class="admin-input-group">
-          <label>Description *</label>
-          <textarea id="admApiDesc" rows="2" placeholder="Brief description of what this API does..."></textarea>
-        </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div class="admin-input-group">
-            <label>Authentication</label>
-            <select id="admApiAuth">
-              <option value="No Auth">No Auth (Free/Open)</option>
-              <option value="apiKey">API Key</option>
-              <option value="OAuth">OAuth 2.0</option>
-              <option value="Bearer">Bearer Token</option>
-            </select>
-          </div>
-          <div class="admin-input-group">
-            <label>CORS Support</label>
-            <select id="admApiCors">
-              <option value="Yes">Yes (Browser Friendly)</option>
-              <option value="No">No (Server Side Only)</option>
-              <option value="Unknown">Unknown</option>
-            </select>
-          </div>
-        </div>
-
-        <button class="btn-admin-submit" onclick="submitCustomApi()">Publish API To Catalog 🚀</button>
-      </div>
-    </div>
-  </div>
-
-<script>
-    function getCustomApis() {
-      try { return JSON.parse(localStorage.getItem("CYBER_CUSTOM_APIS") || "[]"); }
-      catch(e) { return []; }
-    }
-
-    function toggleAdminModal() {
-      const m = document.getElementById("adminModal");
-      m.style.display = (m.style.display === "flex") ? "none" : "flex";
-      if (m.style.display === "flex") {
-        updateAdminStats();
-      }
-    }
-
-    function updateAdminStats() {
-      const custom = getCustomApis();
-      const bookmarks = getBookmarks();
-      document.getElementById("admTotalApis").innerText = (ALL_APIS ? ALL_APIS.length : 0).toLocaleString();
-      document.getElementById("admCustomApis").innerText = custom.length;
-      document.getElementById("admBookmarks").innerText = bookmarks.length;
-    }
-
-    function submitCustomApi() {
-      const name = document.getElementById("admApiName").value.trim();
-      const cat = document.getElementById("admApiCat").value.trim() || "General";
-      const url = document.getElementById("admApiUrl").value.trim();
-      const desc = document.getElementById("admApiDesc").value.trim();
-      const auth = document.getElementById("admApiAuth").value;
-      const cors = document.getElementById("admApiCors").value;
-
-      if (!name || !url || !desc) {
-        alert("Please fill all required fields (Name, URL, Description)!");
-        return;
-      }
-
-      const newApi = {
-        API: name,
-        Category: cat,
-        Description: desc,
-        Link: url,
-        Auth: auth,
-        CORS: cors
-      };
-
-      let custom = getCustomApis();
-      custom.unshift(newApi);
-      localStorage.setItem("CYBER_CUSTOM_APIS", JSON.stringify(custom));
-
-      // Prepend to live runtime database
-      if (typeof ALL_APIS !== "undefined") {
-        ALL_APIS.unshift(newApi);
-      }
-      applyFilters();
-
-      // Reset form
-      document.getElementById("admApiName").value = "";
-      document.getElementById("admApiCat").value = "";
-      document.getElementById("admApiUrl").value = "";
-      document.getElementById("admApiDesc").value = "";
-
-      alert(`✅ Success: API "${name}" published to live catalog!`);
-      toggleAdminModal();
-    }
-
-    // Auto merge custom APIs on boot
-    (function initCustomApis() {
-      const custom = getCustomApis();
-      if (custom.length && typeof ALL_APIS !== "undefined") {
-        ALL_APIS = [...custom, ...ALL_APIS];
-      }
-    })();
-</script>
-
-  
-
+    initializeSystem();
+    </script>
 </body>
 </html>
