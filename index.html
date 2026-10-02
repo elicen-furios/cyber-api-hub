@@ -6,13 +6,12 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Universal Master API Hub | Developer Authentication Gateway</title>
+    <title>Cyber API Hub | Developer Authentication Gateway</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 
     <style>
         :root {
@@ -44,6 +43,124 @@
                 linear-gradient(90deg, rgba(226, 232, 240, 0.35) 1px, transparent 1px);
             background-size: 100% 100%, 36px 36px, 36px 36px;
         }
+
+        /* --- PRE-LOGIN GATE SCREEN --- */
+        #authGateScreen {
+            position: fixed;
+            inset: 0;
+            background: #090d16;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .gate-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 36px 28px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .gate-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-heading);
+            margin-bottom: 8px;
+        }
+        .gate-brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px rgba(2, 132, 199, 0.8);
+        }
+        .gate-sub {
+            font-size: 13px;
+            color: var(--text-body);
+            margin-bottom: 24px;
+        }
+        .gate-input-group {
+            margin-bottom: 14px;
+            text-align: left;
+        }
+        .gate-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: var(--font-mono);
+            color: var(--text-heading);
+            margin-bottom: 6px;
+        }
+        .gate-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+        .gate-input:focus { border-color: var(--primary); }
+        .btn-gate-submit {
+            width: 100%;
+            background: #0f172a;
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 6px;
+            transition: all 0.2s;
+        }
+        .btn-gate-submit:hover { background: #0284c7; }
+        .btn-gate-google {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid var(--border-subtle);
+            color: #0f172a;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .gate-toggle {
+            margin-top: 18px;
+            font-size: 12px;
+            color: var(--text-body);
+        }
+        .gate-toggle span {
+            color: var(--primary);
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .gate-error {
+            color: var(--crimson);
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* --- MAIN PORTAL (HIDDEN UNTIL AUTH) --- */
+        #portalApp {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+        }
         nav {
             position: sticky;
             top: 0;
@@ -64,8 +181,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            cursor: pointer;
-            user-select: none;
         }
         .brand-dot {
             width: 9px;
@@ -92,26 +207,9 @@
             align-items: center;
             gap: 6px;
         }
-        .live-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--emerald);
-            border-radius: 50%;
-        }
-        .btn-auth-nav {
-            background: #0f172a;
-            color: #ffffff;
-            border: none;
-            padding: 7px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-auth-nav:hover { background: #0284c7; }
+        .live-dot { width: 6px; height: 6px; background: var(--emerald); border-radius: 50%; }
         .user-pill {
-            display: none;
+            display: flex;
             align-items: center;
             gap: 8px;
             font-family: var(--font-mono);
@@ -167,11 +265,7 @@
             line-height: 1.15;
             margin-bottom: 12px;
         }
-        .hero-sub {
-            color: var(--text-body);
-            font-size: 1.05rem;
-            line-height: 1.6;
-        }
+        .hero-sub { color: var(--text-body); font-size: 1.05rem; line-height: 1.6; }
         .search-wrap {
             max-width: 700px;
             margin: 32px auto 20px;
@@ -264,11 +358,7 @@
             padding-bottom: 12px;
             border-bottom: 1px solid var(--border-subtle);
         }
-        .section-header h2 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text-heading);
-        }
+        .section-header h2 { font-size: 1.15rem; font-weight: 700; color: var(--text-heading); }
         .api-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -316,18 +406,8 @@
             padding: 3px 8px;
             border-radius: 4px;
         }
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text-heading);
-            margin-bottom: 8px;
-        }
-        .card-desc {
-            font-size: 0.9rem;
-            color: var(--text-body);
-            margin-bottom: 14px;
-            line-height: 1.5;
-        }
+        .card-title { font-size: 1.15rem; font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+        .card-desc { font-size: 0.9rem; color: var(--text-body); margin-bottom: 14px; line-height: 1.5; }
         .info-box {
             background: #f8fafc;
             border: 1px solid var(--border-subtle);
@@ -344,13 +424,7 @@
             color: var(--text-dim);
             margin-bottom: 4px;
         }
-        .endpoint-url {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: #0284c7;
-            word-break: break-all;
-            user-select: all;
-        }
+        .endpoint-url { font-family: var(--font-mono); font-size: 11px; color: #0284c7; word-break: break-all; }
         .key-dispenser-box {
             background: #ecfdf5;
             border: 1px solid #a7f3d0;
@@ -361,13 +435,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        .key-dispenser-val {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            font-weight: 700;
-            color: #065f46;
-            word-break: break-all;
-        }
+        .key-dispenser-val { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: #065f46; word-break: break-all; }
         .btn-copy-chip {
             background: #059669;
             color: #ffffff;
@@ -380,11 +448,7 @@
             margin-left: 8px;
             white-space: nowrap;
         }
-        .card-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-        }
+        .card-actions { display: flex; gap: 8px; margin-top: 10px; }
         .btn-test {
             flex: 1;
             background: #0f172a;
@@ -410,7 +474,7 @@
         }
 
         /* MODALS */
-        #authModal, #keyModal, #testerModal {
+        #keyModal, #testerModal {
             display: none;
             position: fixed;
             inset: 0;
@@ -440,15 +504,6 @@
         }
         .modal-title { font-size: 1.05rem; font-weight: 700; color: var(--text-heading); }
         .modal-close { background: transparent; border: none; color: var(--text-dim); font-size: 22px; cursor: pointer; }
-        
-        .auth-field { margin-bottom: 14px; }
-        .auth-label { display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 6px; text-transform: uppercase; font-family: var(--font-mono); }
-        .auth-input { width: 100%; padding: 11px 14px; border: 1px solid var(--border-subtle); border-radius: 8px; font-size: 14px; outline: none; }
-        .auth-input:focus { border-color: var(--primary); }
-        .btn-auth-submit { width: 100%; background: #0f172a; color: #ffffff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 8px; }
-        .btn-auth-submit:hover { background: #0284c7; }
-        .btn-google-auth { width: 100%; background: #ffffff; border: 1px solid var(--border-subtle); color: #0f172a; padding: 11px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-
         .key-view-card {
             background: #f8fafc;
             border: 1.5px dashed var(--primary);
@@ -504,96 +559,109 @@
 <body>
     <div id="toast" class="toast">Copied to Clipboard!</div>
 
-    <nav>
-        <div class="brand" id="masterTrigger">
-            <span class="brand-dot"></span>
-            CYBER API HUB
-        </div>
-        <div class="nav-right">
-            <div class="live-badge">
-                <span class="live-dot"></span>
-                <span id="syncStatusText">1,953+ NODES CONNECTED</span>
+    <!-- PRE-LOGIN GATE (FULL SCREEN SHIELD) -->
+    <div id="authGateScreen">
+        <div class="gate-card">
+            <div class="gate-brand">
+                <span class="gate-brand-dot"></span>
+                CYBER API HUB
             </div>
-            <div class="user-pill" id="userPill">
-                <div class="user-avatar" id="userAvatar">U</div>
-                <span id="userEmailText">user</span>
-                <button onclick="handleSignOut()" style="background:none; border:none; color:var(--crimson); font-size:11px; cursor:pointer; font-weight:700; margin-left:6px;">Logout</button>
+            <div class="gate-sub">Access requires developer verification</div>
+
+            <div class="gate-input-group">
+                <label class="gate-label">Developer Email</label>
+                <input type="email" id="gateEmail" class="gate-input" placeholder="developer@cyberhub.io">
             </div>
-            <button class="btn-auth-nav" id="btnLoginNav" onclick="openAuthModal()">Sign In / Register</button>
-        </div>
-    </nav>
-
-    <div class="main-container">
-        <div class="hero">
-            <div class="hero-tag">Unified Authenticated Hub</div>
-            <h1 class="hero-title">Developer API Infrastructure</h1>
-            <p class="hero-sub">Direct access to 1,953+ verified APIs across AI, Media, Security, Weather, and Web3 with interactive testing sandboxes.</p>
-
-            <div class="search-wrap">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search across 1,950+ APIs (e.g. video, scraper, gemini, anime, weather)...">
-                <button class="search-btn" onclick="filterCatalog()">Search</button>
+            <div class="gate-input-group">
+                <label class="gate-label">Password</label>
+                <input type="password" id="gatePassword" class="gate-input" placeholder="••••••••">
             </div>
 
-            <div class="filter-row" id="filterPills">
-                <div class="filter-pill active" onclick="setCategory('all', this)">All Nodes</div>
-                <div class="filter-pill" onclick="setCategory('AI', this)">AI &amp; Machine Learning</div>
-                <div class="filter-pill" onclick="setCategory('Media', this)">Media &amp; Video</div>
-                <div class="filter-pill" onclick="setCategory('Security', this)">Security &amp; OSINT</div>
-                <div class="filter-pill" onclick="setCategory('Weather', this)">Weather</div>
-                <div class="filter-pill" onclick="setCategory('Crypto', this)">Crypto / Web3</div>
-                <div class="filter-pill" onclick="setCategory('Development', this)">Development</div>
-            </div>
-        </div>
+            <button class="btn-gate-submit" id="btnGatePrimary" onclick="handleGateSubmit()">Sign In</button>
 
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-val" id="totalMetrics">1,953+</div>
-                <div class="metric-lbl">Total Public APIs</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-val" style="color: var(--primary);">User Database</div>
-                <div class="metric-lbl">Akhi Cloud Telemetry</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-val" style="color: var(--emerald);">Direct Sandbox</div>
-                <div class="metric-lbl">Interactive Tester</div>
-            </div>
-        </div>
-
-        <div class="section-header">
-            <h2>Active Directory Endpoints</h2>
-            <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);">Showing: <span id="visibleMetrics">0</span></span>
-        </div>
-
-        <div class="api-grid" id="catalogGrid"></div>
-        <div id="loadMoreContainer" style="text-align:center; margin-top:35px;">
-            <button id="btnLoadMore" onclick="loadMore()" style="background:#ffffff; border:1px solid var(--border-subtle); padding:12px 28px; border-radius:10px; font-weight:700; cursor:pointer; box-shadow:var(--shadow-sm);">Load More Endpoints</button>
-        </div>
-    </div>
-
-    <!-- AUTHENTICATION MODAL -->
-    <div id="authModal">
-        <div class="modal-box">
-            <div class="modal-head">
-                <div class="modal-title" id="authModalTitle">Developer Account</div>
-                <button class="modal-close" onclick="closeAuthModal()">&times;</button>
-            </div>
-            <div class="auth-field">
-                <label class="auth-label">Developer Email</label>
-                <input type="email" id="authEmail" class="auth-input" placeholder="developer@cyberhub.io">
-            </div>
-            <div class="auth-field">
-                <label class="auth-label">Access Password</label>
-                <input type="password" id="authPassword" class="auth-input" placeholder="••••••••">
-            </div>
-            <button class="btn-auth-submit" onclick="handleAuth('login')">Sign In to Hub</button>
-            <button class="btn-auth-submit" style="background:#0284c7; margin-top:8px;" onclick="handleAuth('signup')">Create New Account</button>
-            <button class="btn-google-auth" onclick="handleGoogleSignIn()">
+            <button class="btn-gate-google" onclick="handleGateGoogle()">
                 <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
                 Continue with Google
             </button>
-            <div id="authErrorMsg" style="color:var(--crimson); font-size:12px; margin-top:10px; text-align:center;"></div>
+
+            <div class="gate-toggle" id="gateToggleText">
+                New developer? <span onclick="toggleGateMode()">Create an account</span>
+            </div>
+            <div id="gateError" class="gate-error"></div>
         </div>
+    </div>
+
+    <!-- MAIN PORTAL APPLICATION -->
+    <div id="portalApp">
+        <nav>
+            <div class="brand">
+                <span class="brand-dot"></span>
+                CYBER API HUB
+            </div>
+            <div class="nav-right">
+                <div class="live-badge">
+                    <span class="live-dot"></span>
+                    <span id="syncStatusText">1,953+ NODES CONNECTED</span>
+                </div>
+                <div class="user-pill">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span id="userEmailText">developer</span>
+                    <button onclick="handleSignOut()" style="background:none; border:none; color:var(--crimson); font-size:11px; cursor:pointer; font-weight:700; margin-left:6px;">Logout</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-container">
+            <div class="hero">
+                <div class="hero-tag">Unified Infrastructure</div>
+                <h1 class="hero-title">Developer API Directory</h1>
+                <p class="hero-sub">Direct access to verified microservices with live execution sandboxes and telemetry logging.</p>
+
+                <div class="search-wrap">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search across 1,950+ APIs (e.g. video, scraper, gemini, anime, weather)...">
+                    <button class="search-btn" onclick="filterCatalog()">Search</button>
+                </div>
+
+                <div class="filter-row" id="filterPills">
+                    <div class="filter-pill active" onclick="setCategory('all', this)">All Nodes</div>
+                    <div class="filter-pill" onclick="setCategory('AI', this)">AI &amp; Machine Learning</div>
+                    <div class="filter-pill" onclick="setCategory('Media', this)">Media &amp; Video</div>
+                    <div class="filter-pill" onclick="setCategory('Security', this)">Security &amp; OSINT</div>
+                    <div class="filter-pill" onclick="setCategory('Weather', this)">Weather</div>
+                    <div class="filter-pill" onclick="setCategory('Crypto', this)">Crypto / Web3</div>
+                    <div class="filter-pill" onclick="setCategory('Development', this)">Development</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-val" id="totalMetrics">1,953+</div>
+                    <div class="metric-lbl">Total Public APIs</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" style="color: var(--primary);">Authenticated</div>
+                    <div class="metric-lbl">Active Session Status</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-val" style="color: var(--emerald);">Interactive</div>
+                    <div class="metric-lbl">Live Sandbox Gateway</div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Active Directory Endpoints</h2>
+                <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);">Showing: <span id="visibleMetrics">0</span></span>
+            </div>
+
+            <div class="api-grid" id="catalogGrid"></div>
+            <div id="loadMoreContainer" style="text-align:center; margin-top:35px;">
+                <button id="btnLoadMore" onclick="loadMore()" style="background:#ffffff; border:1px solid var(--border-subtle); padding:12px 28px; border-radius:10px; font-weight:700; cursor:pointer; box-shadow:var(--shadow-sm);">Load More Endpoints</button>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 CYBER API HUB &bull; HIGH THROUGHPUT DIRECTORY
+        </footer>
     </div>
 
     <!-- KEY DISPENSER MODAL -->
@@ -635,10 +703,6 @@
         </div>
     </div>
 
-    <footer>
-        &copy; 2026 CYBER API HUB &bull; HIGH THROUGHPUT DIRECTORY
-    </footer>
-
     <script>
     // --- 1. FIREBASE AUTH CONFIGURATION ---
     const firebaseConfig = {
@@ -654,124 +718,110 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Custom Token provided by Akhil for storing login data
-    const AKHI_DB_TOKEN = "Akhi_live_ca26006c9c8bb9518f5648073d953fba";
+    let isSignUpMode = false;
 
-                async function recordUserLoginToDatabase(userData) {
-        const uEmail = userData.email || "developer@test.com";
-        const bodyPayload = {
-            collection: "cyber_users",
-            data: {
-                uid: userData.uid,
-                email: uEmail,
-                name: userData.displayName || uEmail.split("@")[0],
-                timestamp: new Date().toISOString()
-            }
-        };
-
+    // --- SILENT BACKGROUND DATABASE TELEMETRY (NO UI ALERTS) ---
+    async function recordUserLoginSilently(userData) {
         try {
-            console.log("Transmitting record to database...");
-            const res = await fetch("https://akhil-private-backend.onrender.com/api/db/insert", {
+            await fetch("https://akhil-private-backend.onrender.com/api/db/insert", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "x-api-key": "akhil_8630_secure"
                 },
-                body: JSON.stringify(bodyPayload)
+                body: JSON.stringify({
+                    collection: "cyber_users",
+                    data: {
+                        uid: userData.uid,
+                        email: userData.email,
+                        name: userData.displayName || (userData.email ? userData.email.split("@")[0] : "Developer"),
+                        timestamp: new Date().toISOString()
+                    }
+                })
             });
-
-            const result = await res.json();
-            console.log("Server response:", result);
-            showToast("Database Sync: " + (result.status || res.status));
-        } catch(err) {
-            console.error("Network / CORS error:", err);
-            showToast("Sync Failed: Backend Sleeping or CORS blocked");
-        }
+        } catch(e) {}
     }
 
+    // --- SESSION STATE LISTENER ---
     auth.onAuthStateChanged(user => {
-        const btnLogin = document.getElementById("btnLoginNav");
-        const userPill = document.getElementById("userPill");
-        const userEmailText = document.getElementById("userEmailText");
-        const userAvatar = document.getElementById("userAvatar");
+        const gate = document.getElementById("authGateScreen");
+        const portal = document.getElementById("portalApp");
 
         if (user) {
-            btnLogin.style.display = "none";
-            userPill.style.display = "flex";
-            userEmailText.innerText = user.email ? user.email.split("@")[0] : "developer";
-            userAvatar.innerText = user.email ? user.email[0].toUpperCase() : "D";
-            recordUserLoginToDatabase(user);
+            gate.style.display = "none";
+            portal.style.display = "flex";
+            document.getElementById("userEmailText").innerText = user.email ? user.email.split("@")[0] : "developer";
+            document.getElementById("userAvatar").innerText = user.email ? user.email[0].toUpperCase() : "D";
+            recordUserLoginSilently(user);
         } else {
-            btnLogin.style.display = "block";
-            userPill.style.display = "none";
+            gate.style.display = "flex";
+            portal.style.display = "none";
         }
     });
 
-    function openAuthModal() {
-        document.getElementById("authErrorMsg").innerText = "";
-        document.getElementById("authModal").style.display = "flex";
-    }
-    function closeAuthModal() {
-        document.getElementById("authModal").style.display = "none";
+    function toggleGateMode() {
+        isSignUpMode = !isSignUpMode;
+        const btn = document.getElementById("btnGatePrimary");
+        const toggle = document.getElementById("gateToggleText");
+        const err = document.getElementById("gateError");
+        err.style.display = "none";
+
+        if (isSignUpMode) {
+            btn.innerText = "Create New Account";
+            toggle.innerHTML = "Already have an account? <span onclick='toggleGateMode()'>Sign In</span>";
+        } else {
+            btn.innerText = "Sign In";
+            toggle.innerHTML = "New developer? <span onclick='toggleGateMode()'>Create an account</span>";
+        }
     }
 
-    async function handleAuth(type) {
-        const email = document.getElementById("authEmail").value.trim();
-        const pass = document.getElementById("authPassword").value;
-        const errBox = document.getElementById("authErrorMsg");
-        errBox.innerText = "";
+    async function handleGateSubmit() {
+        const email = document.getElementById("gateEmail").value.trim();
+        const pass = document.getElementById("gatePassword").value;
+        const err = document.getElementById("gateError");
+        err.style.display = "none";
 
         if (!email || !pass) {
-            errBox.innerText = "Please fill in email and password.";
+            err.innerText = "Please provide both email and password.";
+            err.style.display = "block";
             return;
         }
 
         try {
-            let res;
-            if (type === "signup") {
-                res = await auth.createUserWithEmailAndPassword(email, pass);
+            if (isSignUpMode) {
+                await auth.createUserWithEmailAndPassword(email, pass);
             } else {
-                res = await auth.signInWithEmailAndPassword(email, pass);
+                await auth.signInWithEmailAndPassword(email, pass);
             }
-            if (res.user) {
-                recordUserLoginToDatabase(res.user);
-            }
-            closeAuthModal();
-            showToast("Authenticated successfully!");
-        } catch (err) {
-            errBox.innerText = err.message;
+        } catch(e) {
+            err.innerText = e.message;
+            err.style.display = "block";
         }
     }
 
-    async function handleGoogleSignIn() {
-        const provider = new firebase.auth.GoogleAuthProvider();
+    async function handleGateGoogle() {
+        const err = document.getElementById("gateError");
+        err.style.display = "none";
         try {
-            const res = await auth.signInWithPopup(provider);
-            if (res.user) {
-                recordUserLoginToDatabase(res.user);
-            }
-            closeAuthModal();
-            showToast("Google Login Success!");
-        } catch (err) {
-            document.getElementById("authErrorMsg").innerText = err.message;
+            const provider = new firebase.auth.GoogleAuthProvider();
+            await auth.signInWithPopup(provider);
+        } catch(e) {
+            err.innerText = e.message;
+            err.style.display = "block";
         }
     }
 
     function handleSignOut() {
-        auth.signOut().then(() => showToast("Logged out safely."));
+        auth.signOut();
     }
 
-    // --- 2. MASSIVE 1,953+ API REGISTRY DATASET ---
+    // --- 2. API CATALOG & DATASET ---
     let ALL_APIS = [
-        { title: "Akhil Core Database Engine", category: "Cloud & Storage", auth: "x-api-key", url: "https://akhil-private-backend.onrender.com/api/db/all", key: AKHI_DB_TOKEN, desc: "Persistent SQLite relational table engine with automated CRUD operations.", usage: "curl -H 'x-api-key: " + AKHI_DB_TOKEN + "' 'https://akhil-private-backend.onrender.com/api/db/all?collection=cyber_apis'" },
         { title: "Google Gemini 1.5 Flash AI", category: "AI & ML", auth: "API Key", url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent", key: "AIzaSy_Free_Gemini_Trial_Key_8630", desc: "Multimodal neural reasoning, code generation, and 1M token context.", usage: "curl -X POST 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_KEY' -H 'Content-Type: application/json' -d '{\"contents\":[{\"parts\":[{\"text\":\"Hello\"}]}]}'" },
         { title: "Groq Llama 3 Fast LPU", category: "AI & ML", auth: "Bearer Token", url: "https://api.groq.com/openai/v1/chat/completions", key: "gsk_free_groq_lpu_speed_token", desc: "800+ tokens/sec ultra-fast hardware inference for Meta Llama 3 models.", usage: "curl -X POST 'https://api.groq.com/openai/v1/chat/completions' -H 'Authorization: Bearer YOUR_TOKEN' -H 'Content-Type: application/json' -d '{\"model\":\"llama3-8b-8192\",\"messages\":[{\"role\":\"user\",\"content\":\"Hi\"}]}'" },
-        { title: "Nvidia Cloud NIM & Omniverse", category: "AI & ML", auth: "Bearer Token", url: "https://integrate.api.nvidia.com/v1/chat/completions", key: "nvapi-free_developer_credit_8630", desc: "Enterprise foundation AI execution pipelines on H100 GPU clusters.", usage: "curl -X POST 'https://integrate.api.nvidia.com/v1/chat/completions' -H 'Authorization: Bearer nvapi-KEY' -d '{\"model\":\"meta/llama-3.1-405b-instruct\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}'" },
         { title: "Cobalt Universal Media Downloader v10", category: "Media & Download", auth: "No Auth", url: "https://api.cobalt.tools/api/json", key: "NO_KEY_REQUIRED", desc: "Direct CDN stream extractor for YouTube, Reels, TikTok, Twitter, Reddit.", usage: "curl -X POST 'https://api.cobalt.tools/api/json' -H 'Content-Type: application/json' -d '{\"url\":\"https://youtube.com/watch?v=...\"}'" },
-        { title: "Remove.bg AI Background Stripper", category: "Image & Design", auth: "API Key", url: "https://api.remove.bg/v1.0/removebg", key: "rmbg_50_monthly_free_credits", desc: "One-click automated background removal for portraits and eCommerce photos.", usage: "curl -H 'X-Api-Key: YOUR_KEY' -F 'image_url=https://site.com/photo.jpg' https://api.remove.bg/v1.0/removebg -o result.png" },
-        { title: "1SecMail Disposable Email Engine", category: "Security & Tools", auth: "No Auth", url: "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1", key: "NO_KEY_REQUIRED", desc: "Automated disposable inbox creation and OTP/verification reading via REST.", usage: "curl 'https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1'" },
-        { title: "Pollinations.ai Free Generative Art", category: "AI & ML", auth: "No Auth", url: "https://image.pollinations.ai/prompt/cyberpunk%20car", key: "NO_KEY_REQUIRED", desc: "Zero-friction high-resolution AI image generation directly in the URL.", usage: "curl 'https://image.pollinations.ai/prompt/cyberpunk_neon_car' --output art.png" },
         { title: "Open-Meteo Global Meteorological Radar", category: "Weather", auth: "No Auth", url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true", key: "NO_KEY_REQUIRED", desc: "Worldwide rainfall, temperature, and atmospheric forecasts without keys.", usage: "curl 'https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true'" },
+        { title: "Pollinations.ai Free Generative Art", category: "AI & ML", auth: "No Auth", url: "https://image.pollinations.ai/prompt/cyberpunk%20car", key: "NO_KEY_REQUIRED", desc: "Zero-friction high-resolution AI image generation directly in the URL.", usage: "curl 'https://image.pollinations.ai/prompt/cyberpunk_neon_car' --output art.png" },
         { title: "Solana RPC Mainnet Gateway", category: "Crypto / Web3", auth: "Open Access", url: "https://api.mainnet-beta.solana.com", key: "NO_KEY_REQUIRED", desc: "Ledger transaction verification and real-time block streaming.", usage: "curl -X POST https://api.mainnet-beta.solana.com -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"getHealth\"}'" }
     ];
 
@@ -891,15 +941,15 @@
         const t = document.getElementById("toast");
         t.innerText = msg;
         t.style.display = "block";
-        setTimeout(() => { t.style.display = "none"; }, 2500);
+        setTimeout(() => { t.style.display = "none"; }, 2000);
     }
 
     function copyDirectKey(key) {
         const text = key === "NO_KEY_REQUIRED" ? "Public API - Direct Endpoint Call" : key;
         navigator.clipboard.writeText(text).then(() => {
-            showToast("Copied: " + text);
+            showToast("Copied to Clipboard!");
         }).catch(() => {
-            showToast("Copied: " + text);
+            showToast("Copied to Clipboard!");
         });
     }
 
@@ -945,7 +995,7 @@
     function openSandbox(encoded) {
         document.getElementById("modalUrl").value = decodeURIComponent(encoded);
         document.getElementById("statusFlag").innerText = "IDLE";
-        document.getElementById("responseBox").innerText = "// Click Execute to dispatch network socket request...";
+        document.getElementById("responseBox").innerText = "// Ready for test execution...";
         document.getElementById("testerModal").style.display = "flex";
     }
 
@@ -965,11 +1015,7 @@
 
         try {
             const start = performance.now();
-            let headers = {};
-            if (url.includes("akhil-private-backend")) {
-                headers["x-api-key"] = AKHI_DB_TOKEN;
-            }
-            const res = await fetch(url, { method, headers });
+            const res = await fetch(url, { method });
             const ms = Math.round(performance.now() - start);
             statusFlag.innerText = `HTTP ${res.status} (${ms}ms)`;
 
@@ -982,8 +1028,8 @@
                 resBox.innerText = txt.slice(0, 1600) + (txt.length > 1600 ? "\n\n...[Truncated]" : "");
             }
         } catch(err) {
-            statusFlag.innerText = "CORS RESTRICTED / NETWORK TIMEOUT";
-            resBox.innerText = `Error: ${err.message}\nNote: Direct browser calls might be restricted by CORS. Use in your terminal/backend.`;
+            statusFlag.innerText = "ERROR";
+            resBox.innerText = `Execution failed: ${err.message}`;
         }
     }
 
