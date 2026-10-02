@@ -657,29 +657,33 @@
     // Custom Token provided by Akhil for storing login data
     const AKHI_DB_TOKEN = "Akhi_live_ca26006c9c8bb9518f5648073d953fba";
 
-    async function recordUserLoginToDatabase(userData) {
+        async function recordUserLoginToDatabase(userData) {
         try {
-            await fetch("https://akhil-private-backend.onrender.com/api/db/insert", {
+            const bodyPayload = {
+                collection: "cyber_users",
+                data: {
+                    uid: userData.uid,
+                    email: userData.email,
+                    name: userData.displayName || "Developer",
+                    login_time: new Date().toISOString()
+                }
+            };
+
+            const res = await fetch("https://akhil-private-backend.onrender.com/api/db/insert", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "x-api-key": AKHI_DB_TOKEN
+                    "x-api-key": "akhil_8630_secure"
                 },
-                body: JSON.stringify({
-                    collection: "cyber_users",
-                    data: {
-                        uid: userData.uid,
-                        email: userData.email,
-                        displayName: userData.displayName || "Unknown Developer",
-                        providerId: userData.providerData?.[0]?.providerId || "password",
-                        lastLoginAt: new Date().toISOString(),
-                        userAgent: navigator.userAgent
-                    }
-                })
+                body: JSON.stringify(bodyPayload)
             });
-            console.log("[DB] User session captured to Akhi database.");
-        } catch(e) {
-            console.warn("[DB] User capture fallback skipped.");
+
+            const resData = await res.json();
+            if (resData.status === "success" || res.ok) {
+                showToast("Logged in & Saved to Akhi Database!");
+            }
+        } catch(err) {
+            console.error("DB Record Error:", err);
         }
     }
 
