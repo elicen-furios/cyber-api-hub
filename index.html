@@ -95,7 +95,7 @@
         }
         .hero {
             text-align: center;
-            max-width: 820px;
+            max-width: 840px;
             margin: 0 auto 36px;
         }
         .hero-tag {
@@ -453,25 +453,25 @@
     <div class="main-container">
         <div class="hero">
             <div class="hero-tag">Global Universal API Index</div>
-            <h1 class="hero-title">Every Free API in One Directory</h1>
-            <p class="hero-sub">Direct access to Downloader APIs, Background Removers, Music streams, AI models, Voice TTS, Cyber Security and Dev tools.</p>
+            <h1 class="hero-title">Universal Developer API Directory</h1>
+            <p class="hero-sub">Direct access to Media Downloaders, BG Removers, Web Scrapers, Temp SMS/Email, AI Models, TTS, OSINT, and Dev Tools.</p>
 
             <div class="search-wrap">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search remove bg, download, music, gemini, groq, weather, virustotal...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search across 1,400+ APIs (e.g. video, scraper, deepseek, audio, weather)...">
                 <button class="search-btn" onclick="filterCatalog()">Search</button>
             </div>
 
             <div class="filter-row">
                 <div class="filter-pill active" onclick="setCategory('all', this)">All Categories</div>
-                <div class="filter-pill" onclick="setCategory('Media & Downloader', this)">Media &amp; Downloader</div>
-                <div class="filter-pill" onclick="setCategory('Image & BG Remover', this)">Image &amp; BG Remover</div>
-                <div class="filter-pill" onclick="setCategory('Music & Audio', this)">Music &amp; Audio</div>
-                <div class="filter-pill" onclick="setCategory('Voice & TTS', this)">Voice &amp; TTS</div>
+                <div class="filter-pill" onclick="setCategory('Media & Download', this)">Media &amp; Download</div>
+                <div class="filter-pill" onclick="setCategory('BG Remover & Image', this)">BG Remover &amp; Image</div>
+                <div class="filter-pill" onclick="setCategory('Web Scraping & Proxy', this)">Scraping &amp; Proxy</div>
+                <div class="filter-pill" onclick="setCategory('Temp Mail & SMS', this)">Temp Mail &amp; SMS</div>
+                <div class="filter-pill" onclick="setCategory('OCR & Documents', this)">OCR &amp; PDF</div>
                 <div class="filter-pill" onclick="setCategory('Generative AI', this)">Generative AI</div>
-                <div class="filter-pill" onclick="setCategory('Search & Intel', this)">Search &amp; Intel</div>
-                <div class="filter-pill" onclick="setCategory('Security & Audit', this)">Security &amp; Audit</div>
-                <div class="filter-pill" onclick="setCategory('Weather & Radar', this)">Weather &amp; Radar</div>
-                <div class="filter-pill" onclick="setCategory('Dev Tools', this)">Dev Tools</div>
+                <div class="filter-pill" onclick="setCategory('Audio & Voice TTS', this)">Voice &amp; Music</div>
+                <div class="filter-pill" onclick="setCategory('OSINT & Security', this)">OSINT &amp; Security</div>
+                <div class="filter-pill" onclick="setCategory('Translation & Utils', this)">Translate &amp; Tools</div>
             </div>
         </div>
 
@@ -482,7 +482,7 @@
             </div>
             <div class="metric-card">
                 <div class="metric-val">100% Free</div>
-                <div class="metric-lbl">Direct Developers Scheme</div>
+                <div class="metric-lbl">Direct Tier Access</div>
             </div>
             <div class="metric-card">
                 <div class="metric-val" style="color: var(--emerald);">Direct Sandbox</div>
@@ -491,7 +491,7 @@
         </div>
 
         <div class="section-header">
-            <h2>Active Directory Endpoints</h2>
+            <h2>Directory Endpoints</h2>
             <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);">Showing: <span id="visibleMetrics">0</span></span>
         </div>
 
@@ -528,7 +528,6 @@
     </footer>
 
     <script>
-    // Secret Owner Gate (Triple tap)
     let tapCount = 0;
     document.getElementById("masterTrigger").addEventListener("click", () => {
         tapCount++;
@@ -543,203 +542,34 @@
     let displayedCount = 40;
     let activeCategory = 'all';
 
-    // The Master Multi-Disciplinary API Catalog
-    const UNIVERSAL_MASTER_LIST = [
-        // 1. IMAGE & BG REMOVER
-        {
-            title: "Remove.bg Official Image API",
-            category: "Image & BG Remover",
-            auth: "API Key",
-            url: "https://api.remove.bg/v1.0/removebg",
-            docs: "https://www.remove.bg/i/api",
-            desc: "AI background removal for portraits, products, cars, and animals in 1 API call.",
-            guide: "remove.bg par register karein aur account settings se API Key banayein. Monthly 50 free credits milte hain.",
-            usage: "POST header: X-Api-Key: YOUR_KEY. Form-data body: image_url=https://site.com/photo.jpg size=auto"
-        },
-        // 2. MEDIA & DOWNLOADERS
-        {
-            title: "Cobalt Universal Media Downloader",
-            category: "Media & Downloader",
-            auth: "No Auth",
-            url: "https://api.cobalt.tools/api/json",
-            docs: "https://cobalt.tools",
-            desc: "Extract and download high-resolution audio/video from YouTube, Instagram, TikTok, Twitter, Reddit, and Vimeo.",
-            guide: "Open-source instance. Direct POST request bhejkar stream URL receive karein bina kisi ads ya tracking ke.",
-            usage: "POST body: {\"url\": \"https://youtube.com/watch?v=...\", \"vQuality\": \"1080\"}"
-        },
-        // 3. MUSIC & AUDIO STREAMING
-        {
-            title: "Openwhyd Open Music Curation API",
-            category: "Music & Audio",
-            auth: "No Auth",
-            url: "https://openwhyd.org/hot?format=json",
-            docs: "https://openwhyd.github.io/openwhyd/API.html",
-            desc: "Search, discover, and stream free tracks and playlists curated across YouTube, SoundCloud, and Deezer.",
-            guide: "Completely open public API. Direct GET request send karke trending global tracks and streaming links fetch karein.",
-            usage: "GET https://openwhyd.org/hot?format=json"
-        },
-        {
-            title: "Jamendo Royalty-Free Music API",
-            category: "Music & Audio",
-            auth: "API Key",
-            url: "https://api.jamendo.com/v3.0/tracks/?client_id=56d30c95&format=json&limit=10",
-            docs: "https://developer.jamendo.com/v3.0",
-            desc: "Access 500,000+ full-length Creative Commons music tracks for apps, background music, and games.",
-            guide: "developer.jamendo.com par jakar client_id generate karein ya direct testing client id use karein.",
-            usage: "GET https://api.jamendo.com/v3.0/tracks/?client_id=YOUR_CLIENT_ID&format=json"
-        },
-        // 4. VOICE & TEXT TO SPEECH (TTS)
-        {
-            title: "ElevenLabs Realistic AI Voice",
-            category: "Voice & TTS",
-            auth: "API Key",
-            url: "https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM",
-            docs: "https://elevenlabs.io/docs",
-            desc: "Hyper-realistic generative AI voices with emotional nuance, accent replication, and voice cloning.",
-            guide: "elevenlabs.io par signup karein. Free tier monthly 10,000 characters audio generation deta hai.",
-            usage: "POST header: xi-api-key: YOUR_KEY. Body: {\"text\": \"Hello, this is human-like AI voice.\", \"model_id\": \"eleven_monolingual_v1\"}"
-        },
-        {
-            title: "AssemblyAI Speech-to-Text & Transcribe",
-            category: "Voice & TTS",
-            auth: "API Key",
-            url: "https://api.assemblyai.com/v2/transcript",
-            docs: "https://www.assemblyai.com",
-            desc: "Speech-to-text transcription, speaker diarization, audio summary, and sentiment detection.",
-            guide: "assemblyai.com par register karein, dashboard se instant free API key mil jayegi bina credit card ke.",
-            usage: "POST header: authorization: YOUR_KEY. Body: {\"audio_url\": \"https://bit.ly/3yxKEIY\"}"
-        },
-        // 5. SEARCH & CYBER INTELLIGENCE
-        {
-            title: "DuckDuckGo Instant Answer Zero-Click",
-            category: "Search & Intel",
-            auth: "No Auth",
-            url: "https://api.duckduckgo.com/?q=linux&format=json",
-            docs: "https://duckduckgo.com/api",
-            desc: "Privacy-first search engine providing encyclopedic abstracts, definitions, and direct facts.",
-            guide: "Direct GET query param ?q=Search_Term&format=json bhejkar instantaneous answer extract karein.",
-            usage: "GET https://api.duckduckgo.com/?q=Search_Term&format=json"
-        },
-        {
-            title: "Wikipedia Knowledge Extraction Engine",
-            category: "Search & Intel",
-            auth: "No Auth",
-            url: "https://en.wikipedia.org/api/rest_v1/page/summary/Technology",
-            docs: "https://en.wikipedia.org/api/rest_v1/",
-            desc: "Global multilingual encyclopedia summaries, articles, images, and revisions.",
-            guide: "Open API endpoint provided by Wikimedia Foundation. No token or authentication needed.",
-            usage: "GET https://en.wikipedia.org/api/rest_v1/page/summary/Title_Name"
-        },
-        {
-            title: "Wayback Machine Archive Lookup",
-            category: "Search & Intel",
-            auth: "No Auth",
-            url: "https://archive.org/wayback/available?url=google.com",
-            docs: "https://archive.org/help/wayback_api.php",
-            desc: "Check historical snapshots and cached versions of any website since 1996.",
-            guide: "Direct GET query param ?url=site.com daalkar snapshot availability aur timestamp fetch karein.",
-            usage: "GET https://archive.org/wayback/available?url=google.com"
-        },
-        // 6. SECURITY & AUDIT
-        {
-            title: "Have I Been Pwned (HIBP) Password Audit",
-            category: "Security & Audit",
-            auth: "No Auth",
-            url: "https://api.pwnedpasswords.com/range/21BD1",
-            docs: "https://haveibeenpwned.com/API/v3",
-            desc: "Check if a password has leaked in historical security data breaches using k-Anonymity SHA-1 hash prefix.",
-            guide: "SHA-1 hash ke pehle 5 characters bhejkar match frequency count karein bina original password leak kiye.",
-            usage: "GET https://api.pwnedpasswords.com/range/FIRST_5_HASH_CHARS"
-        },
-        {
-            title: "VirusTotal URL & Malware Scanner",
-            category: "Security & Audit",
-            auth: "API Key",
-            url: "https://www.virustotal.com/api/v3/urls",
-            docs: "https://docs.virustotal.com",
-            desc: "Scan links, domains, IPs, and binaries across 70+ leading antivirus scanning engines.",
-            guide: "virustotal.com par community account banayein. Free tier 500 requests/day allow karta hai.",
-            usage: "POST header: x-apikey: YOUR_KEY. Body: url=http://example.com"
-        },
-        {
-            title: "Shodan IoT Cyber Search Engine",
-            category: "Security & Audit",
-            auth: "API Key",
-            url: "https://api.shodan.io/api-info?key=YOUR_KEY",
-            docs: "https://developer.shodan.io",
-            desc: "Search internet-connected webcams, routers, servers, SCADA systems, and open ports.",
-            guide: "shodan.io par signup karein aur account page se free API key copy karein.",
-            usage: "GET with query param key=YOUR_KEY"
-        },
-        // 7. GENERATIVE AI
-        {
-            title: "Google Gemini 1.5 Flash API",
-            category: "Generative AI",
-            auth: "API Key",
-            url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY",
-            docs: "https://aistudio.google.com/app/apikey",
-            desc: "Ultra-fast multimodal reasoning, code generation, and 1M token context window by Google DeepMind.",
-            guide: "aistudio.google.com par jakar 'Create API Key' par click karein. 15 RPM free tier bina credit card ke available hai.",
-            usage: "POST request body: {\"contents\":[{\"parts\":[{\"text\":\"Hello Gemini\"}]}]}"
-        },
-        {
-            title: "Groq Llama 3 Fast Inference",
-            category: "Generative AI",
-            auth: "Bearer Token",
-            url: "https://api.groq.com/openai/v1/chat/completions",
-            docs: "https://console.groq.com/keys",
-            desc: "Blazing fast LPU inference engine running Meta Llama 3 models at 800+ tokens/second.",
-            guide: "console.groq.com par login karke free API key lein. High-speed free tier ready.",
-            usage: "POST headers: Authorization: Bearer YOUR_KEY. Body: {\"model\":\"llama3-8b-8192\",\"messages\":[{\"role\":\"user\",\"content\":\"Hi\"}]}"
-        },
-        {
-            title: "Pollinations.ai Free Generative Engine",
-            category: "Generative AI",
-            auth: "No Auth",
-            url: "https://image.pollinations.ai/prompt/cyberpunk%20car",
-            docs: "https://pollinations.ai",
-            desc: "100% free unlimited text-to-image and generative AI art without any registration.",
-            guide: "Direct URL call karein. Prompt URL ke aage encode karein aur instant PNG image payein.",
-            usage: "GET https://image.pollinations.ai/prompt/YOUR_PROMPT"
-        },
-        // 8. WEATHER & RADAR
-        {
-            title: "Open-Meteo High Resolution Weather",
-            category: "Weather & Radar",
-            auth: "No Auth",
-            url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true",
-            docs: "https://open-meteo.com",
-            desc: "Worldwide open meteorological forecast, rain radar, and temperature telemetry.",
-            guide: "Direct GET request. Up to 10,000 calls per day free bina kisi registration ke.",
-            usage: "GET https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true"
-        },
-        // 9. DEV TOOLS & UTILITIES
-        {
-            title: "QR Code Generator Dynamic API",
-            category: "Dev Tools",
-            auth: "No Auth",
-            url: "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://github.com",
-            docs: "https://goqr.me/api/",
-            desc: "Generate high-resolution PNG/SVG vector QR codes on the fly for links, WiFi, or text.",
-            guide: "Direct GET query param ?data=Your_Link&size=200x200 bhejkar instant QR image render karein.",
-            usage: "GET https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=YOUR_TEXT"
-        },
-        {
-            title: "IPify Public IP Address Resolver",
-            category: "Dev Tools",
-            auth: "No Auth",
-            url: "https://api.ipify.org?format=json",
-            docs: "https://www.ipify.org",
-            desc: "High availability endpoint returning client machine's current external public IP address.",
-            guide: "Simple GET call returns external public IP.",
-            usage: "GET https://api.ipify.org?format=json"
-        }
+    const EXPANDED_OFFLINE_SEED = [
+        { title: "ScraperAPI Cloud Proxy Bypasser", category: "Web Scraping & Proxy", auth: "API Key", url: "https://api.scraperapi.com?api_key=YOUR_KEY&url=https://httpbin.org/ip", docs: "https://www.scraperapi.com", desc: "Bypasses Cloudflare, CAPTCHAs, and residential blocks automatically.", guide: "Sign up at scraperapi.com for 5,000 monthly free requests.", usage: "GET with query params api_key and target url." },
+        { title: "Microlink Instant URL Scraper & PDF", category: "Web Scraping & Proxy", auth: "No Auth", url: "https://api.microlink.io?url=https://github.com", docs: "https://microlink.io", desc: "Extracts open-graph meta, screenshot images, and structured JSON from web pages.", guide: "Direct open API without keys.", usage: "GET with ?url=target&screenshot=true" },
+        { title: "1SecMail Disposable Email Engine", category: "Temp Mail & SMS", auth: "No Auth", url: "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1", docs: "https://www.1secmail.com/api/", desc: "Generates disposable inboxes and reads incoming OTPs/links via REST.", guide: "Open API with actions genRandomMailbox and getMessages.", usage: "GET request with query params." },
+        { title: "TextBelt Free Single SMS Gateway", category: "Temp Mail & SMS", auth: "No Auth", url: "https://textbelt.com/text", docs: "https://textbelt.com", desc: "Sends mobile SMS messages globally without registration.", guide: "Send key 'textbelt' for 1 free daily SMS.", usage: "POST body: phone=+919876543210&message=Hi&key=textbelt" },
+        { title: "Cobalt Universal Media Downloader v10", category: "Media & Download", auth: "No Auth", url: "https://api.cobalt.tools/api/json", docs: "https://cobalt.tools", desc: "Extracts direct CDN audio/video streams from YouTube, Instagram, and TikTok.", guide: "Send link in JSON body to get instant clean media URL.", usage: "POST body: {\"url\": \"target_video_link\"}" },
+        { title: "Remove.bg Official Background Stripper", category: "BG Remover & Image", auth: "API Key", url: "https://api.remove.bg/v1.0/removebg", docs: "https://www.remove.bg/i/api", desc: "AI background removal for portraits, products, and graphics.", guide: "Create account on remove.bg for 50 free credits.", usage: "POST header X-Api-Key with form-data image_url." },
+        { title: "OCR.space Multi-Language Text Extractor", category: "OCR & Documents", auth: "API Key", url: "https://api.ocr.space/parse/image", docs: "https://ocr.space/ocrapi", desc: "Converts receipts and images into text across 30+ languages.", guide: "Get free API key on ocr.space (500 req/day).", usage: "POST form-data url and language." },
+        { title: "Stirling-PDF Document Processor", category: "OCR & Documents", auth: "No Auth", url: "https://stirlingpdf.io/api/v1/general/pdf-info", docs: "https://stirlingpdf.io", desc: "Open API to split, merge, and inspect PDF files.", guide: "Direct open document REST engine.", usage: "POST multipart/form-data file." },
+        { title: "Google Gemini 1.5 Flash API", category: "Generative AI", auth: "API Key", url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY", docs: "https://aistudio.google.com/app/apikey", desc: "Multimodal AI reasoning and generation with 1M token context.", guide: "Generate key on aistudio.google.com.", usage: "POST body with contents JSON schema." },
+        { title: "Groq Llama 3 Ultra-Speed Inference", category: "Generative AI", auth: "Bearer Token", url: "https://api.groq.com/openai/v1/chat/completions", docs: "https://console.groq.com/keys", desc: "Ultra-fast 800+ tok/s LPU inference running Meta Llama 3.", guide: "Sign in on console.groq.com for instant key.", usage: "POST header Authorization with messages JSON body." },
+        { title: "DeepSeek Coder & Chat V2", category: "Generative AI", auth: "Bearer Token", url: "https://api.deepseek.com/chat/completions", docs: "https://platform.deepseek.com", desc: "High reasoning coding and conversational open LLM engine.", guide: "Get API token on platform.deepseek.com.", usage: "POST header Authorization with model deepseek-chat." },
+        { title: "Pollinations.ai Free Generative Art", category: "Generative AI", auth: "No Auth", url: "https://image.pollinations.ai/prompt/cyberpunk%20car", docs: "https://pollinations.ai", desc: "Unlimited text-to-image generator without tokens or signups.", guide: "Direct GET image request with URL-encoded prompt.", usage: "GET with prompt in URL path." },
+        { title: "ElevenLabs Realistic Neural Voice", category: "Audio & Voice TTS", auth: "API Key", url: "https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM", docs: "https://elevenlabs.io", desc: "Generative AI voice engine with emotional nuances.", guide: "10,000 free chars/month on elevenlabs.io.", usage: "POST header xi-api-key with text payload." },
+        { title: "Openwhyd Curated Music Stream", category: "Audio & Voice TTS", auth: "No Auth", url: "https://openwhyd.org/hot?format=json", docs: "https://openwhyd.org", desc: "Stream and discover trending open tracks across SoundCloud and YouTube.", guide: "Direct open endpoint.", usage: "GET request." },
+        { title: "URLScan.io Threat Sandbox Engine", category: "OSINT & Security", auth: "API Key", url: "https://urlscan.io/api/v1/scan/", docs: "https://urlscan.io/docs/api/", desc: "Security scanner recording HTTP transactions and DOM snapshots.", guide: "Free community account gives 5,000 monthly scans.", usage: "POST header API-Key with target url body." },
+        { title: "IP-API.com Geolocation Radar", category: "OSINT & Security", auth: "No Auth", url: "http://ip-api.com/json/", docs: "https://ip-api.com", desc: "Returns city, country, postal code, ISP, and coordinates.", guide: "45 calls/min free without keys.", usage: "GET query with IP address." },
+        { title: "Have I Been Pwned Password Breach", category: "OSINT & Security", auth: "No Auth", url: "https://api.pwnedpasswords.com/range/21BD1", docs: "https://haveibeenpwned.com/API/v3", desc: "Checks password occurrence in dumps using SHA-1 k-Anonymity.", guide: "Send first 5 characters of SHA-1 hash.", usage: "GET request." },
+        { title: "LibreTranslate Free Language Engine", category: "Translation & Utils", auth: "No Auth", url: "https://translate.terraprint.co/translate", docs: "https://libretranslate.com", desc: "Open-source neural machine translation across 30+ languages.", guide: "Open mirrors support direct JSON translation.", usage: "POST body: q, source, target." },
+        { title: "Open-Meteo Worldwide Weather Sensor", category: "Translation & Utils", auth: "No Auth", url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true", docs: "https://open-meteo.com", desc: "Open meteorological weather, rain radar, and temperature telemetry.", guide: "Up to 10,000 requests/day completely free.", usage: "GET request with latitude and longitude." },
+        { title: "NASA Astronomy Picture of the Day", category: "Translation & Utils", auth: "API Key", url: "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY", docs: "https://api.nasa.gov", desc: "High-resolution cosmic exploration imagery from Hubble and Webb.", guide: "Free DEMO_KEY or instant signup on api.nasa.gov.", usage: "GET request." },
+        { title: "Fake Store E-Commerce Mock API", category: "Translation & Utils", auth: "No Auth", url: "https://fakestoreapi.com/products", docs: "https://fakestoreapi.com", desc: "Mock products, cart orders, and user authentication endpoints for web developers.", guide: "Direct open endpoint.", usage: "GET request." },
+        { title: "PokéAPI Full Creature Database", category: "Translation & Utils", auth: "No Auth", url: "https://pokeapi.co/api/v2/pokemon/charizard", docs: "https://pokeapi.co", desc: "Complete dataset covering abilities, stats, evolutions, and items.", guide: "Open API with extensive historical documentation.", usage: "GET request." }
     ];
 
     async function initCatalog() {
-        masterAPIs = [...UNIVERSAL_MASTER_LIST];
+        masterAPIs = [...EXPANDED_OFFLINE_SEED];
 
-        // 1. Sync custom user created endpoints
         try {
             let custom = JSON.parse(localStorage.getItem("cyber_hub_apis")) || [];
             custom.forEach(c => {
@@ -747,38 +577,45 @@
             });
         } catch(e) {}
 
-        // 2. Fetch the 1,400+ public API mirror
-        try {
-            let res = await fetch("https://raw.githubusercontent.com/public-apis/public-apis/master/scripts/data/valid_apis.json");
-            let data = await res.json();
-            let entries = Array.isArray(data) ? data : (data.entries || []);
+        const mirrors = [
+            "https://raw.githubusercontent.com/public-apis/public-apis/master/scripts/data/valid_apis.json",
+            "https://raw.githubusercontent.com/public-api-lists/public-api-lists/master/README.md"
+        ];
 
-            entries.forEach(e => {
-                let cat = e.Category || "Dev Tools";
-                if (cat.includes("Weather")) cat = "Weather & Radar";
-                else if (cat.includes("Music") || cat.includes("Audio")) cat = "Music & Audio";
-                else if (cat.includes("Security")) cat = "Security & Audit";
-                else if (cat.includes("Machine Learning") || cat.includes("AI")) cat = "Generative AI";
-                else cat = "Dev Tools";
+        for (let url of mirrors) {
+            try {
+                let res = await fetch(url);
+                if (!res.ok) continue;
+                let data = await res.json();
+                let entries = Array.isArray(data) ? data : (data.entries || []);
+                
+                entries.forEach(e => {
+                    let cat = e.Category || "Translation & Utils";
+                    if (cat.includes("Weather")) cat = "Translation & Utils";
+                    else if (cat.includes("Music") || cat.includes("Audio")) cat = "Audio & Voice TTS";
+                    else if (cat.includes("Security")) cat = "OSINT & Security";
+                    else if (cat.includes("Machine Learning") || cat.includes("AI")) cat = "Generative AI";
+                    else if (cat.includes("Video") || cat.includes("Download")) cat = "Media & Download";
+                    else cat = "Translation & Utils";
 
-                let authScheme = e.Auth ? (e.Auth === "apiKey" ? "API Key" : e.Auth) : "No Auth";
-                let url = e.Link || e.url || "https://api.github.com";
+                    let authScheme = e.Auth ? (e.Auth === "apiKey" ? "API Key" : e.Auth) : "No Auth";
+                    let targetUrl = e.Link || e.url || "https://api.github.com";
 
-                if (!masterAPIs.some(x => x.url === url)) {
-                    masterAPIs.push({
-                        title: e.API || e.title || "Public API Service",
-                        url: url,
-                        category: cat,
-                        auth: authScheme,
-                        desc: e.Description || "Reliable public microservice endpoint for developers.",
-                        guide: authScheme === "No Auth" ? "Open Endpoint: Direct HTTP call bhejkar data retrieve karein." : "Official documentation visit karke developer dashboard se API key generate karein.",
-                        usage: "GET " + url,
-                        docs: url
-                    });
-                }
-            });
-        } catch(err) {
-            console.log("Remote mirror cached.");
+                    if (!masterAPIs.some(x => x.url === targetUrl)) {
+                        masterAPIs.push({
+                            title: e.API || e.title || "Public API Service",
+                            url: targetUrl,
+                            category: cat,
+                            auth: authScheme,
+                            desc: e.Description || "Reliable public microservice endpoint for developers.",
+                            guide: authScheme === "No Auth" ? "Open Endpoint: Direct HTTP call bhejkar data retrieve karein." : "Official documentation visit karke API key generate karein.",
+                            usage: "GET " + targetUrl,
+                            docs: targetUrl
+                        });
+                    }
+                });
+                break;
+            } catch(err) {}
         }
 
         document.getElementById("totalMetrics").innerText = `${masterAPIs.length}+`;
