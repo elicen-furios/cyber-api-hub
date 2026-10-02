@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Master API Hub | Universal Free Developer APIs</title>
+    <title>Global Master API Hub | Universal Developer Infrastructure</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -542,33 +542,242 @@
     let displayedCount = 40;
     let activeCategory = 'all';
 
-    const EXPANDED_OFFLINE_SEED = [
-        { title: "ScraperAPI Cloud Proxy Bypasser", category: "Web Scraping & Proxy", auth: "API Key", url: "https://api.scraperapi.com?api_key=YOUR_KEY&url=https://httpbin.org/ip", docs: "https://www.scraperapi.com", desc: "Bypasses Cloudflare, CAPTCHAs, and residential blocks automatically.", guide: "Sign up at scraperapi.com for 5,000 monthly free requests.", usage: "GET with query params api_key and target url." },
-        { title: "Microlink Instant URL Scraper & PDF", category: "Web Scraping & Proxy", auth: "No Auth", url: "https://api.microlink.io?url=https://github.com", docs: "https://microlink.io", desc: "Extracts open-graph meta, screenshot images, and structured JSON from web pages.", guide: "Direct open API without keys.", usage: "GET with ?url=target&screenshot=true" },
-        { title: "1SecMail Disposable Email Engine", category: "Temp Mail & SMS", auth: "No Auth", url: "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1", docs: "https://www.1secmail.com/api/", desc: "Generates disposable inboxes and reads incoming OTPs/links via REST.", guide: "Open API with actions genRandomMailbox and getMessages.", usage: "GET request with query params." },
-        { title: "TextBelt Free Single SMS Gateway", category: "Temp Mail & SMS", auth: "No Auth", url: "https://textbelt.com/text", docs: "https://textbelt.com", desc: "Sends mobile SMS messages globally without registration.", guide: "Send key 'textbelt' for 1 free daily SMS.", usage: "POST body: phone=+919876543210&message=Hi&key=textbelt" },
-        { title: "Cobalt Universal Media Downloader v10", category: "Media & Download", auth: "No Auth", url: "https://api.cobalt.tools/api/json", docs: "https://cobalt.tools", desc: "Extracts direct CDN audio/video streams from YouTube, Instagram, and TikTok.", guide: "Send link in JSON body to get instant clean media URL.", usage: "POST body: {\"url\": \"target_video_link\"}" },
-        { title: "Remove.bg Official Background Stripper", category: "BG Remover & Image", auth: "API Key", url: "https://api.remove.bg/v1.0/removebg", docs: "https://www.remove.bg/i/api", desc: "AI background removal for portraits, products, and graphics.", guide: "Create account on remove.bg for 50 free credits.", usage: "POST header X-Api-Key with form-data image_url." },
-        { title: "OCR.space Multi-Language Text Extractor", category: "OCR & Documents", auth: "API Key", url: "https://api.ocr.space/parse/image", docs: "https://ocr.space/ocrapi", desc: "Converts receipts and images into text across 30+ languages.", guide: "Get free API key on ocr.space (500 req/day).", usage: "POST form-data url and language." },
-        { title: "Stirling-PDF Document Processor", category: "OCR & Documents", auth: "No Auth", url: "https://stirlingpdf.io/api/v1/general/pdf-info", docs: "https://stirlingpdf.io", desc: "Open API to split, merge, and inspect PDF files.", guide: "Direct open document REST engine.", usage: "POST multipart/form-data file." },
-        { title: "Google Gemini 1.5 Flash API", category: "Generative AI", auth: "API Key", url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY", docs: "https://aistudio.google.com/app/apikey", desc: "Multimodal AI reasoning and generation with 1M token context.", guide: "Generate key on aistudio.google.com.", usage: "POST body with contents JSON schema." },
-        { title: "Groq Llama 3 Ultra-Speed Inference", category: "Generative AI", auth: "Bearer Token", url: "https://api.groq.com/openai/v1/chat/completions", docs: "https://console.groq.com/keys", desc: "Ultra-fast 800+ tok/s LPU inference running Meta Llama 3.", guide: "Sign in on console.groq.com for instant key.", usage: "POST header Authorization with messages JSON body." },
-        { title: "DeepSeek Coder & Chat V2", category: "Generative AI", auth: "Bearer Token", url: "https://api.deepseek.com/chat/completions", docs: "https://platform.deepseek.com", desc: "High reasoning coding and conversational open LLM engine.", guide: "Get API token on platform.deepseek.com.", usage: "POST header Authorization with model deepseek-chat." },
-        { title: "Pollinations.ai Free Generative Art", category: "Generative AI", auth: "No Auth", url: "https://image.pollinations.ai/prompt/cyberpunk%20car", docs: "https://pollinations.ai", desc: "Unlimited text-to-image generator without tokens or signups.", guide: "Direct GET image request with URL-encoded prompt.", usage: "GET with prompt in URL path." },
-        { title: "ElevenLabs Realistic Neural Voice", category: "Audio & Voice TTS", auth: "API Key", url: "https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM", docs: "https://elevenlabs.io", desc: "Generative AI voice engine with emotional nuances.", guide: "10,000 free chars/month on elevenlabs.io.", usage: "POST header xi-api-key with text payload." },
-        { title: "Openwhyd Curated Music Stream", category: "Audio & Voice TTS", auth: "No Auth", url: "https://openwhyd.org/hot?format=json", docs: "https://openwhyd.org", desc: "Stream and discover trending open tracks across SoundCloud and YouTube.", guide: "Direct open endpoint.", usage: "GET request." },
-        { title: "URLScan.io Threat Sandbox Engine", category: "OSINT & Security", auth: "API Key", url: "https://urlscan.io/api/v1/scan/", docs: "https://urlscan.io/docs/api/", desc: "Security scanner recording HTTP transactions and DOM snapshots.", guide: "Free community account gives 5,000 monthly scans.", usage: "POST header API-Key with target url body." },
-        { title: "IP-API.com Geolocation Radar", category: "OSINT & Security", auth: "No Auth", url: "http://ip-api.com/json/", docs: "https://ip-api.com", desc: "Returns city, country, postal code, ISP, and coordinates.", guide: "45 calls/min free without keys.", usage: "GET query with IP address." },
-        { title: "Have I Been Pwned Password Breach", category: "OSINT & Security", auth: "No Auth", url: "https://api.pwnedpasswords.com/range/21BD1", docs: "https://haveibeenpwned.com/API/v3", desc: "Checks password occurrence in dumps using SHA-1 k-Anonymity.", guide: "Send first 5 characters of SHA-1 hash.", usage: "GET request." },
-        { title: "LibreTranslate Free Language Engine", category: "Translation & Utils", auth: "No Auth", url: "https://translate.terraprint.co/translate", docs: "https://libretranslate.com", desc: "Open-source neural machine translation across 30+ languages.", guide: "Open mirrors support direct JSON translation.", usage: "POST body: q, source, target." },
-        { title: "Open-Meteo Worldwide Weather Sensor", category: "Translation & Utils", auth: "No Auth", url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true", docs: "https://open-meteo.com", desc: "Open meteorological weather, rain radar, and temperature telemetry.", guide: "Up to 10,000 requests/day completely free.", usage: "GET request with latitude and longitude." },
-        { title: "NASA Astronomy Picture of the Day", category: "Translation & Utils", auth: "API Key", url: "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY", docs: "https://api.nasa.gov", desc: "High-resolution cosmic exploration imagery from Hubble and Webb.", guide: "Free DEMO_KEY or instant signup on api.nasa.gov.", usage: "GET request." },
-        { title: "Fake Store E-Commerce Mock API", category: "Translation & Utils", auth: "No Auth", url: "https://fakestoreapi.com/products", docs: "https://fakestoreapi.com", desc: "Mock products, cart orders, and user authentication endpoints for web developers.", guide: "Direct open endpoint.", usage: "GET request." },
-        { title: "PokéAPI Full Creature Database", category: "Translation & Utils", auth: "No Auth", url: "https://pokeapi.co/api/v2/pokemon/charizard", docs: "https://pokeapi.co", desc: "Complete dataset covering abilities, stats, evolutions, and items.", guide: "Open API with extensive historical documentation.", usage: "GET request." }
+    // VERIFIED LIST WITH REAL HUMAN DOCUMENTATION PORTALS (No SSL errors or raw endpoint crashes)
+    const PRO_CURATED_LIST = [
+        {
+            title: "Nvidia Cloud NIM & Omniverse",
+            category: "Generative AI",
+            auth: "Bearer Token",
+            url: "https://integrate.api.nvidia.com/v1/chat/completions",
+            docs: "https://build.nvidia.com/explore/discover",
+            desc: "Nvidia enterprise AI foundation models running on high-density GPU clusters.",
+            guide: "build.nvidia.com par signup karein, 1,000 free execution credits instantly generate hote hain.",
+            usage: "POST header: Authorization: Bearer $NVIDIA_KEY. Body: {\"model\":\"meta/llama-3.1-405b-instruct\",\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}"
+        },
+        {
+            title: "Akhil Core Database Engine",
+            category: "Translation & Utils",
+            auth: "x-api-key",
+            url: "https://akhil-private-backend.onrender.com/api/db/all",
+            docs: "https://github.com/elicen-furios/akhi-cloud-engine",
+            desc: "Persistent SQLite relational table engine with automated CRUD operations.",
+            guide: "Header mein x-api-key: akhil_8630_secure pass karein data access ke liye.",
+            usage: "GET /api/db/all?collection=cyber_apis&api_key=akhil_8630_secure"
+        },
+        {
+            title: "Google Gemini 1.5 Flash API",
+            category: "Generative AI",
+            auth: "API Key",
+            url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=YOUR_API_KEY",
+            docs: "https://aistudio.google.com/app/apikey",
+            desc: "Multimodal AI reasoning and generation with 1M token context length.",
+            guide: "aistudio.google.com par free key banayein. Monthly 15 RPM free tier.",
+            usage: "POST body: {\"contents\":[{\"parts\":[{\"text\":\"Hello Gemini\"}]}]}"
+        },
+        {
+            title: "Groq Llama 3 Ultra-Speed Inference",
+            category: "Generative AI",
+            auth: "Bearer Token",
+            url: "https://api.groq.com/openai/v1/chat/completions",
+            docs: "https://console.groq.com/keys",
+            desc: "800+ tokens/second hardware LPU inference for Meta Llama 3 models.",
+            guide: "console.groq.com se instant key lein. Completely free high-speed tier.",
+            usage: "POST header Authorization with messages JSON body."
+        },
+        {
+            title: "ScraperAPI Cloud Proxy Bypasser",
+            category: "Web Scraping & Proxy",
+            auth: "API Key",
+            url: "https://api.scraperapi.com?api_key=YOUR_KEY&url=https://httpbin.org/ip",
+            docs: "https://www.scraperapi.com/documentation/",
+            desc: "Bypasses Cloudflare, CAPTCHAs, and residential blocks automatically.",
+            guide: "Sign up at scraperapi.com for 5,000 monthly free requests.",
+            usage: "GET with query params api_key and target url."
+        },
+        {
+            title: "Microlink Instant URL Scraper & PDF",
+            category: "Web Scraping & Proxy",
+            auth: "No Auth",
+            url: "https://api.microlink.io?url=https://github.com",
+            docs: "https://microlink.io/docs/sdk/getting-started/overview",
+            desc: "Extracts open-graph meta, screenshot images, and structured JSON from web pages.",
+            guide: "Direct open API without keys.",
+            usage: "GET with ?url=target&screenshot=true"
+        },
+        {
+            title: "1SecMail Disposable Email Engine",
+            category: "Temp Mail & SMS",
+            auth: "No Auth",
+            url: "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1",
+            docs: "https://www.1secmail.com/api/",
+            desc: "Generates disposable inboxes and reads incoming OTPs/links via REST.",
+            guide: "Open API with actions genRandomMailbox and getMessages.",
+            usage: "GET request with query params."
+        },
+        {
+            title: "TextBelt Free Single SMS Gateway",
+            category: "Temp Mail & SMS",
+            auth: "No Auth",
+            url: "https://textbelt.com/text",
+            docs: "https://textbelt.com/documentation/",
+            desc: "Sends mobile SMS messages globally without registration.",
+            guide: "Send key 'textbelt' for 1 free daily SMS.",
+            usage: "POST body: phone=+919876543210&message=Hi&key=textbelt"
+        },
+        {
+            title: "Cobalt Universal Media Downloader v10",
+            category: "Media & Download",
+            auth: "No Auth",
+            url: "https://api.cobalt.tools/api/json",
+            docs: "https://github.com/imputnet/cobalt/blob/current/docs/api.md",
+            desc: "Extracts direct CDN audio/video streams from YouTube, Instagram, and TikTok.",
+            guide: "Send link in JSON body to get instant clean media URL.",
+            usage: "POST body: {\"url\": \"target_video_link\"}"
+        },
+        {
+            title: "Remove.bg Official Background Stripper",
+            category: "BG Remover & Image",
+            auth: "API Key",
+            url: "https://api.remove.bg/v1.0/removebg",
+            docs: "https://www.remove.bg/api",
+            desc: "AI background removal for portraits, products, and graphics.",
+            guide: "Create account on remove.bg for 50 free credits.",
+            usage: "POST header X-Api-Key with form-data image_url."
+        },
+        {
+            title: "OCR.space Multi-Language Text Extractor",
+            category: "OCR & Documents",
+            auth: "API Key",
+            url: "https://api.ocr.space/parse/image",
+            docs: "https://ocr.space/ocrapi",
+            desc: "Converts receipts and images into text across 30+ languages.",
+            guide: "Get free API key on ocr.space (500 req/day).",
+            usage: "POST form-data url and language."
+        },
+        {
+            title: "Stirling-PDF Document Processor",
+            category: "OCR & Documents",
+            auth: "No Auth",
+            url: "https://stirlingpdf.io/api/v1/general/pdf-info",
+            docs: "https://github.com/Stirling-Tools/Stirling-PDF",
+            desc: "Open API to split, merge, and inspect PDF files.",
+            guide: "Direct open document REST engine.",
+            usage: "POST multipart/form-data file."
+        },
+        {
+            title: "DeepSeek Coder & Chat V2",
+            category: "Generative AI",
+            auth: "Bearer Token",
+            url: "https://api.deepseek.com/chat/completions",
+            docs: "https://platform.deepseek.com/api-docs",
+            desc: "High reasoning coding and conversational open LLM engine.",
+            guide: "Get API token on platform.deepseek.com.",
+            usage: "POST header Authorization with model deepseek-chat."
+        },
+        {
+            title: "Pollinations.ai Free Generative Art",
+            category: "Generative AI",
+            auth: "No Auth",
+            url: "https://image.pollinations.ai/prompt/cyberpunk%20car",
+            docs: "https://pollinations.ai",
+            desc: "Unlimited text-to-image generator without tokens or signups.",
+            guide: "Direct GET image request with URL-encoded prompt.",
+            usage: "GET with prompt in URL path."
+        },
+        {
+            title: "ElevenLabs Realistic Neural Voice",
+            category: "Audio & Voice TTS",
+            auth: "API Key",
+            url: "https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM",
+            docs: "https://elevenlabs.io/docs/api-reference",
+            desc: "Generative AI voice engine with emotional nuances.",
+            guide: "10,000 free chars/month on elevenlabs.io.",
+            usage: "POST header xi-api-key with text payload."
+        },
+        {
+            title: "Openwhyd Curated Music Stream",
+            category: "Audio & Voice TTS",
+            auth: "No Auth",
+            url: "https://openwhyd.org/hot?format=json",
+            docs: "https://openwhyd.github.io/openwhyd/API.html",
+            desc: "Stream and discover trending open tracks across SoundCloud and YouTube.",
+            guide: "Direct open endpoint.",
+            usage: "GET request."
+        },
+        {
+            title: "URLScan.io Threat Sandbox Engine",
+            category: "OSINT & Security",
+            auth: "API Key",
+            url: "https://urlscan.io/api/v1/scan/",
+            docs: "https://urlscan.io/docs/api/",
+            desc: "Security scanner recording HTTP transactions and DOM snapshots.",
+            guide: "Free community account gives 5,000 monthly scans.",
+            usage: "POST header API-Key with target url body."
+        },
+        {
+            title: "IP-API.com Geolocation Radar",
+            category: "OSINT & Security",
+            auth: "No Auth",
+            url: "http://ip-api.com/json/",
+            docs: "https://ip-api.com/docs",
+            desc: "Returns city, country, postal code, ISP, and coordinates.",
+            guide: "45 calls/min free without keys.",
+            usage: "GET query with IP address."
+        },
+        {
+            title: "Have I Been Pwned Password Breach",
+            category: "OSINT & Security",
+            auth: "No Auth",
+            url: "https://api.pwnedpasswords.com/range/21BD1",
+            docs: "https://haveibeenpwned.com/API/v3",
+            desc: "Checks password occurrence in dumps using SHA-1 k-Anonymity.",
+            guide: "Send first 5 characters of SHA-1 hash.",
+            usage: "GET request."
+        },
+        {
+            title: "LibreTranslate Free Language Engine",
+            category: "Translation & Utils",
+            auth: "No Auth",
+            url: "https://translate.terraprint.co/translate",
+            docs: "https://libretranslate.com",
+            desc: "Open-source neural machine translation across 30+ languages.",
+            guide: "Open mirrors support direct JSON translation.",
+            usage: "POST body: q, source, target."
+        },
+        {
+            title: "Open-Meteo Worldwide Weather Sensor",
+            category: "Translation & Utils",
+            auth: "No Auth",
+            url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true",
+            docs: "https://open-meteo.com/en/docs",
+            desc: "Open meteorological weather, rain radar, and temperature telemetry.",
+            guide: "Up to 10,000 requests/day completely free.",
+            usage: "GET request with latitude and longitude."
+        },
+        {
+            title: "NASA Astronomy Picture of the Day",
+            category: "Translation & Utils",
+            auth: "API Key",
+            url: "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY",
+            docs: "https://api.nasa.gov",
+            desc: "High-resolution cosmic exploration imagery from Hubble and Webb.",
+            guide: "Free DEMO_KEY or instant signup on api.nasa.gov.",
+            usage: "GET request."
+        },
+        {
+            title: "Solana RPC Mainnet Gateway",
+            category: "Translation & Utils",
+            auth: "Open Access",
+            url: "https://api.mainnet-beta.solana.com",
+            docs: "https://solana.com/docs/rpc",
+            desc: "Ledger transaction verification and real-time block streaming.",
+            guide: "JSON-RPC endpoint directly accessible.",
+            usage: "POST JSON-RPC getHealth."
+        }
     ];
 
     async function initCatalog() {
-        masterAPIs = [...EXPANDED_OFFLINE_SEED];
+        masterAPIs = [...PRO_CURATED_LIST];
 
         try {
             let custom = JSON.parse(localStorage.getItem("cyber_hub_apis")) || [];
@@ -578,13 +787,12 @@
         } catch(e) {}
 
         const mirrors = [
-            "https://raw.githubusercontent.com/public-apis/public-apis/master/scripts/data/valid_apis.json",
-            "https://raw.githubusercontent.com/public-api-lists/public-api-lists/master/README.md"
+            "https://raw.githubusercontent.com/public-apis/public-apis/master/scripts/data/valid_apis.json"
         ];
 
-        for (let url of mirrors) {
+        for (let mirrorUrl of mirrors) {
             try {
-                let res = await fetch(url);
+                let res = await fetch(mirrorUrl);
                 if (!res.ok) continue;
                 let data = await res.json();
                 let entries = Array.isArray(data) ? data : (data.entries || []);
@@ -682,7 +890,7 @@
                 </div>
                 <div class="card-actions">
                     <button class="btn-test" onclick="openSandbox('${encodeURIComponent(item.url)}')">Test Endpoint</button>
-                    <a href="${item.docs || item.url}" target="_blank" rel="noopener" class="btn-link">Docs &amp; Key &rarr;</a>
+                    <a href="${item.docs || item.url}" target="_blank" rel="noopener noreferrer" class="btn-link">Docs &amp; Key &rarr;</a>
                 </div>
             `;
             grid.appendChild(card);
