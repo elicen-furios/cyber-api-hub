@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber API Hub | Developer Architecture Gateway</title>
+    <title>Global API Hub | Complete Free Developer Directory</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -87,7 +87,7 @@
             display: inline-block;
         }
         .main-container {
-            max-width: 1160px;
+            max-width: 1180px;
             width: 100%;
             margin: 0 auto;
             padding: 40px 20px 80px;
@@ -95,7 +95,7 @@
         }
         .hero {
             text-align: center;
-            max-width: 760px;
+            max-width: 780px;
             margin: 0 auto 36px;
         }
         .hero-tag {
@@ -126,7 +126,7 @@
             line-height: 1.6;
         }
         .search-wrap {
-            max-width: 640px;
+            max-width: 680px;
             margin: 32px auto 20px;
             display: flex;
             background: #ffffff;
@@ -224,16 +224,17 @@
             font-weight: 700;
             color: var(--text-heading);
         }
+
         .api-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 22px;
         }
         .api-card {
             background: #ffffff;
             border: 1px solid var(--border-subtle);
             border-radius: 16px;
-            padding: 24px;
+            padding: 22px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -249,7 +250,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
         .tag-cat {
             font-family: var(--font-mono);
@@ -265,7 +266,7 @@
         .tag-auth {
             font-family: var(--font-mono);
             font-size: 11px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--emerald);
             background: #ecfdf5;
             padding: 3px 8px;
@@ -280,35 +281,72 @@
         .card-desc {
             font-size: 0.9rem;
             color: var(--text-body);
-            margin-bottom: 18px;
+            margin-bottom: 14px;
             line-height: 1.5;
         }
-        .card-url {
-            font-family: var(--font-mono);
-            font-size: 11.5px;
+        .usage-block {
             background: #f1f5f9;
             border: 1px solid var(--border-subtle);
-            color: #334155;
-            padding: 9px 12px;
             border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 12px;
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+        }
+        .usage-title {
+            font-size: 10.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .url-text {
+            color: #0369a1;
             word-break: break-all;
+            user-select: all;
+        }
+        .key-guide {
+            font-size: 11.5px;
+            color: #64748b;
             margin-bottom: 14px;
+            line-height: 1.4;
+        }
+        .key-guide a {
+            color: var(--primary);
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        .card-actions {
+            display: flex;
+            gap: 8px;
         }
         .btn-test {
-            width: 100%;
+            flex: 1;
             background: #0f172a;
             color: #ffffff;
             border: none;
-            padding: 11px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12.5px;
             cursor: pointer;
             transition: all 0.2s;
         }
         .btn-test:hover { background: #0284c7; }
+        .btn-docs {
+            background: #f8fafc;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-heading);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12.5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
 
-        /* MODAL */
+        /* TESTER MODAL */
         #testerModal {
             display: none;
             position: fixed;
@@ -421,49 +459,54 @@
 
     <div class="main-container">
         <div class="hero">
-            <div class="hero-tag">Production Directory</div>
-            <h1 class="hero-title">Developer API Infrastructure</h1>
-            <p class="hero-sub">Explore production endpoints, real-time telemetry, and run live socket requests directly in the sandbox.</p>
+            <div class="hero-tag">Global Free API Index</div>
+            <h1 class="hero-title">Worldwide Free API Directory</h1>
+            <p class="hero-sub">Complete endpoints, integration guidelines, authentication manuals, and live testing sandbox.</p>
 
             <div class="search-wrap">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search 1,940+ endpoints by title, Nvidia, crypto, weather, etc...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search 1,400+ APIs (e.g. weather, crypto, ai, github, books)...">
                 <button class="search-btn" onclick="filterCatalog()">Search</button>
             </div>
 
             <div class="filter-row">
-                <div class="filter-pill active" onclick="setCategory('all', this)">All Nodes</div>
+                <div class="filter-pill active" onclick="setCategory('all', this)">All APIs</div>
                 <div class="filter-pill" onclick="setCategory('AI & ML', this)">AI &amp; ML</div>
-                <div class="filter-pill" onclick="setCategory('Crypto & Web3', this)">Crypto / Web3</div>
+                <div class="filter-pill" onclick="setCategory('Cryptocurrency', this)">Crypto / Web3</div>
                 <div class="filter-pill" onclick="setCategory('Weather', this)">Weather</div>
                 <div class="filter-pill" onclick="setCategory('Animals', this)">Animals</div>
                 <div class="filter-pill" onclick="setCategory('Development', this)">Development</div>
+                <div class="filter-pill" onclick="setCategory('Finance', this)">Finance</div>
+                <div class="filter-pill" onclick="setCategory('Security', this)">Security</div>
             </div>
         </div>
 
         <div class="metrics-grid">
             <div class="metric-card">
-                <div class="metric-val" id="totalMetrics">1,942+</div>
-                <div class="metric-lbl">Active Endpoints</div>
+                <div class="metric-val" id="totalMetrics">Loading...</div>
+                <div class="metric-lbl">Total Verified APIs</div>
             </div>
             <div class="metric-card">
-                <div class="metric-val">SHA-256</div>
-                <div class="metric-lbl">Security Architecture</div>
+                <div class="metric-val">100% Free</div>
+                <div class="metric-lbl">Access Scheme</div>
             </div>
             <div class="metric-card">
-                <div class="metric-val" style="color: var(--emerald);">99.98%</div>
-                <div class="metric-lbl">Uptime Standard</div>
+                <div class="metric-val" style="color: var(--emerald);">Direct Sandbox</div>
+                <div class="metric-lbl">Interactive Tester</div>
             </div>
         </div>
 
         <div class="section-header">
-            <h2>Active Production Endpoints</h2>
+            <h2>Directory Endpoints</h2>
             <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);">Showing: <span id="visibleMetrics">0</span></span>
         </div>
 
         <div class="api-grid" id="catalogGrid"></div>
+        <div id="loadMoreContainer" style="text-align:center; margin-top:30px;">
+            <button id="btnLoadMore" onclick="loadMore()" style="background:#ffffff; border:1px solid var(--border-subtle); padding:10px 24px; border-radius:8px; font-weight:600; cursor:pointer;">Load More APIs</button>
+        </div>
     </div>
 
-    <!-- MODAL -->
+    <!-- TESTER MODAL -->
     <div id="testerModal">
         <div class="modal-box">
             <div class="modal-head">
@@ -490,7 +533,7 @@
     </footer>
 
     <script>
-    // Secret Owner Gate
+    // Secret Owner Gate (Triple tap)
     let tapCount = 0;
     document.getElementById("masterTrigger").addEventListener("click", () => {
         tapCount++;
@@ -501,90 +544,138 @@
         setTimeout(() => { tapCount = 0; }, 1500);
     });
 
-    // Massive verified built-in catalog
-    const BUNDLED_REGISTRY = [
-        { title: "Nvidia Cloud Omniverse AI", url: "https://api.nvidia.com/v1/generative", category: "AI & ML", auth: "Bearer Token", desc: "Neural processing pipelines and generative vision inference on GPU clusters." },
-        { title: "Solana RPC Mainnet Gateway", url: "https://api.mainnet-beta.solana.com", category: "Crypto & Web3", auth: "Open Access", desc: "Ledger transaction verification and real-time block telemetry streaming." },
-        { title: "Akhil Core Database Engine", url: "https://akhil-private-backend.onrender.com/api/db/all", category: "Development", auth: "x-api-key", desc: "ACID-compliant SQLite relational storage engine with REST CRUD capabilities." },
-        { title: "Open-Meteo Worldwide Weather", url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true", category: "Weather", auth: "No Auth", desc: "Seamless worldwide atmospheric weather readings and 7-day forecast telemetry." },
-        { title: "CoinGecko Real-time Rates", url: "https://api.coingecko.com/api/v3/ping", category: "Crypto & Web3", auth: "No Auth", desc: "Live decentralized pricing, spot market order books and coin ticker feeds." },
-        { title: "Cat Facts Telemetry", url: "https://catfact.ninja/fact", category: "Animals", auth: "No Auth", desc: "Random feline biological and behavioral verified data stream." },
-        { title: "Dog CEO Canine Directory", url: "https://dog.ceo/api/breeds/image/random", category: "Animals", auth: "No Auth", desc: "Curated high-resolution canine image repository with CDN caching." },
-        { title: "Binance Public Market Ticker", url: "https://api.binance.com/api/v3/ticker/price", category: "Crypto & Web3", auth: "No Auth", desc: "Global cryptocurrency spot trade matching engine rates and volumes." },
-        { title: "Hugging Face Model Hub", url: "https://huggingface.co/api/models", category: "AI & ML", auth: "Bearer Token", desc: "Transformer models, checkpoints and NLP fine-tuned repositories." },
-        { title: "JSONPlaceholder Fake API", url: "https://jsonplaceholder.typicode.com/posts", category: "Development", auth: "No Auth", desc: "Reliable mock REST API for testing frontend mockups and prototypes." },
-        { title: "National Weather Service (US)", url: "https://api.weather.gov", category: "Weather", auth: "No Auth", desc: "Official raw alerts, radar observations and weather warnings." },
-        { title: "RandomUser Identity Generator", url: "https://randomuser.me/api/", category: "Development", auth: "No Auth", desc: "Randomized human profile dataset for mock registration testing." },
-        { title: "IPify Public IP Resolver", url: "https://api.ipify.org?format=json", category: "Development", auth: "No Auth", desc: "Lightweight socket service returning client IPv4 and IPv6 addresses." },
-        { title: "Ethereum Gas Station Oracle", url: "https://api.etherscan.io/api?module=gastracker&action=gasoracle", category: "Crypto & Web3", auth: "x-api-key", desc: "Real-time base fee, priority tip and congested transaction gwei monitor." },
-        { title: "NASA Astronomy Picture of the Day", url: "https://api.nasa.gov/planetary/apod", category: "Development", auth: "API Key", desc: "High-resolution cosmic imagery captured by orbital Hubble and Webb telescopes." },
-        { title: "WeatherAPI Global Forecast", url: "https://api.weatherapi.com/v1/current.json", category: "Weather", auth: "API Key", desc: "Hyperlocal weather forecasts, precipitation indexes and air quality." },
-        { title: "GitHub REST API Core", url: "https://api.github.com/zen", category: "Development", auth: "OAuth 2.0", desc: "Repository management, release logs, commits and issue tracker hooks." },
-        { title: "OpenAI GPT Execution API", url: "https://api.openai.com/v1/models", category: "AI & ML", auth: "Bearer Token", desc: "Large Language Model completions, embeddings and multi-modal vision." },
-        { title: "The Cat API Breed Explorer", url: "https://api.thecatapi.com/v1/images/search", category: "Animals", auth: "API Key", desc: "Cat breed specifics, historical ancestry metrics and high-res photos." },
-        { title: "DuckDuckGo Instant Answer", url: "https://api.duckduckgo.com/?q=DuckDuckGo&format=json", category: "Development", auth: "No Auth", desc: "Privacy-focused encyclopedia zero-click search snippets and abstracts." }
-    ];
-
-    let allAPIs = [];
+    let masterAPIs = [];
+    let displayedCount = 40;
     let activeCategory = 'all';
 
-    async function loadCatalog() {
-        allAPIs = [...BUNDLED_REGISTRY];
+    // 100% Reliable Curated Dataset covering major worldwide categories
+    const CURATED_GLOBAL_APIS = [
+        { title: "Nvidia Cloud Omniverse AI", url: "https://api.nvidia.com/v1/generative", category: "AI & ML", auth: "Bearer Token", desc: "Neural processing pipelines and generative vision inference on GPU clusters.", guide: "Nvidia developer portal par account banakar free credit key prapt karein." },
+        { title: "Open-Meteo Global Weather", url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true", category: "Weather", auth: "No Auth", desc: "World-wide open source atmospheric telemetry and rainfall forecast.", guide: "Direct GET request karein, kisi key ki zaroorat nahi hai." },
+        { title: "CoinGecko Market Telemetry", url: "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd", category: "Cryptocurrency", auth: "No Auth", desc: "Real-time cryptocurrency valuation, liquidity order books, and market caps.", guide: "Direct open API, free tier allows 30 calls/min bina key ke." },
+        { title: "Binance Public Market Ticker", url: "https://api.binance.com/api/v3/ticker/price", category: "Cryptocurrency", auth: "No Auth", desc: "Global cryptocurrency spot trade matching engine rates and volumes.", guide: "Direct endpoint for real-time market spot pairs." },
+        { title: "Cat Facts Worldwide", url: "https://catfact.ninja/fact", category: "Animals", auth: "No Auth", desc: "Random feline biological, historical, and behavioral verified data stream.", guide: "GET call dispatch karein instant JSON return milega." },
+        { title: "Dog CEO Canine Directory", url: "https://dog.ceo/api/breeds/image/random", category: "Animals", auth: "No Auth", desc: "High-resolution canine image repository with CDN edge caching.", guide: "Free public CDN endpoint for sample images." },
+        { title: "Hugging Face Inference Hub", url: "https://huggingface.co/api/models", category: "AI & ML", auth: "API Key", desc: "Over 100,000+ transformer models, NLP fine-tuned weights, and vision models.", guide: "huggingface.co par login karein aur Settings -> Access Tokens se free key lein." },
+        { title: "Solana RPC Mainnet Gateway", url: "https://api.mainnet-beta.solana.com", category: "Cryptocurrency", auth: "No Auth", desc: "Decentralized ledger transaction verification and real-time block streaming.", guide: "POST JSON-RPC body {jsonrpc:'2.0', id:1, method:'getHealth'} bhejkar use karein." },
+        { title: "GitHub Core REST API", url: "https://api.github.com/zen", category: "Development", auth: "No Auth", desc: "Public user profile lookups, repo stats, release feeds, and commits.", guide: "Bina token ke 60 req/hour, personal token ke saath 5,000 req/hour." },
+        { title: "JSONPlaceholder Fake API", url: "https://jsonplaceholder.typicode.com/posts", category: "Development", auth: "No Auth", desc: "Reliable mock REST API for testing frontend prototypes and CRUD apps.", guide: "GET, POST, PUT, DELETE sab test kar sakte hain mock response ke saath." },
+        { title: "RandomUser Profile Generator", url: "https://randomuser.me/api/", category: "Development", auth: "No Auth", desc: "Generates randomized dummy user records with pictures, address, and email.", guide: "Form autofill aur testing ke liye direct endpoint call karein." },
+        { title: "IPify Public IP Address", url: "https://api.ipify.org?format=json", category: "Development", auth: "No Auth", desc: "Lightweight socket service returning client IPv4 and IPv6 addresses.", guide: "Single GET call returns user's external public IP." },
+        { title: "NASA Astronomy Picture (APOD)", url: "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY", category: "Development", auth: "API Key", desc: "High-resolution cosmic imagery captured by Hubble and James Webb space telescopes.", guide: "api.nasa.gov par free signup karein ya default DEMO_KEY use karein." },
+        { title: "Frankfurter Currency Exchange", url: "https://api.frankfurter.app/latest?from=USD", category: "Finance", auth: "No Auth", desc: "European Central Bank reference rates for tracking foreign exchange fiat currencies.", guide: "Real-time forex rate endpoint without any credentials required." },
+        { title: "Have I Been Pwned Check", url: "https://haveibeenpwned.com/api/v3", category: "Security", auth: "API Key", desc: "Check compromised user credentials and data breach logs across historical attacks.", guide: "haveibeenpwned.com/API/Key se security analyst token prapt karein." },
+        { title: "Open Food Facts Database", url: "https://world.openfoodfacts.org/api/v0/product/737628064500.json", category: "Development", auth: "No Auth", desc: "Crowdsourced database of barcodes, food ingredients, allergens and nutritional score.", guide: "Direct barcode number daalkar product scan data fetch karein." },
+        { title: "Open Library Book Search", url: "https://openlibrary.org/search.json?q=the+lord+of+the+rings", category: "Development", auth: "No Auth", desc: "Search millions of books, authors, ISBNs, and digital library records.", guide: "Query parameter ?q=book_name bhejkar books detail lein." },
+        { title: "REST Countries Telemetry", url: "https://restcountries.com/v3.1/all", category: "Development", auth: "No Auth", desc: "Comprehensive demographic, geographic, and flag assets for all global countries.", guide: "Direct GET returns JSON of population, capital, borders, and currency." },
+        { title: "Universities List Database", url: "http://universities.hipolabs.com/search?country=India", category: "Development", auth: "No Auth", desc: "Directory of higher educational colleges and universities globally.", guide: "?country=India daalkar saari state aur central universities fetch karein." },
+        { title: "PokéAPI Pokémon Engine", url: "https://pokeapi.co/api/v2/pokemon/ditto", category: "Development", auth: "No Auth", desc: "Full RESTful dataset covering monsters, moves, abilities, types, and egg groups.", guide: "Open API with extensive historical gaming documentation." }
+    ];
 
-        // Load custom user deployed APIs from local storage and Render DB
+    async function initCatalog() {
+        masterAPIs = [...CURATED_GLOBAL_APIS];
+
+        // 1. Sync custom user created endpoints
         try {
             let custom = JSON.parse(localStorage.getItem("cyber_hub_apis")) || [];
             custom.forEach(c => {
-                if (c.title && !allAPIs.some(x => x.title === c.title)) allAPIs.unshift(c);
+                if (c.title && !masterAPIs.some(x => x.title === c.title)) masterAPIs.unshift(c);
             });
         } catch(e) {}
 
+        // 2. Fetch the 1,400+ APIs global registry from public-apis mirror
         try {
-            let res = await fetch("https://akhil-private-backend.onrender.com/api/db/all?collection=cyber_apis&api_key=akhil_8630_secure");
-            let d = await res.json();
-            if (d.status === "success" && d.records) {
-                d.records.forEach(r => {
-                    if (r.data && r.data.title && !allAPIs.some(x => x.title === r.data.title)) {
-                        allAPIs.unshift(r.data);
-                    }
-                });
-            }
-        } catch(e) {}
+            let res = await fetch("https://raw.githubusercontent.com/public-apis/public-apis/master/scripts/data/valid_apis.json");
+            let data = await res.json();
+            let entries = Array.isArray(data) ? data : (data.entries || []);
 
-        render(allAPIs);
+            entries.forEach(e => {
+                let cat = e.Category || "Development";
+                if (cat.includes("Cryptocurrency")) cat = "Cryptocurrency";
+                else if (cat.includes("Weather")) cat = "Weather";
+                else if (cat.includes("Animal")) cat = "Animals";
+                else if (cat.includes("Machine Learning") || cat.includes("AI")) cat = "AI & ML";
+                else if (cat.includes("Finance")) cat = "Finance";
+                else if (cat.includes("Security")) cat = "Security";
+                else cat = "Development";
+
+                let authScheme = e.Auth ? (e.Auth === "apiKey" ? "API Key" : e.Auth) : "No Auth";
+                let url = e.Link || e.url || "https://api.github.com";
+
+                if (!masterAPIs.some(x => x.url === url)) {
+                    masterAPIs.push({
+                        title: e.API || e.title || "Public API Service",
+                        url: url,
+                        category: cat,
+                        auth: authScheme,
+                        desc: e.Description || "Reliable public microservice endpoint for developers.",
+                        guide: authScheme === "No Auth" ? "Open Endpoint: Direct HTTP request bhejkar data retrieve karein." : "Target official documentation visit karke API key generate karein."
+                    });
+                }
+            });
+        } catch(err) {
+            console.log("Remote mirror busy, displaying offline curated database.");
+        }
+
+        document.getElementById("totalMetrics").innerText = `${masterAPIs.length}+`;
+        render();
     }
 
-    function render(list) {
+    function render() {
         const grid = document.getElementById("catalogGrid");
         grid.innerHTML = "";
 
-        document.getElementById("visibleMetrics").innerText = list.length;
+        const q = document.getElementById("searchInput").value.toLowerCase().trim();
+        let filtered = masterAPIs.filter(api => {
+            let catMatch = (activeCategory === 'all') || (api.category === activeCategory);
+            let textMatch = api.title.toLowerCase().includes(q) || 
+                            (api.desc && api.desc.toLowerCase().includes(q)) || 
+                            api.url.toLowerCase().includes(q) ||
+                            api.category.toLowerCase().includes(q);
+            return catMatch && textMatch;
+        });
 
-        if (list.length === 0) {
+        document.getElementById("visibleMetrics").innerText = filtered.length;
+
+        let slice = filtered.slice(0, displayedCount);
+
+        if (slice.length === 0) {
             grid.innerHTML = `
                 <div style="grid-column: 1/-1; text-align: center; padding: 50px 20px; background: #ffffff; border-radius: 16px; border: 1px dashed var(--border-subtle);">
-                    <div style="font-size: 15px; font-weight: 600; color: var(--text-heading); margin-bottom: 4px;">No matching endpoints found</div>
-                    <div style="font-size: 13px; color: var(--text-dim);">Try searching with another keyword or explore other categories.</div>
+                    <div style="font-size: 15px; font-weight: 600; color: var(--text-heading); margin-bottom: 4px;">No matching APIs found</div>
+                    <div style="font-size: 13px; color: var(--text-dim);">Try searching with another term or explore different categories.</div>
                 </div>
             `;
+            document.getElementById("loadMoreContainer").style.display = "none";
             return;
         }
 
-        list.forEach(item => {
+        document.getElementById("loadMoreContainer").style.display = (displayedCount >= filtered.length) ? "none" : "block";
+
+        slice.forEach(item => {
             const card = document.createElement("div");
             card.className = "api-card";
             card.innerHTML = `
                 <div>
                     <div class="card-top">
-                        <span class="tag-cat">${clean(item.category || 'Service')}</span>
-                        <span class="tag-auth">${clean(item.auth || 'Open')}</span>
+                        <span class="tag-cat">${clean(item.category)}</span>
+                        <span class="tag-auth">${clean(item.auth)}</span>
                     </div>
                     <div class="card-title">${clean(item.title)}</div>
-                    <div class="card-desc">${clean(item.desc || 'High throughput API service endpoint.')}</div>
+                    <div class="card-desc">${clean(item.desc)}</div>
+                    
+                    <div class="usage-block">
+                        <div class="usage-title">Endpoint URL:</div>
+                        <div class="url-text">${clean(item.url)}</div>
+                    </div>
+
+                    <div class="key-guide">
+                        <strong>Kaise Use Karein:</strong> ${clean(item.guide || "Documentation check karein.")}
+                    </div>
                 </div>
-                <div>
-                    <div class="card-url">${clean(item.url)}</div>
+                <div class="card-actions">
                     <button class="btn-test" onclick="openSandbox('${encodeURIComponent(item.url)}')">Test Endpoint</button>
+                    <a href="${item.url}" target="_blank" rel="noopener" class="btn-docs">Docs &rarr;</a>
                 </div>
             `;
             grid.appendChild(card);
@@ -596,25 +687,27 @@
         return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     }
 
-    function filterCatalog() {
-        const q = document.getElementById("searchInput").value.toLowerCase().trim();
-        let matched = allAPIs.filter(item => {
-            let catMatch = (activeCategory === 'all') || (item.category === activeCategory);
-            let textMatch = item.title.toLowerCase().includes(q) || 
-                            (item.desc && item.desc.toLowerCase().includes(q)) || 
-                            item.url.toLowerCase().includes(q);
-            return catMatch && textMatch;
-        });
-        render(matched);
+    function loadMore() {
+        displayedCount += 40;
+        render();
     }
 
-    document.getElementById("searchInput").addEventListener("input", filterCatalog);
+    function filterCatalog() {
+        displayedCount = 40;
+        render();
+    }
+
+    document.getElementById("searchInput").addEventListener("input", () => {
+        displayedCount = 40;
+        render();
+    });
 
     function setCategory(cat, el) {
         activeCategory = cat;
+        displayedCount = 40;
         document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("active"));
         el.classList.add("active");
-        filterCatalog();
+        render();
     }
 
     function openSandbox(encoded) {
@@ -654,11 +747,11 @@
             }
         } catch(err) {
             statusFlag.innerText = "CORS RESTRICTED / NETWORK TIMEOUT";
-            resBox.innerText = `Error: ${err.message}\nNote: External servers without Access-Control-Allow-Origin headers require backend routing.`;
+            resBox.innerText = `Error: ${err.message}\nNote: Kuch servers direct browser calls block karte hain, inko backend curl se call karein.`;
         }
     }
 
-    loadCatalog();
+    initCatalog();
     </script>
 </body>
 </html>
