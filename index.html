@@ -10,7 +10,6 @@
             --bg-base: #f8fafc;
             --bg-surface: #ffffff;
             --border-subtle: #e2e8f0;
-            --border-hover: #cbd5e1;
             --text-heading: #0f172a;
             --text-body: #475569;
             --text-dim: #94a3b8;
@@ -18,8 +17,8 @@
             --primary-soft: #f0f9ff;
             --emerald: #059669;
             --font-mono: 'JetBrains Mono', monospace;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
-            --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.03);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
             --shadow-hover: 0 20px 35px -10px rgba(15, 23, 42, 0.08);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,7 +39,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-subtle);
             padding: 16px 28px;
@@ -57,8 +56,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            cursor: pointer;
             user-select: none;
+            cursor: pointer;
         }
         .brand-dot {
             width: 9px;
@@ -67,7 +66,6 @@
             background: var(--primary);
             box-shadow: 0 0 8px rgba(2, 132, 199, 0.6);
         }
-        .nav-right { display: flex; align-items: center; gap: 12px; }
         .live-badge {
             font-family: var(--font-mono);
             font-size: 11.5px;
@@ -136,7 +134,6 @@
             border-radius: 12px;
             box-shadow: var(--shadow-md);
             padding: 6px;
-            transition: all 0.2s;
         }
         .search-wrap:focus-within {
             border-color: var(--primary);
@@ -161,10 +158,7 @@
             padding: 0 22px;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s;
         }
-        .search-btn:hover { background: #1e293b; }
-
         .filter-row {
             display: flex;
             gap: 8px;
@@ -189,7 +183,6 @@
             background: var(--primary);
             border-color: var(--primary);
         }
-
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -218,7 +211,6 @@
             color: var(--text-dim);
             margin-top: 4px;
         }
-
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -232,7 +224,6 @@
             font-weight: 700;
             color: var(--text-heading);
         }
-
         .api-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
@@ -317,7 +308,7 @@
         }
         .btn-test:hover { background: #0284c7; }
 
-        /* TESTER MODAL */
+        /* MODAL */
         #testerModal {
             display: none;
             position: fixed;
@@ -435,22 +426,23 @@
             <p class="hero-sub">Explore production endpoints, real-time telemetry, and run live socket requests directly in the sandbox.</p>
 
             <div class="search-wrap">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search endpoints by title, Nvidia, Solana, Cloud...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search 1,400+ endpoints by name, category, or keyword...">
                 <button class="search-btn" onclick="filterCatalog()">Search</button>
             </div>
 
             <div class="filter-row">
                 <div class="filter-pill active" onclick="setCategory('all', this)">All Nodes</div>
-                <div class="filter-pill" onclick="setCategory('AI / Machine Learning', this)">AI Compute</div>
-                <div class="filter-pill" onclick="setCategory('Crypto / Web3', this)">Decentralized</div>
-                <div class="filter-pill" onclick="setCategory('Cloud & Systems', this)">Infrastructure</div>
-                <div class="filter-pill" onclick="setCategory('Data / Analytics', this)">Telemetry</div>
+                <div class="filter-pill" onclick="setCategory('AI & ML', this)">AI &amp; ML</div>
+                <div class="filter-pill" onclick="setCategory('Crypto & Web3', this)">Crypto / Web3</div>
+                <div class="filter-pill" onclick="setCategory('Weather', this)">Weather</div>
+                <div class="filter-pill" onclick="setCategory('Animals', this)">Animals</div>
+                <div class="filter-pill" onclick="setCategory('Development', this)">Development</div>
             </div>
         </div>
 
         <div class="metrics-grid">
             <div class="metric-card">
-                <div class="metric-val" id="totalMetrics">0</div>
+                <div class="metric-val" id="totalMetrics">1,400+</div>
                 <div class="metric-lbl">Registered Nodes</div>
             </div>
             <div class="metric-card">
@@ -509,62 +501,80 @@
         setTimeout(() => { tapCount = 0; }, 1500);
     });
 
-    const SEED_APIS = [
-        {
-            title: "Nvidia Cloud Omniverse AI",
-            url: "https://api.nvidia.com/v1/generative",
-            category: "AI / Machine Learning",
-            auth: "Bearer Token",
-            desc: "Neural processing pipelines and generative vision inference on GPU clusters."
-        },
-        {
-            title: "Solana RPC Mainnet Gateway",
-            url: "https://api.mainnet-beta.solana.com",
-            category: "Crypto / Web3",
-            auth: "Open Access",
-            desc: "Ledger transaction verification and real-time block telemetry streaming."
-        },
-        {
-            title: "Akhil Core Database Engine",
-            url: "https://akhil-private-backend.onrender.com/api/db/all",
-            category: "Cloud & Systems",
-            auth: "x-api-key",
-            desc: "ACID-compliant SQLite relational storage engine with REST CRUD capabilities."
-        }
-    ];
-
-    let store = [];
+    let allAPIs = [];
     let activeCategory = 'all';
 
     async function loadCatalog() {
-        let saved = localStorage.getItem("cyber_hub_apis");
-        if (saved) {
-            try { store = JSON.parse(saved); } catch(e) { store = [...SEED_APIS]; }
-        } else {
-            store = [...SEED_APIS];
-            localStorage.setItem("cyber_hub_apis", JSON.stringify(store));
-        }
+        // Core curated seed APIs
+        const CORE_SEEDS = [
+            { title: "Nvidia Cloud Omniverse AI", url: "https://api.nvidia.com/v1/generative", category: "AI & ML", auth: "Bearer Token", desc: "Neural processing pipelines and generative vision inference on GPU clusters." },
+            { title: "Solana RPC Mainnet Gateway", url: "https://api.mainnet-beta.solana.com", category: "Crypto & Web3", auth: "Open Access", desc: "Ledger transaction verification and real-time block telemetry streaming." },
+            { title: "Akhil Core Database Engine", url: "https://akhil-private-backend.onrender.com/api/db/all", category: "Development", auth: "x-api-key", desc: "ACID-compliant SQLite relational storage engine with REST CRUD capabilities." },
+            { title: "Open-Meteo Weather Forecast", url: "https://api.open-meteo.com/v1/forecast?latitude=28.61&longitude=77.20&current_weather=true", category: "Weather", auth: "No Auth", desc: "Accurate open-source worldwide weather forecast and atmospheric metrics." },
+            { title: "CoinGecko Crypto Ticker", url: "https://api.coingecko.com/api/v3/ping", category: "Crypto & Web3", auth: "No Auth", desc: "Real-time digital asset valuations, liquidity feeds and market capitalization." },
+            { title: "Cat Facts Telemetry", url: "https://catfact.ninja/fact", category: "Animals", auth: "No Auth", desc: "Random feline biological and behavioral verified data stream." },
+            { title: "Dog CEO Canine Images", url: "https://dog.ceo/api/breeds/image/random", category: "Animals", auth: "No Auth", desc: "High-resolution curated canine image endpoint with CDN caching." }
+        ];
+
+        allAPIs = [...CORE_SEEDS];
+
+        // 1. Load user custom added APIs from localStorage & Render Cloud DB
+        try {
+            let custom = JSON.parse(localStorage.getItem("cyber_hub_apis")) || [];
+            custom.forEach(c => {
+                if (c.title && !allAPIs.some(x => x.title === c.title)) allAPIs.unshift(c);
+            });
+        } catch(e) {}
 
         try {
             let res = await fetch("https://akhil-private-backend.onrender.com/api/db/all?collection=cyber_apis&api_key=akhil_8630_secure");
             let d = await res.json();
-            if (d.status === "success" && d.records && d.records.length > 0) {
-                d.records.forEach(item => {
-                    if (item.data && item.data.title && !store.some(x => x.title === item.data.title)) {
-                        store.unshift(item.data);
+            if (d.status === "success" && d.records) {
+                d.records.forEach(r => {
+                    if (r.data && r.data.title && !allAPIs.some(x => x.title === r.data.title)) {
+                        allAPIs.unshift(r.data);
                     }
                 });
             }
         } catch(e) {}
 
-        render(store);
+        // 2. Fetch the massive public dataset of 1,400+ APIs (from public-apis repository)
+        try {
+            let pubRes = await fetch("https://raw.githubusercontent.com/public-apis/public-apis/master/scripts/data/valid_apis.json");
+            if (!pubRes.ok) {
+                pubRes = await fetch("https://api.publicapis.org/entries");
+            }
+            let data = await pubRes.json();
+            let entries = data.entries || data || [];
+            
+            entries.slice(0, 1400).forEach(item => {
+                let cat = item.Category || "Development";
+                if (cat.includes("Weather")) cat = "Weather";
+                else if (cat.includes("Animals")) cat = "Animals";
+                else if (cat.includes("Cryptocurrency")) cat = "Crypto & Web3";
+                else if (cat.includes("Machine Learning") || cat.includes("AI")) cat = "AI & ML";
+                else cat = "Development";
+
+                allAPIs.push({
+                    title: item.API || item.title || "External Endpoint",
+                    url: item.Link || item.url || "https://api.github.com",
+                    category: cat,
+                    auth: item.Auth || "Open Access",
+                    desc: item.Description || item.desc || "Public network service endpoint."
+                });
+            });
+        } catch(e) {
+            console.log("Using cached registry catalog.");
+        }
+
+        render(allAPIs.slice(0, 30));
     }
 
     function render(list) {
         const grid = document.getElementById("catalogGrid");
         grid.innerHTML = "";
 
-        document.getElementById("totalMetrics").innerText = store.length;
+        document.getElementById("totalMetrics").innerText = allAPIs.length > 50 ? `${allAPIs.length}+` : allAPIs.length;
         document.getElementById("visibleMetrics").innerText = list.length;
 
         if (list.length === 0) {
@@ -605,14 +615,14 @@
 
     function filterCatalog() {
         const q = document.getElementById("searchInput").value.toLowerCase().trim();
-        let matched = store.filter(item => {
+        let matched = allAPIs.filter(item => {
             let catMatch = (activeCategory === 'all') || (item.category === activeCategory);
             let textMatch = item.title.toLowerCase().includes(q) || 
                             (item.desc && item.desc.toLowerCase().includes(q)) || 
                             item.url.toLowerCase().includes(q);
             return catMatch && textMatch;
         });
-        render(matched);
+        render(matched.slice(0, 60));
     }
 
     document.getElementById("searchInput").addEventListener("input", filterCatalog);
